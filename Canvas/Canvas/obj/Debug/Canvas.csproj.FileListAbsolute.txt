@@ -1,0 +1,16 @@
+C:\Users\Ash\Desktop\Canvas\Canvas\bin\Debug\CommonTools.dll
+C:\Users\Ash\Desktop\Canvas\Canvas\bin\Debug\CommonTools.pdb
+C:\Users\Ash\Desktop\Canvas\Canvas\obj\Debug\Canvas.csprojResolveAssemblyReference.cache
+C:\Users\Ash\Desktop\Canvas\Canvas\obj\Debug\Canvas.CanvasCtrl.resources
+C:\Users\Ash\Desktop\Canvas\Canvas\obj\Debug\Canvas.DocumentForm.resources
+C:\Users\Ash\Desktop\Canvas\Canvas\obj\Debug\Canvas.MainWin.resources
+C:\Users\Ash\Desktop\Canvas\Canvas\obj\Debug\Canvas.About.resources
+C:\Users\Ash\Desktop\Canvas\Canvas\obj\Debug\Canvas.Options.GridPage.resources
+C:\Users\Ash\Desktop\Canvas\Canvas\obj\Debug\Canvas.Options.LayersPage.resources
+C:\Users\Ash\Desktop\Canvas\Canvas\obj\Debug\Canvas.Options.OptionsDlg.resources
+C:\Users\Ash\Desktop\Canvas\Canvas\obj\Debug\Canvas.csproj.GenerateResource.Cache
+C:\Users\Ash\Desktop\Canvas\Canvas\bin\Debug\GLUE.exe
+C:\Users\Ash\Desktop\Canvas\Canvas\bin\Debug\GLUE.pdb
+C:\Users\Ash\Desktop\Canvas\Canvas\obj\Debug\GLUE.exe
+C:\Users\Ash\Desktop\Canvas\Canvas\obj\Debug\GLUE.pdb
+C:\Users\Ash\Desktop\Canvas\Canvas\obj\Debug\Canvas.Properties.Resources.resources

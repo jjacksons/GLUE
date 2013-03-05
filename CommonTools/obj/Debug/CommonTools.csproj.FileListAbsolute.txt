@@ -1,0 +1,9 @@
+C:\Users\Ash\Desktop\CommonTools\bin\Debug\CommonTools.dll
+C:\Users\Ash\Desktop\CommonTools\bin\Debug\CommonTools.pdb
+C:\Users\Ash\Desktop\CommonTools\obj\Debug\CommonTools.ColorPickerCtrl.resources
+C:\Users\Ash\Desktop\CommonTools\obj\Debug\CommonTools.ColorPickerDialog.resources
+C:\Users\Ash\Desktop\CommonTools\obj\Debug\CommonTools.ColorWheelCtrl.resources
+C:\Users\Ash\Desktop\CommonTools\obj\Debug\CommonTools.PropertyDialog.resources
+C:\Users\Ash\Desktop\CommonTools\obj\Debug\CommonTools.csproj.GenerateResource.Cache
+C:\Users\Ash\Desktop\CommonTools\obj\Debug\CommonTools.dll
+C:\Users\Ash\Desktop\CommonTools\obj\Debug\CommonTools.pdb
