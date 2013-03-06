@@ -28,8 +28,22 @@ namespace Canvas.Options
 		/// </summary>
 		private void InitializeComponent()
 		{
+            this.SuspendLayout();
+            // 
+            // m_treeView
+            // 
+            this.m_treeView.LineColor = System.Drawing.Color.Black;
+            // 
+            // OptionsDlg
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.ClientSize = new System.Drawing.Size(454, 233);
+            this.Name = "OptionsDlg";
+            this.ResumeLayout(false);
+
 		}
 
 		#endregion
-	}
+
+    }
 }

@@ -58,6 +58,7 @@ namespace Canvas
 			SetupDrawTools();
 			SetupLayerToolstrip();
 			SetupEditTools();
+            SetupModuleItems();
 			UpdateLayerUI();
 
 			MenuStrip menuitem = new MenuStrip();
@@ -72,6 +73,7 @@ namespace Canvas
 			base.OnLoad(e);
 			m_canvas.SetCenter(m_data.CenterPoint);
 		}
+       
 		void SetupMenuItems()
 		{
 			MenuItem mmitem = m_menuItems.GetItem("Undo");
@@ -253,6 +255,68 @@ namespace Canvas
 			strip.Items.Add(m_menuItems.GetItem("ShrinkExtend").CreateButton());
 			m_toolHint = string.Empty;
 		}
+        void SetupModuleItems()
+        {
+            ToolStripMenuItem item = m_menuItems.GetMenuStrip("powerflow");
+            item.ToolTipText = "Powerflow Module";
+            item.Image = ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow);
+            item.Tag = "powerflow";
+            m_data.AddEditTool(item.Tag.ToString(), new EditTools.LinesMeetEditTool(this));
+
+            item.DropDownItems.Add("Line Overhead", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Node", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Link", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Line", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Line configuration", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Line spacing", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Overhead Line", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Overhead Line Conductor", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Underground Line", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Underground Line Conductor", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Triplex line", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Triplex Line Configuration", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Triplex Conductor", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Transformer", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Transformer Configuration", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Load", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Meter", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Triplex Node", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Triplex Meter", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Regulator", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Regulator Configuration", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Capacitor", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Fuse", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Switch", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Recloser", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Relay", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Substation", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Parametric Load", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Volt-VAr Control", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Volt Dump", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Current Dump", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Bill Dump", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Fault Check", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Frequency Generator", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Motor", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Restoration", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Series Reactor", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Sectionalizer", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Power Metrics", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Emissions", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item = m_menuItems.GetMenuStrip("generator");
+            item.ToolTipText = "Generators Module";
+            item.Image = ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.generators);
+            item.Tag = "generator";
+            m_data.AddEditTool(item.Tag.ToString(), new EditTools.LineShrinkExtendEditTool(this));
+            
+
+
+            ToolStrip strip = m_menuItems.GetStrip("modules");
+            strip.Items.Add(m_menuItems.GetMenuStrip("powerflow"));
+            strip.Items.Add(m_menuItems.GetMenuStrip("powerflow"));
+            strip.Items.Add(m_menuItems.GetMenuStrip("generator"));
+            m_toolHint = string.Empty;
+        }
 
 		ToolStripStatusLabel m_mousePosLabel = new ToolStripStatusLabel();
 		ToolStripStatusLabel m_snapInfoLabel = new ToolStripStatusLabel();
