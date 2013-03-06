@@ -143,7 +143,7 @@ namespace Canvas
 		void DefaultLayer()
 		{
 			m_layers.Clear();
-			m_layers.Add(new DrawingLayer("layer0", "Backdrop", Color.White, 0.0f));
+            m_layers.Add(new DrawingLayer("layer0", "Backdrop", Color.Black, 0.0f));
 		}
 		public IDrawObject GetFirstSelected()
 		{

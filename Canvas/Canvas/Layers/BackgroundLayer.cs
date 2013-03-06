@@ -38,10 +38,6 @@ namespace Canvas
 			StringFormat f = new StringFormat();
 			f.Alignment = StringAlignment.Center;
 			PointF centerpoint = new PointF(r.Width / 2, r.Height / 2);
-			canvas.Graphics.TranslateTransform(centerpoint.X, centerpoint.Y);
-			canvas.Graphics.RotateTransform(-15);
-			canvas.Graphics.DrawString("Jesper Kristiansen (2007)", m_font, m_brush, 0, 0, f);
-			canvas.Graphics.ResetTransform();
 		}
 		public PointF SnapPoint(PointF unitmousepoint)
 		{

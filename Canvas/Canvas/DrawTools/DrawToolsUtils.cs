@@ -31,7 +31,7 @@ namespace Canvas.DrawTools
 				return;
 			if (r.Top < 0 || r.Bottom > canvas.ClientRectangle.Height)
 				return;
-			canvas.Graphics.FillRectangle(Brushes.White, r);
+			canvas.Graphics.FillRectangle(Brushes.Black, r);
 			r.Inflate(1, 1);
 			canvas.Graphics.DrawRectangle(Pens.Black, ScreenUtils.ConvertRect(r));
 		}
@@ -46,7 +46,7 @@ namespace Canvas.DrawTools
 				new PointF(screenpoint.X + size, screenpoint.Y),
 				new PointF(screenpoint.X, screenpoint.Y - size),
 			};
-			canvas.Graphics.FillPolygon(Brushes.White, p);
+			canvas.Graphics.FillPolygon(Brushes.Black, p);
 		}
 	}
 

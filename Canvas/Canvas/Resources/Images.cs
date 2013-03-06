@@ -94,4 +94,25 @@ namespace Canvas
 			return ImageList().Images[(int)index];
 		}
 	}
+    public class ModuleItemsImages16x16
+    {
+        static private ImageList m_imageList = null;
+
+        public enum eIndexes
+        {
+            powerflow,
+            generators,
+        }
+        static public ImageList ImageList()
+        {
+            Type t = typeof(MenuImages16x16);
+            if (m_imageList == null)
+                m_imageList = ImagesUtil.GetToolbarImageList(t, "Resources.moduleimages.bmp", new Size(16, 16), Color.White);
+            return m_imageList;
+        }
+        static public Image Image(eIndexes index)
+        {
+            return ImageList().Images[(int)index];
+        }
+    }
 }

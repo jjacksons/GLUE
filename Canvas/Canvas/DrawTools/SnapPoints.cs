@@ -83,7 +83,7 @@ namespace Canvas
 		}
 		public override void Draw(ICanvas canvas)
 		{
-			DrawPoint(canvas, Pens.White, Brushes.YellowGreen);
+			DrawPoint(canvas, Pens.Black, Brushes.YellowGreen);
 		}
 	}
 	class IntersectSnapPoint : SnapPointBase
@@ -94,7 +94,7 @@ namespace Canvas
 		}
 		public override void Draw(ICanvas canvas)
 		{
-			DrawPoint(canvas, Pens.White, Brushes.YellowGreen);
+			DrawPoint(canvas, Pens.Black, Brushes.YellowGreen);
 		}
 	}
 	class NearestSnapPoint : SnapPointBase
@@ -106,7 +106,7 @@ namespace Canvas
 		#region ISnapPoint Members
 		public override void Draw(ICanvas canvas)
 		{
-			DrawPoint(canvas, Pens.White, Brushes.YellowGreen);
+            DrawPoint(canvas, Pens.Black, Brushes.YellowGreen);
 		}
 		#endregion
 	}
@@ -118,7 +118,7 @@ namespace Canvas
 		}
 		public override void Draw(ICanvas canvas)
 		{
-			DrawPoint(canvas, Pens.White, Brushes.YellowGreen);
+			DrawPoint(canvas, Pens.Black, Brushes.YellowGreen);
 		}
 	}
 	class DivisionSnapPoint : SnapPointBase
@@ -129,7 +129,7 @@ namespace Canvas
 		}
 		public override void Draw(ICanvas canvas)
 		{
-			DrawPoint(canvas, Pens.White, Brushes.YellowGreen);
+			DrawPoint(canvas, Pens.Black, Brushes.YellowGreen);
 		}
 	}
 	class CenterSnapPoint : SnapPointBase
@@ -140,7 +140,7 @@ namespace Canvas
 		}
 		public override void Draw(ICanvas canvas)
 		{
-			DrawPoint(canvas, Pens.White, Brushes.YellowGreen);
+            DrawPoint(canvas, Pens.Black, Brushes.YellowGreen);
 		}
 	}
 	class PerpendicularSnapPoint : SnapPointBase
@@ -151,7 +151,7 @@ namespace Canvas
 		}
 		public override void Draw(ICanvas canvas)
 		{
-			DrawPoint(canvas, Pens.White, Brushes.YellowGreen);
+            DrawPoint(canvas, Pens.Black, Brushes.YellowGreen);
 		}
 	}
 	class TangentSnapPoint : SnapPointBase
@@ -162,7 +162,7 @@ namespace Canvas
 		}
 		public override void Draw(ICanvas canvas)
 		{
-			DrawPoint(canvas, Pens.White, Brushes.YellowGreen);
+            DrawPoint(canvas, Pens.Black, Brushes.YellowGreen);
 		}
 	}
 }

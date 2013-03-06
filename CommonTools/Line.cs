@@ -42,22 +42,22 @@ namespace CommonTools
 			if ((int)(LinePositions & AnchorStyles.Left) > 0)
 			{
 				e.Graphics.DrawLine(p, r.Left-1, r.Top, r.Left-1, r.Bottom-1);
-				e.Graphics.DrawLine(Pens.WhiteSmoke, r.Left, r.Top, r.Left, r.Bottom-1);
+                e.Graphics.DrawLine(Pens.Black, r.Left, r.Top, r.Left, r.Bottom - 1);
 			}
 			if ((int)(LinePositions & AnchorStyles.Right) > 0)
 			{
 				e.Graphics.DrawLine(p, r.Right, r.Top, r.Right, r.Bottom-1);
-				e.Graphics.DrawLine(Pens.WhiteSmoke, r.Right+1, r.Top, r.Right+1, r.Bottom-1);
+                e.Graphics.DrawLine(Pens.Black, r.Right + 1, r.Top, r.Right + 1, r.Bottom - 1);
 			}
 			if ((int)(LinePositions & AnchorStyles.Top) > 0)
 			{
 				e.Graphics.DrawLine(p, r.Left, r.Top-1, r.Right-1, r.Top-1);
-				e.Graphics.DrawLine(Pens.WhiteSmoke, r.Left, r.Top, r.Right-1, r.Top);
+                e.Graphics.DrawLine(Pens.Black, r.Left, r.Top, r.Right - 1, r.Top);
 			}
 			if ((int)(LinePositions & AnchorStyles.Bottom) > 0)
 			{
 				e.Graphics.DrawLine(p, r.Left, r.Bottom, r.Right-1, r.Bottom);
-				e.Graphics.DrawLine(Pens.WhiteSmoke, r.Left, r.Bottom+1, r.Right-1, r.Bottom+1);
+                e.Graphics.DrawLine(Pens.Black, r.Left, r.Bottom + 1, r.Right - 1, r.Bottom + 1);
 			}
 			p.Dispose();
 		}
