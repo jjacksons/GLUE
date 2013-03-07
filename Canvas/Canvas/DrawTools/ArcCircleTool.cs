@@ -285,7 +285,7 @@ namespace Canvas.DrawTools
 		}
 		public RectangleF GetBoundingRect(ICanvas canvas)
 		{
-			float thWidth = Line.ThresholdWidth(canvas, Width, ThresholdPixel);
+			float thWidth = Line.ThresholdWidth(canvas, Width, ThresholdPixel)+1;
 			if (thWidth < Width)
 				thWidth = Width;
 			float r = m_radius + thWidth / 2;

@@ -263,7 +263,8 @@ namespace Canvas
             item.Tag = "powerflow";
             m_data.AddEditTool(item.Tag.ToString(), new EditTools.LinesMeetEditTool(this));
 
-            item.DropDownItems.Add("Line Overhead", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("OverheadLine", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow), new EventHandler(OnModuleSelect));
+            m_data.AddDrawTool("OverheadLine", new ModuleItems.powerflow.Switch());
             item.DropDownItems.Add("Node", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
             item.DropDownItems.Add("Link", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
             item.DropDownItems.Add("Line", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
@@ -286,7 +287,8 @@ namespace Canvas
             item.DropDownItems.Add("Regulator Configuration", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
             item.DropDownItems.Add("Capacitor", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
             item.DropDownItems.Add("Fuse", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
-            item.DropDownItems.Add("Switch", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Switch", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow), new EventHandler(OnModuleSelect));
+            m_data.AddDrawTool("Switch", new ModuleItems.powerflow.Switch());
             item.DropDownItems.Add("Recloser", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
             item.DropDownItems.Add("Relay", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
             item.DropDownItems.Add("Substation", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
@@ -405,6 +407,7 @@ namespace Canvas
 			// update any additional properties of data which is not part of the interface
 			m_data.CenterPoint = m_canvas.GetCenter();
 		}
+        void OnModuleSelect(object sender, System.EventArgs e) { m_canvas.CommandSelectDrawTool(((ToolStripMenuItem)sender).Text); }
 		void OnToolSelect(object sender, System.EventArgs e)
 		{
 			string toolid = string.Empty;

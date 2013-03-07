@@ -18,22 +18,21 @@ namespace Canvas.DrawTools
 				if (m_selectedPen == null)
 				{
 					m_selectedPen = new Pen(Color.Magenta, 1);
-					m_selectedPen.DashStyle = DashStyle.Dash;
 				}
 				return m_selectedPen;
 			}
 		}
 		static public void DrawNode(ICanvas canvas, UnitPoint nodepoint)
 		{
-			RectangleF r = new RectangleF(canvas.ToScreen(nodepoint), new SizeF(0, 0));
-			r.Inflate(3, 3);
-			if (r.Right < 0 || r.Left > canvas.ClientRectangle.Width)
-				return;
-			if (r.Top < 0 || r.Bottom > canvas.ClientRectangle.Height)
-				return;
-			canvas.Graphics.FillRectangle(Brushes.Black, r);
-			r.Inflate(1, 1);
-			canvas.Graphics.DrawRectangle(Pens.Black, ScreenUtils.ConvertRect(r));
+            RectangleF r = new RectangleF(canvas.ToScreen(nodepoint), new SizeF(0, 0));
+            r.Inflate(3, 3);
+            if (r.Right < 0 || r.Left > canvas.ClientRectangle.Width)
+                return;
+            if (r.Top < 0 || r.Bottom > canvas.ClientRectangle.Height)
+                return;
+            canvas.Graphics.FillRectangle(Brushes.Black, r);
+            r.Inflate(1, 1);
+            canvas.Graphics.DrawRectangle(Pens.Black, ScreenUtils.ConvertRect(r));
 		}
 		static public void DrawTriangleNode(ICanvas canvas, UnitPoint nodepoint)
 		{
