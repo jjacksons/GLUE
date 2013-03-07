@@ -96,8 +96,6 @@
       <DependentUpon>MainWin.cs</DependentUpon>
     </Compile>
     <Compile Include="Model.cs" />
-    <Compile Include="ModuleItems\generator.cs" />
-    <Compile Include="ModuleItems\powerflow.cs" />
     <Compile Include="Options\GridPage.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -203,6 +201,10 @@
   <ItemGroup>
     <Content Include="get_glue_icon.ico" />
     <EmbeddedResource Include="Resources\moduleimages.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ModuleItems\generators\" />
+    <Folder Include="ModuleItems\powerflow\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

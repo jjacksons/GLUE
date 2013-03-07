@@ -94,7 +94,7 @@ namespace Canvas
                         {
                             for (int dx = m_dotsize; dx > 0; dx--)
                             {
-                                gdi.SetPixel((int)p1.X + dx, (int)p1.Y + dy, m_color.ToArgb());
+                                gdi.SetPixel(((int)(p1.X - m_dotsize / 2 -1)) + dx, ((int)(p1.Y - m_dotsize / 2 -1)) + dy, m_color.ToArgb());
                             }
                         }
 					}
