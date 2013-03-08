@@ -366,6 +366,13 @@ namespace Canvas
 				invalidate = true;
 				m_model.ClearSelectedObjects();
 			}
+            foreach (IDrawObject obj in selected)
+            {
+                if (obj.GetType().IsAssignableFrom(typeof(ModuleItems.Module))) {
+                    
+                }
+            }
+            
 
 			if (invalidate)
 				DoInvalidate(false);

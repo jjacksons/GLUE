@@ -320,10 +320,38 @@ namespace Canvas
             m_toolHint = string.Empty;
         }
 
+        void SetupPropertyToolbar(List<ModuleItems.Property> list)
+        {
+            ToolStrip strip = m_menuItems.GetStrip("Properties");
+            
+
+            //if (list.Count == 0) strip.Visible  = false;
+            list.ForEach((item) =>
+                {
+                    ToolStripLabel item1 = m_menuItems.GetMenuLabel(item.name);
+                    item1.ToolTipText = item.name;
+                    item1.Text = item.name;
+                    strip.Items.Add(m_menuItems.GetMenuLabel(item.name));
+                    ToolStripTextBox item2 = m_menuItems.GetMenuText(item.value as String);
+                    item2.ToolTipText = item.name;
+                    item2.Text = item.value as String;
+                    strip.Items.Add(m_menuItems.GetMenuText(item.value as String));
+                });
+
+            strip.LayoutStyle = ToolStripLayoutStyle.Table;
+            strip.Dock = System.Windows.Forms.DockStyle.Right;
+            TableLayoutSettings tableLayoutSettings = strip.LayoutSettings as TableLayoutSettings;
+            tableLayoutSettings.ColumnCount = 2;
+            
+            //strip.AutoSize = false;
+            //strip.Size = new System.Drawing.Size(103, 485);
+        }
+
 		ToolStripStatusLabel m_mousePosLabel = new ToolStripStatusLabel();
 		ToolStripStatusLabel m_snapInfoLabel = new ToolStripStatusLabel();
 		ToolStripStatusLabel m_drawInfoLabel = new ToolStripStatusLabel();
 		ToolStripComboBox m_layerCombo = new ToolStripComboBox();
+
 		void SetupLayerToolstrip()
 		{
 			StatusStrip status = m_menuItems.GetStatusStrip("status");

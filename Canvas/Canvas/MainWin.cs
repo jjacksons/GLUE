@@ -121,6 +121,7 @@ namespace Canvas
 				ToolStripManager.Merge(m_activeDocument.GetToolStrip("status"), m_menuItems.GetStrip("status"));
 				ToolStripManager.Merge(m_activeDocument.GetToolStrip("modify"), m_menuItems.GetStrip("modify"));
                 ToolStripManager.Merge(m_activeDocument.GetToolStrip("modules"), m_menuItems.GetStrip("modules"));
+                ToolStripManager.Merge(m_activeDocument.GetToolStrip("Properties"), m_menuItems.GetStrip("Properties"));
 			}
 			foreach (Control ctrl in Controls)
 			{
@@ -223,6 +224,22 @@ namespace Canvas
 
         private void gLMToolStripMenuItem_Click(object sender, EventArgs e)
         {
+
+        }
+
+        private void m_windowMenu_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Close_button_Click(object sender, EventArgs e)
+        {
+            PropertiesPanel.Visible = false;
+        }
+
+        private void propertiesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            PropertiesPanel.Visible = true;
 
         }
 

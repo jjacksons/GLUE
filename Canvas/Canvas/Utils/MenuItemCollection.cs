@@ -95,6 +95,18 @@ namespace Canvas
 				m_stripsItem[key] = new ToolStripMenuItem();
 			return m_stripsItem[key] as ToolStripMenuItem;
 		}
+        public ToolStripLabel GetMenuLabel(object key)
+        {
+            if (m_stripsItem.ContainsKey(key) == false)
+                m_stripsItem[key] = new ToolStripLabel();
+            return m_stripsItem[key] as ToolStripLabel;
+        }
+        public ToolStripTextBox GetMenuText(object key)
+        {
+            if (m_stripsItem.ContainsKey(key) == false)
+                m_stripsItem[key] = new ToolStripTextBox();
+            return m_stripsItem[key] as ToolStripTextBox;
+        }
 		public StatusStrip GetStatusStrip(object key)
 		{
 			if (m_strips.ContainsKey(key) == false)
