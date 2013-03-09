@@ -460,7 +460,7 @@ namespace Canvas.DrawTools
 			canvas.Invalidate();
 		}
 
-		public new void Copy(LineEdit acopy)
+		public void Copy(LineEdit acopy)
 		{
 			base.Copy(acopy);
 			m_perSnap = acopy.m_perSnap;

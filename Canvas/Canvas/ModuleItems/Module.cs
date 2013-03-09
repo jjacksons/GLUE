@@ -10,19 +10,21 @@ namespace Canvas.ModuleItems
 {
     abstract class NodePoint : INodePoint {
         public enum ePoint {
-            Startpoint,
+            FromPoint,
+            StartPoint,
             EndPoint,
         }
         public enum eorientation {
             Vertical,
             Horizontal,
         }
-        Module m_owner;
-        Module m_clone;
-        UnitPoint m_originalPoint;
-        UnitPoint m_endPoint;
-        ePoint m_pointId;
+        protected Module m_owner;
+        protected Module m_clone;
+        protected UnitPoint m_originalPoint;
+        protected UnitPoint m_endPoint;
+        protected ePoint m_pointId;
         static bool m_angleLocked = false;
+        public NodePoint() { }
         public NodePoint(Module owner, ePoint id)
         {
             m_owner = owner;
@@ -50,6 +52,7 @@ namespace Canvas.ModuleItems
         public void Finish()
         {
             m_endPoint = GetPoint(m_pointId);
+            m_owner.FromPoint = m_clone.FromPoint;
             m_owner.StartPoint = m_clone.StartPoint;
             m_owner.EndPoint = m_clone.EndPoint;
             m_clone = null;
@@ -76,7 +79,9 @@ namespace Canvas.ModuleItems
         #endregion
         protected UnitPoint GetPoint(ePoint pointid)
         {
-            if (pointid == ePoint.Startpoint)
+            if (pointid == ePoint.FromPoint)
+                return m_clone.FromPoint;
+            if (pointid == ePoint.StartPoint)
                 return m_clone.StartPoint;
             if (pointid == ePoint.EndPoint)
                 return m_clone.EndPoint;
@@ -84,13 +89,15 @@ namespace Canvas.ModuleItems
         }
         protected UnitPoint OtherPoint(ePoint currentpointid)
         {
-            if (currentpointid == ePoint.Startpoint)
+            if (currentpointid == ePoint.StartPoint)
                 return GetPoint(ePoint.EndPoint);
-            return GetPoint(ePoint.Startpoint);
+            return GetPoint(ePoint.StartPoint);
         }
         protected void SetPoint(ePoint pointid, UnitPoint point, Module line)
         {
-            if (pointid == ePoint.Startpoint)
+            if (pointid == ePoint.FromPoint)
+                line.FromPoint = point;
+            if (pointid == ePoint.StartPoint)
                 line.StartPoint = point;
             if (pointid == ePoint.EndPoint)
                 line.EndPoint = point;
@@ -98,7 +105,7 @@ namespace Canvas.ModuleItems
     }
     abstract class Module : Canvas.DrawTools.DrawObjectBase, IDrawObject, ISerialize
     {
-        protected UnitPoint m_p1, m_p2;
+        protected UnitPoint m_p1, m_p2, m_p3;
         protected List<Module> to_connections;
         protected List<Module> from_connections;
         protected List<Property> properties;
@@ -118,16 +125,22 @@ namespace Canvas.ModuleItems
             return temp;
         }
         [XmlSerializable]
-        public UnitPoint StartPoint
+        public UnitPoint FromPoint
         {
             get { return m_p1; }
             set { m_p1 = value; }
         }
         [XmlSerializable]
-        public UnitPoint EndPoint
+        public UnitPoint StartPoint
         {
             get { return m_p2; }
             set { m_p2 = value; }
+        }
+        [XmlSerializable]
+        public UnitPoint EndPoint
+        {
+            get { return m_p3; }
+            set { m_p3 = value; }
         }
         public static string ObjectType;
         public virtual void Copy(Module acopy)
@@ -139,7 +152,7 @@ namespace Canvas.ModuleItems
         }
         public abstract IDrawObject Clone();
         static int ThresholdPixel = 6;
-        static float ThresholdWidth(ICanvas canvas, float objectwidth)
+        protected static float ThresholdWidth(ICanvas canvas, float objectwidth)
         {
             return ThresholdWidth(canvas, objectwidth, ThresholdPixel);
         }
@@ -152,7 +165,7 @@ namespace Canvas.ModuleItems
         public RectangleF GetBoundingRect(ICanvas canvas)
         {
             float thWidth = ThresholdWidth(canvas, Width);
-            return ScreenUtils.GetRect(m_p1, m_p2, thWidth);
+            return ScreenUtils.GetRect(m_p1, m_p3, thWidth);
         }
         UnitPoint MidPoint(ICanvas canvas, UnitPoint p1, UnitPoint p2, UnitPoint hitpoint)
         {
@@ -165,7 +178,7 @@ namespace Canvas.ModuleItems
         public bool PointInObject(ICanvas canvas, UnitPoint point)
         {
             float thWidth = ThresholdWidth(canvas, Width);
-            return HitUtil.IsPointInLine(m_p1, m_p2, point, thWidth);
+            return HitUtil.IsPointInLine(m_p1, m_p2, point, thWidth) || HitUtil.IsPointInLine(m_p2,m_p3, point, thWidth);
         }
         public bool ObjectInRectangle(ICanvas canvas, RectangleF rect, bool anyPoint)
         {
@@ -174,21 +187,14 @@ namespace Canvas.ModuleItems
                 return HitUtil.LineIntersectWithRect(m_p1, m_p2, rect);
             return rect.Contains(boundingrect);
         }
-        public virtual void Draw(ICanvas canvas, RectangleF unitrect)
-        {
-            Color color = Color;
-            Pen pen = canvas.CreatePen(color, Width);
-            if (Highlighted||Selected) pen = Canvas.DrawTools.DrawUtils.SelectedPen;
-            canvas.DrawLine(canvas, pen, m_p1, m_p2);
-            canvas.DrawLine(canvas,pen,m_p1,new UnitPoint(m_p1.X+1,m_p1.Y ));
-            if (m_p1.IsEmpty == false)Canvas.DrawTools.DrawUtils.DrawNode(canvas, m_p1);
-            if (m_p2.IsEmpty == false)Canvas.DrawTools.DrawUtils.DrawNode(canvas, m_p2);
-        }
+        public abstract void Draw(ICanvas canvas, RectangleF unitrect);
+
         public virtual void OnMouseMove(ICanvas canvas, UnitPoint point)
         {
             if (Control.ModifierKeys == Keys.Control)
                 point = HitUtil.OrthoPointD(m_p1, point, 45);
             m_p2 = point;
+            m_p3 = new UnitPoint(point.X+1, point.Y);
         }
         public virtual eDrawObjectMouseDown OnMouseDown(ICanvas canvas, UnitPoint point, ISnapPoint snappoint)
         {
@@ -196,28 +202,29 @@ namespace Canvas.ModuleItems
             if (snappoint is PerpendicularSnapPoint && snappoint.Owner is Module)
             {
                 Module src = snappoint.Owner as Module;
-                m_p2 = HitUtil.NearestPointOnLine(src.StartPoint, src.EndPoint, m_p1, true);
-                return eDrawObjectMouseDown.DoneRepeat;
+                m_p2 = HitUtil.NearestPointOnLine(src.FromPoint, src.EndPoint, m_p1, true);
+                return eDrawObjectMouseDown.Done;
             }
             if (snappoint is PerpendicularSnapPoint && snappoint.Owner is Canvas.DrawTools.Line)
             {
                 Canvas.DrawTools.Line src = snappoint.Owner as Canvas.DrawTools.Line;
                 m_p2 = HitUtil.NearestPointOnLine(src.P1, src.P2, m_p1, true);
-                return eDrawObjectMouseDown.DoneRepeat;
+                return eDrawObjectMouseDown.Done;
             }
             if (snappoint is PerpendicularSnapPoint && snappoint.Owner is Canvas.DrawTools.Arc)
             {
                 Canvas.DrawTools.Arc src = snappoint.Owner as Canvas.DrawTools.Arc;
                 m_p2 = HitUtil.NearestPointOnCircle(src.Center, src.Radius, m_p1, 0);
-                return eDrawObjectMouseDown.DoneRepeat;
+                return eDrawObjectMouseDown.Done;
             }
             if (Control.ModifierKeys == Keys.Control)
                 point = HitUtil.OrthoPointD(m_p1, point, 45);
             m_p2 = point;
-            return eDrawObjectMouseDown.DoneRepeat;
+            return eDrawObjectMouseDown.Done;
         }
         public void OnMouseUp(ICanvas canvas, UnitPoint point, ISnapPoint snappoint)
         {
+            //Draw(canvas,new RectangleF());
         }
         public virtual void OnKeyDown(ICanvas canvas, KeyEventArgs e)
         {
@@ -303,7 +310,7 @@ namespace Canvas.ModuleItems
         public abstract INodePoint NodePoint(ICanvas canvas, UnitPoint point);
         public override void InitializeFromModel(UnitPoint point, DrawingLayer layer, ISnapPoint snap)
         {
-            StartPoint = StartPoint = point;
+            FromPoint  = StartPoint = EndPoint = point;
             Width = layer.Width;
             Color = layer.Color;
             Selected = true;

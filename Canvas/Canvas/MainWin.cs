@@ -242,6 +242,22 @@ namespace Canvas
             PropertiesPanel.Visible = true;
 
         }
+        public void updateProperties(List<ModuleItems.Property> list)
+        {
+            if (list.Count == 0) return;
+            int i = 0;
+            foreach (ModuleItems.Property prop in list)
+            {
+                Label temp = new Label();
+                temp.Text = prop.name;
+                temp.Top = PropertiesPanel.Top + (DefaultLabel.Top - PropertiesPanel.Top) + 26 * i;
+                temp.Left = DefaultLabel.Left;
 
+                TextBox temp2 = new TextBox();
+                temp2.Text = prop.value.ToString();
+                temp2.Top = PropertiesPanel.Top + (DefaultTextbox.Top - PropertiesPanel.Top) + 26 * i;
+                temp.Left = DefaultTextbox.Left;
+            }
+        }
 	}
 }
