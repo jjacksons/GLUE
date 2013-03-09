@@ -53,7 +53,7 @@ namespace Canvas
             this.PropertiesPanel = new System.Windows.Forms.Panel();
             this.DefaultTextbox = new System.Windows.Forms.TextBox();
             this.Close_button = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
+            this.PropertiesTitle = new System.Windows.Forms.Label();
             this.DefaultLabel = new System.Windows.Forms.Label();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.m_mainMenu.SuspendLayout();
@@ -120,26 +120,26 @@ namespace Canvas
             // gLMToolStripMenuItem
             // 
             this.gLMToolStripMenuItem.Name = "gLMToolStripMenuItem";
-            this.gLMToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.gLMToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.gLMToolStripMenuItem.Text = "GLM";
             this.gLMToolStripMenuItem.Click += new System.EventHandler(this.OnGLMImport);
             // 
             // sINCALToolStripMenuItem
             // 
             this.sINCALToolStripMenuItem.Name = "sINCALToolStripMenuItem";
-            this.sINCALToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.sINCALToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.sINCALToolStripMenuItem.Text = "SINCAL";
             // 
             // lIDToolStripMenuItem
             // 
             this.lIDToolStripMenuItem.Name = "lIDToolStripMenuItem";
-            this.lIDToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.lIDToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.lIDToolStripMenuItem.Text = "LID";
             // 
             // gISToolStripMenuItem
             // 
             this.gISToolStripMenuItem.Name = "gISToolStripMenuItem";
-            this.gISToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.gISToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.gISToolStripMenuItem.Text = "GIS";
             // 
             // optionsToolStripMenuItem
@@ -200,7 +200,7 @@ namespace Canvas
             this.PropertiesPanel.AutoScroll = true;
             this.PropertiesPanel.Controls.Add(this.DefaultTextbox);
             this.PropertiesPanel.Controls.Add(this.Close_button);
-            this.PropertiesPanel.Controls.Add(this.label1);
+            this.PropertiesPanel.Controls.Add(this.PropertiesTitle);
             this.PropertiesPanel.Controls.Add(this.DefaultLabel);
             this.PropertiesPanel.Dock = System.Windows.Forms.DockStyle.Right;
             this.PropertiesPanel.Location = new System.Drawing.Point(603, 24);
@@ -228,17 +228,17 @@ namespace Canvas
             this.Close_button.UseVisualStyleBackColor = false;
             this.Close_button.Click += new System.EventHandler(this.Close_button_Click);
             // 
-            // label1
+            // PropertiesTitle
             // 
-            this.label1.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.label1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.label1.Font = new System.Drawing.Font("Rockwell", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(0, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(200, 22);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Properties";
+            this.PropertiesTitle.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.PropertiesTitle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.PropertiesTitle.Dock = System.Windows.Forms.DockStyle.Top;
+            this.PropertiesTitle.Font = new System.Drawing.Font("Rockwell", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.PropertiesTitle.Location = new System.Drawing.Point(0, 0);
+            this.PropertiesTitle.Name = "PropertiesTitle";
+            this.PropertiesTitle.Size = new System.Drawing.Size(200, 22);
+            this.PropertiesTitle.TabIndex = 1;
+            this.PropertiesTitle.Text = "Properties";
             // 
             // DefaultLabel
             // 
@@ -295,7 +295,7 @@ namespace Canvas
         private Label DefaultLabel;
         private TextBox DefaultTextbox;
         private Button Close_button;
-        private Label label1;
+        private Label PropertiesTitle;
         private ToolStripMenuItem propertiesToolStripMenuItem;
         private ToolTip toolTip1;
 	}
