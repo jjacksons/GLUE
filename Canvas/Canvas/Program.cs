@@ -19,7 +19,8 @@ namespace Canvas
 
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			Application.Run(new MainWin());
+            MainWin thisisthemainwindow = new MainWin();
+            Application.Run(thisisthemainwindow);
 
 			CommonTools.Tracing.Terminate();
 		}

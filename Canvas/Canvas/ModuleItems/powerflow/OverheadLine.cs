@@ -20,8 +20,8 @@ namespace Canvas.ModuleItems.powerflow
     class OverheadLine : Module
     {
 
-        public OverheadLine() { }
-        public OverheadLine(UnitPoint frompoint, UnitPoint startpoint, UnitPoint endpoint) { m_p1 = frompoint; m_p2 = startpoint; m_p3 = endpoint; }
+        public OverheadLine() { setupProperties(); }
+        public OverheadLine(UnitPoint frompoint, UnitPoint startpoint, UnitPoint endpoint) { m_p1 = frompoint; m_p2 = startpoint; m_p3 = endpoint; setupProperties(); }
         public override void GetObjectData(XmlWriter wr)
         {
             wr.WriteStartElement("OverheadLine");
@@ -51,6 +51,13 @@ namespace Canvas.ModuleItems.powerflow
                 return new NodePointOverheadLine(this, NodePointOverheadLine.ePoint.StartPoint);
 
             return null;
+        }
+        private void setupProperties()
+        {
+            for (int i = 1; i < 50; i++)
+            {
+                properties.Add(new Property("nameqwertyuiopasdfghjkl" + i, "propqwertyuiopasdfghjkl" + i));
+            }
         }
         public override string Id
         {

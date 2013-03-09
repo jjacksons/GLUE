@@ -30,6 +30,7 @@ namespace Canvas
 			
 			Application.Idle += new EventHandler(OnIdle);
 		}
+        public int aaa = 2;
 		void SetupToolbars()
 		{
 			MenuItem mmitem = m_menuItems.GetItem("New");
@@ -97,7 +98,7 @@ namespace Canvas
 				m_activeDocument.UpdateUI();
 
 		}
-		DocumentForm m_activeDocument = null;
+		protected DocumentForm m_activeDocument = null;
 		protected override void OnMdiChildActivate(EventArgs e)
 		{
 			DocumentForm olddocument = m_activeDocument;
@@ -121,7 +122,6 @@ namespace Canvas
 				ToolStripManager.Merge(m_activeDocument.GetToolStrip("status"), m_menuItems.GetStrip("status"));
 				ToolStripManager.Merge(m_activeDocument.GetToolStrip("modify"), m_menuItems.GetStrip("modify"));
                 ToolStripManager.Merge(m_activeDocument.GetToolStrip("modules"), m_menuItems.GetStrip("modules"));
-                ToolStripManager.Merge(m_activeDocument.GetToolStrip("Properties"), m_menuItems.GetStrip("Properties"));
 			}
 			foreach (Control ctrl in Controls)
 			{
@@ -250,14 +250,34 @@ namespace Canvas
             {
                 Label temp = new Label();
                 temp.Text = prop.name;
-                temp.Top = PropertiesPanel.Top + (DefaultLabel.Top - PropertiesPanel.Top) + 26 * i;
-                temp.Left = DefaultLabel.Left;
+                temp.TabIndex = i;
+                temp.Size = DefaultLabel.Size;
+                temp.Location = DefaultLabel.Location;
+                temp.Top += i * 26;
+                this.toolTip1.SetToolTip(temp, prop.name);
 
                 TextBox temp2 = new TextBox();
                 temp2.Text = prop.value.ToString();
-                temp2.Top = PropertiesPanel.Top + (DefaultTextbox.Top - PropertiesPanel.Top) + 26 * i;
-                temp.Left = DefaultTextbox.Left;
+                temp2.Size = DefaultTextbox.Size;
+                temp2.TabIndex = i + 1;
+                temp2.Location = DefaultTextbox.Location;
+                temp2.Top += i++ * 20;
+                this.toolTip1.SetToolTip(temp2, prop.value.ToString());
+                temp2.TextChanged += new System.EventHandler(updateProperty);
+
+                PropertiesPanel.Controls.Add(temp);
+                PropertiesPanel.Controls.Add(temp2);
+            }
+            if (PropertiesPanel.VerticalScroll.Visible)
+            {
+                PropertiesPanel.Width += System.Windows.Forms.SystemInformation.VerticalScrollBarWidth;
+
             }
         }
+        private void updateProperty(object sender, EventArgs e){
+            
+        }
+
+
 	}
 }

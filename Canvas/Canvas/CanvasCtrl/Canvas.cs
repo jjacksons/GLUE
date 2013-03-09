@@ -368,10 +368,12 @@ namespace Canvas
 			}
             foreach (IDrawObject obj in selected)
             {
-                if (obj.GetType().IsAssignableFrom(typeof(ModuleItems.Module))) {
+                if (obj.GetType().ToString().IndexOf("Module")>0) {
                     ModuleItems.Module temp = obj as ModuleItems.Module;
-                    MainWin a = MainWin.ActiveForm as MainWin;
-                    a.updateProperties(temp.GetProperties());
+                    MainWin temps = (MainWin)this.Parent.Parent.Parent;
+                    temps.updateProperties(temp.GetProperties());
+                    //temps.updateProperties(temp.GetProperties());
+                    //a.updateProperties(temp.GetProperties());
                 }
             }
             

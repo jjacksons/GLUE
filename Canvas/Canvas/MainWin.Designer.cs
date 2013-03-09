@@ -31,6 +31,7 @@ namespace Canvas
 		/// </summary>
 		private void InitializeComponent()
 		{
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWin));
             this.BottomToolStripPanel = new System.Windows.Forms.ToolStripPanel();
             this.TopToolStripPanel = new System.Windows.Forms.ToolStripPanel();
@@ -50,11 +51,11 @@ namespace Canvas
             this.optionsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.layersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.PropertiesPanel = new System.Windows.Forms.Panel();
-            this.DefaultLabel = new System.Windows.Forms.Label();
             this.DefaultTextbox = new System.Windows.Forms.TextBox();
             this.Close_button = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.DefaultLabel = new System.Windows.Forms.Label();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.m_mainMenu.SuspendLayout();
             this.PropertiesPanel.SuspendLayout();
             this.SuspendLayout();
@@ -197,26 +198,15 @@ namespace Canvas
             // PropertiesPanel
             // 
             this.PropertiesPanel.AutoScroll = true;
-            this.PropertiesPanel.Controls.Add(this.DefaultLabel);
-            this.PropertiesPanel.Controls.Add(this.textBox1);
             this.PropertiesPanel.Controls.Add(this.DefaultTextbox);
             this.PropertiesPanel.Controls.Add(this.Close_button);
             this.PropertiesPanel.Controls.Add(this.label1);
+            this.PropertiesPanel.Controls.Add(this.DefaultLabel);
             this.PropertiesPanel.Dock = System.Windows.Forms.DockStyle.Right;
             this.PropertiesPanel.Location = new System.Drawing.Point(603, 24);
             this.PropertiesPanel.Name = "PropertiesPanel";
             this.PropertiesPanel.Size = new System.Drawing.Size(200, 485);
             this.PropertiesPanel.TabIndex = 6;
-            // 
-            // DefaultLabel
-            // 
-            this.DefaultLabel.AutoSize = true;
-            this.DefaultLabel.Location = new System.Drawing.Point(3, 28);
-            this.DefaultLabel.Name = "DefaultLabel";
-            this.DefaultLabel.Size = new System.Drawing.Size(44, 13);
-            this.DefaultLabel.TabIndex = 3;
-            this.DefaultLabel.Text = "Name 1";
-            this.DefaultLabel.Visible = false;
             // 
             // DefaultTextbox
             // 
@@ -250,13 +240,16 @@ namespace Canvas
             this.label1.TabIndex = 1;
             this.label1.Text = "Properties";
             // 
-            // textBox1
+            // DefaultLabel
             // 
-            this.textBox1.Location = new System.Drawing.Point(85, 51);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(112, 20);
-            this.textBox1.TabIndex = 2;
-            this.textBox1.Visible = false;
+            this.DefaultLabel.Location = new System.Drawing.Point(3, 28);
+            this.DefaultLabel.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
+            this.DefaultLabel.Name = "DefaultLabel";
+            this.DefaultLabel.Size = new System.Drawing.Size(76, 17);
+            this.DefaultLabel.TabIndex = 3;
+            this.DefaultLabel.Text = "Name 1";
+            this.toolTip1.SetToolTip(this.DefaultLabel, "hi");
+            this.DefaultLabel.Visible = false;
             // 
             // MainWin
             // 
@@ -304,7 +297,7 @@ namespace Canvas
         private Button Close_button;
         private Label label1;
         private ToolStripMenuItem propertiesToolStripMenuItem;
-        private TextBox textBox1;
+        private ToolTip toolTip1;
 	}
 
 }

@@ -108,7 +108,7 @@ namespace Canvas.ModuleItems
         protected UnitPoint m_p1, m_p2, m_p3;
         protected List<Module> to_connections;
         protected List<Module> from_connections;
-        protected List<Property> properties;
+        protected List<Property> properties = new List<Property>();
         [XmlSerializable]
         public void AddConnectionTo(Module toAdd){ to_connections.Add(toAdd);}
         public void AddConnectionFrom(Module toAdd) { from_connections.Add(toAdd); }
