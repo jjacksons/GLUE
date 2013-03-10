@@ -30,7 +30,6 @@ namespace Canvas
 			
 			Application.Idle += new EventHandler(OnIdle);
 		}
-        public int aaa = 2;
 		void SetupToolbars()
 		{
 			MenuItem mmitem = m_menuItems.GetItem("New");
@@ -244,29 +243,8 @@ namespace Canvas
         }
         public void updateProperties(List<ModuleItems.Property> list)
         {
-            foreach (object t in PropertiesPanel.Controls)
-            {
-                if (t.GetType().ToString() != "System.Windows.Forms.TextBox" && t.GetType().ToString() != "System.Windows.Forms.Label") continue;
-                if (t.GetType().ToString() == "System.Windows.Forms.TextBox")
-                {
-                    TextBox temp = (TextBox)t;
-                    if (temp.Name != "DefaultTextbox")
-                    {
-                        PropertiesPanel.Controls.Remove(temp);
-                        PropertiesPanel.Controls.GetEnumerator().Reset();
-                    }
-
-                }
-                else
-                {
-                    Label temp = (Label)t;
-                    if (temp.Name != "DefaultLabel" && temp.Name != "PropertiesTitle")
-                    {
-                        PropertiesPanel.Controls.Remove(temp);
-                        PropertiesPanel.Controls.GetEnumerator().Reset();
-                    }
-                }
-            }
+            for (int j = PropertiesPanel.Controls.Count-1; j > 3; j--) PropertiesPanel.Controls.RemoveAt(j);
+            PropertiesPanel.Width = 200;
             if (list.Count == 0) return;
             int i = 0;
 
@@ -289,19 +267,21 @@ namespace Canvas
                 temp2.Tag = prop.name;
                 this.toolTip1.SetToolTip(temp2, prop.value.ToString());
                 temp2.TextChanged += new System.EventHandler(updateProperty);
+                
+
                 PropertiesPanel.Controls.Add(temp);
                 PropertiesPanel.Controls.Add(temp2);
-                this.ResizeRedraw = true;
+               
             }
-            if (PropertiesPanel.VerticalScroll.Visible)
-                PropertiesPanel.Width = 200 + System.Windows.Forms.SystemInformation.VerticalScrollBarWidth;
-            else
-                PropertiesPanel.Width = 200;
+            if (PropertiesPanel.VerticalScroll.Visible)PropertiesPanel.Width = 200 + System.Windows.Forms.SystemInformation.VerticalScrollBarWidth;
+            
+                
 
             this.ResizeRedraw = true;
         }
         private void updateProperty(object sender, EventArgs e){
             TextBox t = (TextBox)sender;
+            this.m_activeDocument.Canvas.updateActiveProperty(new ModuleItems.Property(t.Tag.ToString(),t.Text));
             
         }
 

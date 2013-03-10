@@ -124,6 +124,10 @@ namespace Canvas.ModuleItems
                 });
             return temp;
         }
+        public void UpdateProperty(Property tobeupdated)
+        {
+            foreach (Property p in properties) if (p.name == tobeupdated.name) p.value = tobeupdated.value;
+        }
         [XmlSerializable]
         public UnitPoint FromPoint
         {
@@ -326,8 +330,8 @@ namespace Canvas.ModuleItems
     }
     public class Property
     {
-        public string name;
-        public object value;
+        public string name { get; set; }
+        public object value { get; set; }
         public Property() { }
         public Property(string Name, object Value) { name = Name; value = Value; }
         public Property clone() { return new Property(name, value); }

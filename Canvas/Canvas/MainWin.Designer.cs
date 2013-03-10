@@ -120,26 +120,26 @@ namespace Canvas
             // gLMToolStripMenuItem
             // 
             this.gLMToolStripMenuItem.Name = "gLMToolStripMenuItem";
-            this.gLMToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.gLMToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
             this.gLMToolStripMenuItem.Text = "GLM";
             this.gLMToolStripMenuItem.Click += new System.EventHandler(this.OnGLMImport);
             // 
             // sINCALToolStripMenuItem
             // 
             this.sINCALToolStripMenuItem.Name = "sINCALToolStripMenuItem";
-            this.sINCALToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.sINCALToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
             this.sINCALToolStripMenuItem.Text = "SINCAL";
             // 
             // lIDToolStripMenuItem
             // 
             this.lIDToolStripMenuItem.Name = "lIDToolStripMenuItem";
-            this.lIDToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.lIDToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
             this.lIDToolStripMenuItem.Text = "LID";
             // 
             // gISToolStripMenuItem
             // 
             this.gISToolStripMenuItem.Name = "gISToolStripMenuItem";
-            this.gISToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.gISToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
             this.gISToolStripMenuItem.Text = "GIS";
             // 
             // optionsToolStripMenuItem

@@ -752,6 +752,11 @@ namespace Canvas
 			Cursor = m_cursors.GetCursor(m_commandType);
 		}
 
+        public void updateActiveProperty(ModuleItems.Property tobeupdated)
+        {
+            foreach (ModuleItems.Module j in m_model.SelectedObjects) j.UpdateProperty(tobeupdated);
+        }
+
 		Dictionary<Keys, Type> m_QuickSnap = new Dictionary<Keys,Type>();
 		public void AddQuickSnapType(Keys key, Type snaptype)
 		{
