@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace Canvas
 {
@@ -139,9 +140,52 @@ namespace Canvas
         {
             OpenFileDialog dlg = new OpenFileDialog();
             dlg.Filter = "Gridlabd GLM files (*.glm)|*.glm";
-            if (dlg.ShowDialog(this) == DialogResult.OK)
-                OpenDocument(dlg.FileName);
+            DialogResult results = dlg.ShowDialog(this);
+            if (results != DialogResult.OK) return;
+            string filename = dlg.SafeFileName.Replace(".glm", "");
+            if (this.m_activeDocument == null) OpenDocument(string.Empty);
+            if (this.m_activeDocument.isDirty())
+            {
+                DialogResult result = MessageBox.Show(this, "This file is already edited. Do you want to merge?", Program.AppName, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                if (result == DialogResult.Cancel) return;
+                if (result == DialogResult.No)
+                {
+                    this.m_activeDocument.Save();
+                    this.m_activeDocument.Close();
+                    OpenDocument(string.Empty);
+                }
+            }
+            int FileLineCount = 0;
+            string line;
+            List<ModuleItems.Module> objects = new List<ModuleItems.Module>();
+            ModuleItems.Module temp = null;
+            System.IO.StreamReader file = new System.IO.StreamReader(dlg.FileName);
+            while ((line = file.ReadLine()) != null)
+            {
+
+                line = Regex.Replace(line, "\t", "");
+                line = Regex.Replace(line,"//.*","");
+                FileLineCount++;
+                if (line == string.Empty) continue;
+                if (line.IndexOf("object") >= 0)
+                {
+                    String type = Regex.Replace(line, ".*object (.*){", "$1").Trim();
+                    if (type.IndexOf(":") >= 0) type = Regex.Replace(line, ".*object (.*):.*{", "$1").Trim();
+                    Convert.ChangeType(temp,Type.GetType("Canvas.ModuleItems.powerflow."+type));
+                    if (type.IndexOf(":") >= 0) temp.properties.Add(new ModuleItems.Property("name",Regex.Replace(line, ".*object .*:(.*){", "$1").Trim()));
+                }
+                if (line.Trim() == "}" && temp != null)
+                {
+                    objects.Add(temp);
+                    temp = null;
+                }
+
+                              
+            }
+
+            file.Close();
         }
+
 		private void OnFileSave(object sender, EventArgs e)
 		{
 			DocumentForm doc = this.ActiveMdiChild as DocumentForm;
@@ -223,7 +267,18 @@ namespace Canvas
 
         private void gLMToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            if (this.m_activeDocument.isDirty())
+            {
+                string filename = "";
+                DialogResult result = MessageBox.Show(this, "This file is already edited. Do you want to merge?", Program.AppName, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                if (result == DialogResult.Cancel) return;
+                if (result == DialogResult.No)
+                {
+                    this.m_activeDocument.Save();
+                    this.m_activeDocument.Close();
+                    this.m_activeDocument = new DocumentForm(filename);
+                }
+            }
         }
 
         private void m_windowMenu_Click(object sender, EventArgs e)
@@ -241,7 +296,7 @@ namespace Canvas
             PropertiesPanel.Visible = true;
 
         }
-        public void updateProperties(List<ModuleItems.Property> list)
+        public void updateProperties(List<ModuleItems.Property> list, List<ModuleItems.Property> defaults)
         {
             for (int j = PropertiesPanel.Controls.Count-1; j > 3; j--) PropertiesPanel.Controls.RemoveAt(j);
             PropertiesPanel.Width = 200;
@@ -259,6 +314,8 @@ namespace Canvas
                 this.toolTip1.SetToolTip(temp, prop.name);
 
                 TextBox temp2 = new TextBox();
+                temp2.Font = new Font(temp2.Font, FontStyle.Bold);
+                foreach (ModuleItems.Property p in defaults) if (prop.name == p.name && prop.value == p.value) temp2.Font = new Font(temp2.Font, FontStyle.Regular);
                 temp2.Text = prop.value.ToString();
                 temp2.Size = DefaultTextbox.Size;
                 temp2.TabIndex = i + 1;

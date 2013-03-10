@@ -369,12 +369,14 @@ namespace Canvas
             foreach (IDrawObject obj in selected)
             {
                 List<ModuleItems.Property> t = new List<ModuleItems.Property>();
+                List<ModuleItems.Property> u = new List<ModuleItems.Property>();
                 if (obj.GetType().ToString().IndexOf("Module")>0) {
                     ModuleItems.Module temp = obj as ModuleItems.Module;
-                    t = temp.GetProperties();
+                    t = temp.properties;
+                    u = temp.DefaultProperties;
                 }
                 MainWin temps = (MainWin)this.Parent.Parent.Parent;
-                temps.updateProperties(t);
+                temps.updateProperties(t,u);
             }
             
 
@@ -754,7 +756,7 @@ namespace Canvas
 
         public void updateActiveProperty(ModuleItems.Property tobeupdated)
         {
-            foreach (ModuleItems.Module j in m_model.SelectedObjects) j.UpdateProperty(tobeupdated);
+            foreach (ModuleItems.Module j in m_model.SelectedObjects) foreach (ModuleItems.Property p in j.properties) if (p.name == tobeupdated.name) p.value = tobeupdated.value;
         }
 
 		Dictionary<Keys, Type> m_QuickSnap = new Dictionary<Keys,Type>();

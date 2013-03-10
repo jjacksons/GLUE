@@ -93,22 +93,26 @@ namespace Canvas.ModuleItems
                 return GetPoint(ePoint.EndPoint);
             return GetPoint(ePoint.StartPoint);
         }
-        protected void SetPoint(ePoint pointid, UnitPoint point, Module line)
+        protected void SetPoint(ePoint pointid, UnitPoint point, Module lines)
         {
             if (pointid == ePoint.FromPoint)
-                line.FromPoint = point;
-            if (pointid == ePoint.StartPoint)
-                line.StartPoint = point;
+                lines.FromPoint = point;
+            if (pointid == ePoint.StartPoint)lines.StartPoint = point;
             if (pointid == ePoint.EndPoint)
-                line.EndPoint = point;
+            {
+                lines.EndPoint = point;
+                lines.StartPoint = new UnitPoint(lines.EndPoint.X - 1, lines.EndPoint.Y);
+            }
         }
     }
     abstract class Module : Canvas.DrawTools.DrawObjectBase, IDrawObject, ISerialize
     {
         protected UnitPoint m_p1, m_p2, m_p3;
-        protected List<Module> to_connections;
-        protected List<Module> from_connections;
-        protected List<Property> properties = new List<Property>();
+        public bool horizontal = true;
+        public List<Module> to_connections { get; set; }
+        public List<Module> from_connections { get; set; }
+        public List<Property> properties = new List<Property>();
+        public List<Property> DefaultProperties = new List<Property>();
         [XmlSerializable]
         public void AddConnectionTo(Module toAdd){ to_connections.Add(toAdd);}
         public void AddConnectionFrom(Module toAdd) { from_connections.Add(toAdd); }
@@ -116,18 +120,6 @@ namespace Canvas.ModuleItems
         public void RemoveConnectionFrom(Module toRemove) { from_connections.Remove(toRemove); }
         public void ClearTo() { to_connections.Clear(); }
         public void ClearFrom() { from_connections.Clear(); }
-        public List<Property> GetProperties() { 
-            List<Property> temp = new List<Property>();
-            properties.ForEach((item) =>
-                {
-                    temp.Add(new Property(item.name, item.value));
-                });
-            return temp;
-        }
-        public void UpdateProperty(Property tobeupdated)
-        {
-            foreach (Property p in properties) if (p.name == tobeupdated.name) p.value = tobeupdated.value;
-        }
         [XmlSerializable]
         public UnitPoint FromPoint
         {
@@ -152,9 +144,14 @@ namespace Canvas.ModuleItems
             base.Copy(acopy);
             m_p1 = acopy.m_p1;
             m_p2 = acopy.m_p2;
+            m_p3 = acopy.m_p3;
             Selected = acopy.Selected;
         }
         public abstract IDrawObject Clone();
+        public GLM toGLM()
+        {
+            return new GLM(this.Id, properties);
+        }
         static int ThresholdPixel = 6;
         protected static float ThresholdWidth(ICanvas canvas, float objectwidth)
         {
@@ -198,7 +195,8 @@ namespace Canvas.ModuleItems
             if (Control.ModifierKeys == Keys.Control)
                 point = HitUtil.OrthoPointD(m_p1, point, 45);
             m_p2 = point;
-            m_p3 = new UnitPoint(point.X+1, point.Y);
+            if(this.horizontal)m_p3 = new UnitPoint(point.X+1, point.Y);
+            else m_p3 = new UnitPoint(point.X, point.Y+1);
         }
         public virtual eDrawObjectMouseDown OnMouseDown(ICanvas canvas, UnitPoint point, ISnapPoint snappoint)
         {
@@ -243,6 +241,8 @@ namespace Canvas.ModuleItems
             m_p1.Y += offset.Y;
             m_p2.X += offset.X;
             m_p2.Y += offset.Y;
+            m_p3.X += offset.X;
+            m_p3.Y += offset.Y;
         }
         public abstract string GetInfoAsString();
         public ISnapPoint SnapPoint(ICanvas canvas, UnitPoint point, List<IDrawObject> otherobjs, Type[] runningsnaptypes, Type usersnaptype)
@@ -335,5 +335,14 @@ namespace Canvas.ModuleItems
         public Property() { }
         public Property(string Name, object Value) { name = Name; value = Value; }
         public Property clone() { return new Property(name, value); }
+    }
+        public class GLM
+    {
+        public String Type { get; set; }
+        public List<Property> Properties { get; set; }
+        public GLM() { Type = ""; Properties = new List<Property>(); }
+        public GLM(String type) { Type = type; Properties = new List<Property>(); }
+        public GLM(string type, List<Property> properties) { Type = type; Properties = properties; }
+        public GLM clone() { return new GLM(Type, Properties); }
     }
 }
