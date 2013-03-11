@@ -172,7 +172,7 @@ namespace Canvas
                     String type = Regex.Replace(line, ".*object (.*){", "$1").Trim();
                     if (type.IndexOf(":") >= 0) type = Regex.Replace(line, ".*object (.*):.*{", "$1").Trim();
                     Convert.ChangeType(temp,Type.GetType("Canvas.ModuleItems.powerflow."+type));
-                    if (type.IndexOf(":") >= 0) temp.properties.Add(new ModuleItems.Property("name",Regex.Replace(line, ".*object .*:(.*){", "$1").Trim()));
+                    if (type.IndexOf(":") >= 0) temp.Properties.Add(new ModuleItems.Property("name",Regex.Replace(line, ".*object .*:(.*){", "$1").Trim()));
                 }
                 if (line.Trim() == "}" && temp != null)
                 {

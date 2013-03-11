@@ -20,17 +20,19 @@ namespace Canvas.ModuleItems.powerflow
     class overhead_line : Module
     {
 
-        public overhead_line() { setupProperties(true); }
-        public overhead_line(overhead_line old) { m_p1 = old.FromPoint; m_p2 = old.StartPoint; m_p3 = old.EndPoint; properties = old.properties; setupProperties(false); }
-        private void setupProperties(Boolean defaults)
+        public overhead_line() { setupProperties(new List<Property>()); }
+        public overhead_line(overhead_line old) { m_p1 = old.FromPoint; m_p2 = old.StartPoint; m_p3 = old.EndPoint; setupProperties(old.Properties); }
+        private void setupProperties( List<Property> prop)
         {
+            Properties = new List<Property>();
+            DefaultProperties = new List<Property>(6);
             DefaultProperties.Add(new Property("name", ""));
             DefaultProperties.Add(new Property("phases", ""));
             DefaultProperties.Add(new Property("from", ""));
             DefaultProperties.Add(new Property("to", ""));
             DefaultProperties.Add(new Property("length", "0"));
             DefaultProperties.Add(new Property("configuration", ""));
-            if (defaults) foreach (Property p in DefaultProperties) properties.Add(p);
+            if (Properties.Count ==0) foreach (Property p in DefaultProperties) Properties.Add(p);
         }
         public override void GetObjectData(XmlWriter wr)
         {
@@ -77,13 +79,15 @@ namespace Canvas.ModuleItems.powerflow
                 pen = Canvas.DrawTools.DrawUtils.SelectedPen;
                 if (m_p1.IsEmpty == false) Canvas.DrawTools.DrawUtils.DrawNode(canvas, m_p1);
                 if (m_p2.IsEmpty == false) Canvas.DrawTools.DrawUtils.DrawNode(canvas, m_p2);
-                if ((m_p3.X != m_p2.X + 1 || m_p3.Y != m_p2.Y) && this.horizontal) m_p3 = new UnitPoint(m_p2.X + 1, m_p2.Y);
-                if (m_p3.Y != m_p2.Y + 1 && !this.horizontal) m_p3 = new UnitPoint(m_p2.X, m_p2.Y + 1);
+                //if ((m_p3.X != m_p2.X + 1 || m_p3.Y != m_p2.Y) && this.horizontal) m_p3 = new UnitPoint(m_p2.X + 1, m_p2.Y);
+                //if (m_p3.Y != m_p2.Y + 1 && !this.horizontal) m_p3 = new UnitPoint(m_p2.X, m_p2.Y + 1);
                 if (m_p3.IsEmpty == false) Canvas.DrawTools.DrawUtils.DrawNode(canvas, m_p3);
+                if (m_p4.IsEmpty == false) Canvas.DrawTools.DrawUtils.DrawNode(canvas, m_p4);
             }
             canvas.DrawLine(canvas, pen, m_p1, m_p2);
+            if(this.currentPoint != ePoint.FromPoint)canvas.DrawLine(canvas, pen, m_p3, m_p4);
             pen = new Pen(pen.Color, (float)3);
-            canvas.DrawLine(canvas,pen,m_p2,new UnitPoint(m_p2.X+1,m_p2.Y ));
+            canvas.DrawLine(canvas,pen,m_p2,m_p3);
 
 
         }
