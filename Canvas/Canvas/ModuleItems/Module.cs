@@ -99,19 +99,24 @@ namespace Canvas.ModuleItems
         }
         protected void SetPoint(ePoint pointid, UnitPoint point, Module mod)
         {
-            if (pointid == ePoint.FromPoint)
-                mod.FromPoint = point;
+            if (pointid == ePoint.FromPoint ) mod.FromPoint = point;
+            if (pointid == ePoint.ToPoint) mod.ToPoint = point;
             if (pointid == ePoint.StartPoint)
             {
                 mod.StartPoint = point;
-                if (mod.horizontal) mod.EndPoint = new UnitPoint(mod.StartPoint.X + 1, mod.StartPoint.Y);
-                else mod.EndPoint = new UnitPoint(mod.StartPoint.X, mod.StartPoint.Y+1);
+                if ((mod.horizontal && mod.EndPoint.X == mod.StartPoint.X + 1 && mod.EndPoint.Y == mod.StartPoint.Y) || (!mod.horizontal && mod.EndPoint.Y == mod.StartPoint.Y+1 && mod.EndPoint.X == mod.StartPoint.X)) return;
+                if (mod.horizontal) point.X += 1;
+                else point.Y +=1;
+                SetPoint(ePoint.EndPoint, point, mod);
+                
             }
             if (pointid == ePoint.EndPoint)
             {
                 mod.EndPoint = point;
-                if (mod.horizontal) mod.StartPoint = new UnitPoint(mod.EndPoint.X - 1, mod.EndPoint.Y);
-                else mod.StartPoint = new UnitPoint(mod.EndPoint.X, mod.EndPoint.Y-1);
+                if ((mod.horizontal && mod.EndPoint.X == mod.StartPoint.X + 1 && mod.EndPoint.Y == mod.StartPoint.Y) || (!mod.horizontal && mod.EndPoint.Y == mod.StartPoint.Y + 1 && mod.EndPoint.X == mod.StartPoint.X)) return;
+                if (mod.horizontal) point.X -= 1;
+                else point.Y -= 1;
+                SetPoint(ePoint.StartPoint, point, mod);
             }
         }
     }
@@ -120,17 +125,12 @@ namespace Canvas.ModuleItems
         protected UnitPoint m_p1, m_p2, m_p3, m_p4;
         protected ePoint currentPoint = ePoint.FromPoint;
         public bool horizontal = true;
-        public List<Module> to_connections { get; set; }
-        public List<Module> from_connections { get; set; }
+        public bool tofrom = false;
+        public bool child = false;
+        public Module to_connections { get; set; }
+        public Module from_connections { get; set; }
         public List<Property> Properties = new List<Property>();
         public List<Property> DefaultProperties = new List<Property>();
-        [XmlSerializable]
-        public void AddConnectionTo(Module toAdd){ to_connections.Add(toAdd);}
-        public void AddConnectionFrom(Module toAdd) { from_connections.Add(toAdd); }
-        public void RemoveConnectionTo(Module toRemove) { to_connections.Remove(toRemove); }
-        public void RemoveConnectionFrom(Module toRemove) { from_connections.Remove(toRemove); }
-        public void ClearTo() { to_connections.Clear(); }
-        public void ClearFrom() { from_connections.Clear(); }
         [XmlSerializable]
         public UnitPoint FromPoint
         {
@@ -154,6 +154,14 @@ namespace Canvas.ModuleItems
         {
             get { return m_p4; }
             set { m_p4 = value; }
+        }
+        public String getUnit(String name)
+        {
+            foreach (Property p in DefaultProperties)
+            {
+                if (p.name == name) return p.unit;
+            }
+            return String.Empty;
         }
         public enum ePoint {
             FromPoint,
@@ -211,7 +219,7 @@ namespace Canvas.ModuleItems
         public bool PointInObject(ICanvas canvas, UnitPoint point)
         {
             float thWidth = ThresholdWidth(canvas, Width);
-            return HitUtil.IsPointInLine(m_p1, m_p2, point, thWidth) || HitUtil.IsPointInLine(m_p2,m_p3, point, thWidth);
+            return HitUtil.IsPointInLine(m_p1, m_p2, point, thWidth) || HitUtil.IsPointInLine(m_p2, m_p3, point, thWidth) || HitUtil.IsPointInLine(m_p3, m_p4, point, thWidth);
         }
         public bool ObjectInRectangle(ICanvas canvas, RectangleF rect, bool anyPoint)
         {
@@ -226,18 +234,26 @@ namespace Canvas.ModuleItems
         {
             if (Control.ModifierKeys == Keys.Control && currentPoint == ePoint.FromPoint)point = HitUtil.OrthoPointD(m_p1, point, 45);
             if (Control.ModifierKeys == Keys.Control && currentPoint == ePoint.EndPoint) point = HitUtil.OrthoPointD(m_p3, point, 45);
-            if (currentPoint == ePoint.FromPoint)
+            if (currentPoint == ePoint.StartPoint)
             {
                 m_p2 = point;
                 if (this.horizontal) m_p3 = new UnitPoint(point.X + 1, point.Y);
                 else m_p3 = new UnitPoint(point.X, point.Y + 1);
+                m_p4 = m_p3;
             }
             if (currentPoint == ePoint.EndPoint) m_p4 = point;
+
         }
         public virtual eDrawObjectMouseDown OnMouseDown(ICanvas canvas, UnitPoint point, ISnapPoint snappoint)
         {
-            
+            if (!tofrom) return eDrawObjectMouseDown.Done;
             if (currentPoint == ePoint.FromPoint)
+            {
+                m_p1 = point;
+                currentPoint = ePoint.StartPoint;
+                return eDrawObjectMouseDown.Continue;
+            }
+            if (currentPoint == ePoint.StartPoint)
             {
                 currentPoint = ePoint.EndPoint;
                 if (snappoint is PerpendicularSnapPoint && snappoint.Owner is Module)
@@ -315,6 +331,8 @@ namespace Canvas.ModuleItems
             m_p2.Y += offset.Y;
             m_p3.X += offset.X;
             m_p3.Y += offset.Y;
+            m_p4.X += offset.X;
+            m_p4.Y += offset.Y;
         }
         public abstract string GetInfoAsString();
         public ISnapPoint SnapPoint(ICanvas canvas, UnitPoint point, List<IDrawObject> otherobjs, Type[] runningsnaptypes, Type usersnaptype)
@@ -386,7 +404,7 @@ namespace Canvas.ModuleItems
         public abstract INodePoint NodePoint(ICanvas canvas, UnitPoint point);
         public override void InitializeFromModel(UnitPoint point, DrawingLayer layer, ISnapPoint snap)
         {
-            FromPoint  = StartPoint = EndPoint = point;
+            FromPoint  = StartPoint = EndPoint = ToPoint = point;
             Width = layer.Width;
             Color = layer.Color;
             Selected = true;
@@ -402,11 +420,12 @@ namespace Canvas.ModuleItems
     }
     public class Property
     {
-        public string name { get; set; }
-        public object value { get; set; }
+        public String name { get; set; }
+        public Object value { get; set; }
+        public String unit { get; set; }
         public Property() { }
-        public Property(string Name, object Value) { name = Name; value = Value; }
-        public Property clone() { return new Property(name, value); }
+        public Property(string Name, object Value, String Unit) { name = Name; value = Value; unit = Unit; }
+        public Property clone() { return new Property(name, value,unit); }
     }
         public class GLM
     {

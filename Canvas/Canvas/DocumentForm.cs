@@ -262,10 +262,10 @@ namespace Canvas
             item.Image = ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow);
             item.Tag = "powerflow";
             m_data.AddEditTool(item.Tag.ToString(), new EditTools.LinesMeetEditTool(this));
-
             item.DropDownItems.Add("OverheadLine", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow), new EventHandler(OnModuleSelect));
             m_data.AddDrawTool("OverheadLine", new ModuleItems.powerflow.overhead_line());
-            item.DropDownItems.Add("Node", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Node", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow),new EventHandler(OnModuleSelect));
+            m_data.AddDrawTool("Node", new ModuleItems.powerflow.node());
             item.DropDownItems.Add("Link", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
             item.DropDownItems.Add("Line", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
             item.DropDownItems.Add("Line configuration", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));

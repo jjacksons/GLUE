@@ -158,6 +158,7 @@ namespace Canvas
             int FileLineCount = 0;
             string line;
             List<ModuleItems.Module> objects = new List<ModuleItems.Module>();
+            Type typ = null;
             ModuleItems.Module temp = null;
             System.IO.StreamReader file = new System.IO.StreamReader(dlg.FileName);
             while ((line = file.ReadLine()) != null)
@@ -170,19 +171,69 @@ namespace Canvas
                 if (line.IndexOf("object") >= 0)
                 {
                     String type = Regex.Replace(line, ".*object (.*){", "$1").Trim();
+                    temp = new ModuleItems.powerflow.node();
                     if (type.IndexOf(":") >= 0) type = Regex.Replace(line, ".*object (.*):.*{", "$1").Trim();
-                    Convert.ChangeType(temp,Type.GetType("Canvas.ModuleItems.powerflow."+type));
-                    if (type.IndexOf(":") >= 0) temp.Properties.Add(new ModuleItems.Property("name",Regex.Replace(line, ".*object .*:(.*){", "$1").Trim()));
+                    typ = Type.GetType("Canvas.ModuleItems.powerflow."+type);
+                    Convert.ChangeType(temp,typ);
+                    if (type.IndexOf(":") >= 0) temp.Properties.Add(new ModuleItems.Property("name",Regex.Replace(line, ".*object .*:(.*){", "$1").Trim(),""));
+                    continue;
                 }
                 if (line.Trim() == "}" && temp != null)
                 {
                     objects.Add(temp);
                     temp = null;
+                    typ = null;
+                    continue;
                 }
-
+                if (temp != null)
+                {
+                    foreach (ModuleItems.Property p in temp.Properties) if (p.name == Regex.Replace(line, "(.*) .*", "$1").Trim()) p.value = Regex.Replace(line, ".* (.*);", "$1").Trim();
+                }
                               
             }
-
+            m_activeDocument.SetHint("Completed glm file import. Processing...");
+            //connect
+            UnitPoint start = new UnitPoint(0,0);
+            UnitPoint end = new UnitPoint(1,0);
+            UnitPoint from = new UnitPoint(1,1);
+            UnitPoint to = new UnitPoint(0,-1);
+            foreach (ModuleItems.Module m in objects)
+            {
+                if (m.tofrom)
+                {
+                    m.to_connections = new ModuleItems.powerflow.node();
+                    m.from_connections = new ModuleItems.powerflow.node();
+                    foreach (ModuleItems.Property p in m.Properties)
+                    {
+                        if (p.name == "to")
+                            foreach (ModuleItems.Module n in objects)
+                                foreach (ModuleItems.Property q in m.Properties)
+                                    if (q.name == "name" && q.value == p.value) m.to_connections = n;
+                        if (p.name == "from")
+                            foreach (ModuleItems.Module n in objects)
+                                foreach (ModuleItems.Property q in m.Properties)
+                                    if (q.name == "name" && q.value == p.value) m.to_connections = n;
+                    }
+                }
+                m.FromPoint = from;
+                m.StartPoint = start;
+                m.EndPoint = end;
+                m.ToPoint = to;
+                start.X += 2;
+                end.X += 2;
+                from.X += 2;
+                to.X += 2;
+    
+                        
+            }
+            foreach (ModuleItems.Module m in objects)
+            {
+                if (m.tofrom)
+                {
+                    m.Move(new UnitPoint(m.FromPoint.X - m.from_connections.ToPoint.X, m.FromPoint.Y - m.from_connections.ToPoint.Y));
+                    m.to_connections.Move(new UnitPoint(m.to_connections.FromPoint.X - m.ToPoint.X, m.to_connections.FromPoint.Y - m.ToPoint.Y));
+                }
+            }
             file.Close();
         }
 
@@ -338,7 +389,7 @@ namespace Canvas
         }
         private void updateProperty(object sender, EventArgs e){
             TextBox t = (TextBox)sender;
-            this.m_activeDocument.Canvas.updateActiveProperty(new ModuleItems.Property(t.Tag.ToString(),t.Text));
+            this.m_activeDocument.Canvas.updateActiveProperty(new ModuleItems.Property(t.Tag.ToString(),t.Text,""));
             
         }
 

@@ -395,9 +395,28 @@ namespace Canvas
 				if (m_newObject == null)
 				{
 					m_newObject = m_model.CreateObject(m_drawObjectId, mouseunitpoint, snappoint);
-					DoInvalidate(false, m_newObject.GetBoundingRect(m_canvaswrapper));
+                    if (m_newObject.GetType().ToString().IndexOf("Module")>0)
+                    {
+                        eDrawObjectMouseDown result = m_newObject.OnMouseDown(m_canvaswrapper, mouseunitpoint, snappoint);
+                        switch (result)
+                        {
+                            case eDrawObjectMouseDown.Done:
+                                m_model.AddObject(m_model.ActiveLayer, m_newObject);
+                                m_newObject = null;
+                                DoInvalidate(true);
+                                break;
+                            case eDrawObjectMouseDown.DoneRepeat:
+                                m_model.AddObject(m_model.ActiveLayer, m_newObject);
+                                m_newObject = m_model.CreateObject(m_newObject.Id, m_newObject.RepeatStartingPoint, null);
+                                DoInvalidate(true);
+                                break;
+                            case eDrawObjectMouseDown.Continue:
+                                break;
+                        }
+                    }
+					else DoInvalidate(false, m_newObject.GetBoundingRect(m_canvaswrapper));
 				}
-				else
+                else
 				{
 					if (m_newObject != null)
 					{

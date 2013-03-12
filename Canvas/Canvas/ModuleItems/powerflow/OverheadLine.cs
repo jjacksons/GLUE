@@ -20,18 +20,19 @@ namespace Canvas.ModuleItems.powerflow
     class overhead_line : Module
     {
 
-        public overhead_line() { setupProperties(new List<Property>()); }
-        public overhead_line(overhead_line old) { m_p1 = old.FromPoint; m_p2 = old.StartPoint; m_p3 = old.EndPoint; setupProperties(old.Properties); }
+        public overhead_line() { setupProperties(new List<Property>()); tofrom = true; }
+        public overhead_line(overhead_line old) { m_p1 = old.FromPoint; m_p2 = old.StartPoint; m_p3 = old.EndPoint; m_p4 = old.ToPoint; setupProperties(old.Properties); tofrom = true;}
         private void setupProperties( List<Property> prop)
         {
+
             Properties = new List<Property>();
             DefaultProperties = new List<Property>(6);
-            DefaultProperties.Add(new Property("name", ""));
-            DefaultProperties.Add(new Property("phases", ""));
-            DefaultProperties.Add(new Property("from", ""));
-            DefaultProperties.Add(new Property("to", ""));
-            DefaultProperties.Add(new Property("length", "0"));
-            DefaultProperties.Add(new Property("configuration", ""));
+            DefaultProperties.Add(new Property("name", "",""));
+            DefaultProperties.Add(new Property("phases", "",""));
+            DefaultProperties.Add(new Property("from", "",""));
+            DefaultProperties.Add(new Property("to", "", ""));
+            DefaultProperties.Add(new Property("length", "0", " ft"));
+            DefaultProperties.Add(new Property("configuration", "",""));
             if (Properties.Count ==0) foreach (Property p in DefaultProperties) Properties.Add(p);
         }
         public override void GetObjectData(XmlWriter wr)
@@ -62,6 +63,8 @@ namespace Canvas.ModuleItems.powerflow
                 return new NodePointOverheadLine(this, NodePointOverheadLine.ePoint.StartPoint);
             if (HitUtil.CircleHitPoint(m_p3, thWidth, point))
                 return new NodePointOverheadLine(this, NodePointOverheadLine.ePoint.EndPoint);
+            if (HitUtil.CircleHitPoint(m_p4, thWidth, point))
+                return new NodePointOverheadLine(this, NodePointOverheadLine.ePoint.ToPoint);
 
             return null;
         }
