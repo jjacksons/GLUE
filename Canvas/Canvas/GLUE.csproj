@@ -97,6 +97,7 @@
     </Compile>
     <Compile Include="Model.cs" />
     <Compile Include="ModuleItems\Module.cs" />
+    <Compile Include="ModuleItems\powerflow\UndergroundLine.cs" />
     <Compile Include="ModuleItems\powerflow\Switch.cs" />
     <Compile Include="ModuleItems\powerflow\OverheadLine.cs" />
     <Compile Include="ModuleItems\powerflow\Node.cs" />

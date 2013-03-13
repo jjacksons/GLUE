@@ -773,9 +773,10 @@ namespace Canvas
 			Cursor = m_cursors.GetCursor(m_commandType);
 		}
 
-        public void updateActiveProperty(ModuleItems.Property tobeupdated)
+        public void updateActiveProperty(ModuleItems.Property tobeupdated,CanvasCtrl c)
         {
             foreach (ModuleItems.Module j in m_model.SelectedObjects) foreach (ModuleItems.Property p in j.Properties) if (p.name == tobeupdated.name) p.value = tobeupdated.value;
+            foreach (ModuleItems.Module j in m_model.SelectedObjects) RepaintObject(j);
         }
 
 		Dictionary<Keys, Type> m_QuickSnap = new Dictionary<Keys,Type>();

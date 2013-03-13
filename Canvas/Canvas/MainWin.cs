@@ -389,7 +389,7 @@ namespace Canvas
         }
         private void updateProperty(object sender, EventArgs e){
             TextBox t = (TextBox)sender;
-            this.m_activeDocument.Canvas.updateActiveProperty(new ModuleItems.Property(t.Tag.ToString(),t.Text,""));
+            this.m_activeDocument.Canvas.updateActiveProperty(new ModuleItems.Property(t.Tag.ToString(),t.Text,""), this.m_activeDocument.Canvas);
             
         }
 
