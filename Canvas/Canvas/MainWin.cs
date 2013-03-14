@@ -167,18 +167,17 @@ namespace Canvas
                 line = Regex.Replace(line, "\t", "");
                 line = Regex.Replace(line,"//.*","");
                 FileLineCount++;
-                if (line == string.Empty) continue;
+                if (line.Trim() == string.Empty) continue;
                 if (line.IndexOf("object") >= 0)
                 {
                     String type = Regex.Replace(line, ".*object (.*){", "$1").Trim();
-                    temp = new ModuleItems.powerflow.node();
+                    
                     if (type.IndexOf(":") >= 0) type = Regex.Replace(line, ".*object (.*):.*{", "$1").Trim();
-                    typ = Type.GetType("Canvas.ModuleItems.powerflow."+type);
-                    Convert.ChangeType(temp,typ);
+                    temp = (ModuleItems.Module)m_activeDocument.Model.CreateObject(type, new UnitPoint(),null);
                     if (type.IndexOf(":") >= 0) temp.Properties.Add(new ModuleItems.Property("name",Regex.Replace(line, ".*object .*:(.*){", "$1").Trim(),""));
                     continue;
                 }
-                if (line.Trim() == "}" && temp != null)
+                if ((line.Trim() == "}" || line.Trim() == "};")&& temp != null)
                 {
                     objects.Add(temp);
                     temp = null;
@@ -199,7 +198,7 @@ namespace Canvas
             UnitPoint to = new UnitPoint(0,-1);
             foreach (ModuleItems.Module m in objects)
             {
-                if (m.tofrom)
+                if (m.tofrom || m.child)
                 {
                     m.to_connections = new ModuleItems.powerflow.node();
                     m.from_connections = new ModuleItems.powerflow.node();
@@ -212,17 +211,34 @@ namespace Canvas
                         if (p.name == "from")
                             foreach (ModuleItems.Module n in objects)
                                 foreach (ModuleItems.Property q in m.Properties)
-                                    if (q.name == "name" && q.value == p.value) m.to_connections = n;
+                                    if (q.name == "name" && q.value == p.value) m.from_connections = n;
+                        if (p.name == "parent")
+                            foreach (ModuleItems.Module n in objects)
+                                foreach (ModuleItems.Property q in m.Properties)
+                                    if (q.name == "name" && q.value == p.value) m.from_connections = n;
                     }
                 }
-                m.FromPoint = from;
-                m.StartPoint = start;
-                m.EndPoint = end;
-                m.ToPoint = to;
+                m.FromPoint = m.StartPoint = start;
+                m.EndPoint = m.ToPoint = end;
+                if(m.tofrom){
+                    m.FromPoint = from;
+                    m.ToPoint = to;
+                }
+                if(m.child)m.FromPoint = from;
                 start.X += 2;
                 end.X += 2;
                 from.X += 2;
                 to.X += 2;
+                if (start.X > 20)
+                {
+                    start.X = to.X = 0;
+                    from.X = end.X = 1;
+                    start.Y += 2;
+                    end.Y += 2;
+                    to.Y += 2;
+                    from.Y += 2;
+                }
+
     
                         
             }
@@ -233,7 +249,9 @@ namespace Canvas
                     m.Move(new UnitPoint(m.FromPoint.X - m.from_connections.ToPoint.X, m.FromPoint.Y - m.from_connections.ToPoint.Y));
                     m.to_connections.Move(new UnitPoint(m.to_connections.FromPoint.X - m.ToPoint.X, m.to_connections.FromPoint.Y - m.ToPoint.Y));
                 }
+                if (m.child)m.Move(new UnitPoint(m.FromPoint.X - m.from_connections.ToPoint.X, m.FromPoint.Y - m.from_connections.ToPoint.Y));
             }
+            foreach (ModuleItems.Module m in objects) m_activeDocument.Model.AddObject(m_activeDocument.Model.ActiveLayer, m);
             file.Close();
         }
 

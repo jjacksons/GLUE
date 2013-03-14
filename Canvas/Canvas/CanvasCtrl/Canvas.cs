@@ -370,7 +370,8 @@ namespace Canvas
             {
                 List<ModuleItems.Property> t = new List<ModuleItems.Property>();
                 List<ModuleItems.Property> u = new List<ModuleItems.Property>();
-                if (obj.GetType().ToString().IndexOf("Module")>0) {
+                if (obj.GetType().ToString().IndexOf("Module") > 0 )
+                {
                     ModuleItems.Module temp = obj as ModuleItems.Module;
                     t = temp.Properties;
                     u = temp.DefaultProperties;
@@ -469,6 +470,8 @@ namespace Canvas
 					base.OnMouseDown(e);
 					return;
 				}
+                DoInvalidate(true);
+                //UpdateCursor();
 				m_selection = new SelectionRectangle(m_mousedownPoint);
 			}
 			if (m_commandType == eCommandType.move)
@@ -776,7 +779,8 @@ namespace Canvas
         public void updateActiveProperty(ModuleItems.Property tobeupdated,CanvasCtrl c)
         {
             foreach (ModuleItems.Module j in m_model.SelectedObjects) foreach (ModuleItems.Property p in j.Properties) if (p.name == tobeupdated.name) p.value = tobeupdated.value;
-            foreach (ModuleItems.Module j in m_model.SelectedObjects) RepaintObject(j);
+            DoInvalidate(true);
+            
         }
 
 		Dictionary<Keys, Type> m_QuickSnap = new Dictionary<Keys,Type>();

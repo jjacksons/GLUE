@@ -20,6 +20,7 @@ namespace Canvas.ModuleItems
             Horizontal,
         }
         protected Module m_owner;
+        protected ConfObject c_owner;
         protected Module m_clone;
         protected UnitPoint m_originalPoint;
         protected UnitPoint m_endPoint;
@@ -99,7 +100,11 @@ namespace Canvas.ModuleItems
         }
         protected void SetPoint(ePoint pointid, UnitPoint point, Module mod)
         {
-            if (pointid == ePoint.FromPoint ) mod.FromPoint = point;
+            if (pointid == ePoint.FromPoint)
+            {
+                mod.FromPoint = point;
+                
+            }
             if (pointid == ePoint.ToPoint) mod.ToPoint = point;
             if (pointid == ePoint.StartPoint)
             {
@@ -127,6 +132,8 @@ namespace Canvas.ModuleItems
         public bool horizontal = true;
         public bool tofrom = false;
         public bool child = false;
+        public bool conf = false;
+        public ConfObject conf_object { get; set; }
         public Module to_connections { get; set; }
         public Module from_connections { get; set; }
         public List<Property> Properties = new List<Property>();
