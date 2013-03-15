@@ -102,6 +102,7 @@ namespace Canvas
         {
             powerflow,
             generators,
+            clock,
         }
         static public ImageList ImageList()
         {

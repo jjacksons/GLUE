@@ -309,47 +309,30 @@ namespace Canvas
             item.DropDownItems.Add("Sectionalizer", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
             item.DropDownItems.Add("Power Metrics", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
             item.DropDownItems.Add("Emissions", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            
             item = m_menuItems.GetMenuStrip("generator");
             item.ToolTipText = "Generators Module";
             item.Image = ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.generators);
             item.Tag = "generator";
             m_data.AddEditTool(item.Tag.ToString(), new EditTools.LineShrinkExtendEditTool(this));
-            
+
+            MenuItem mmitem = m_menuItems.GetItem("clock");
+            mmitem.Text = "clock";
+            mmitem.ToolTipText = "Gridlab Simulation Clock";
+            mmitem.Image = ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.clock);
+            mmitem.Click += new EventHandler(OnModuleSelect);
+            m_data.AddDrawTool("clock", new ModuleItems.clock());
+
 
 
             ToolStrip strip = m_menuItems.GetStrip("modules");
+            strip.Items.Add(m_menuItems.GetItem("clock").CreateButton());
             strip.Items.Add(m_menuItems.GetMenuStrip("powerflow"));
             strip.Items.Add(m_menuItems.GetMenuStrip("powerflow"));
             strip.Items.Add(m_menuItems.GetMenuStrip("generator"));
             m_toolHint = string.Empty;
         }
 
-        void SetupPropertyToolbar(List<ModuleItems.Property> list)
-        {
-            ToolStrip strip = m_menuItems.GetStrip("Properties");
-            
-
-            //if (list.Count == 0) strip.Visible  = false;
-            list.ForEach((item) =>
-                {
-                    ToolStripLabel item1 = m_menuItems.GetMenuLabel(item.name);
-                    item1.ToolTipText = item.name;
-                    item1.Text = item.name;
-                    strip.Items.Add(m_menuItems.GetMenuLabel(item.name));
-                    ToolStripTextBox item2 = m_menuItems.GetMenuText(item.value as String);
-                    item2.ToolTipText = item.name;
-                    item2.Text = item.value as String;
-                    strip.Items.Add(m_menuItems.GetMenuText(item.value as String));
-                });
-
-            strip.LayoutStyle = ToolStripLayoutStyle.Table;
-            strip.Dock = System.Windows.Forms.DockStyle.Right;
-            TableLayoutSettings tableLayoutSettings = strip.LayoutSettings as TableLayoutSettings;
-            tableLayoutSettings.ColumnCount = 2;
-            
-            //strip.AutoSize = false;
-            //strip.Size = new System.Drawing.Size(103, 485);
-        }
 
 		ToolStripStatusLabel m_mousePosLabel = new ToolStripStatusLabel();
 		ToolStripStatusLabel m_snapInfoLabel = new ToolStripStatusLabel();
@@ -439,7 +422,7 @@ namespace Canvas
 			// update any additional properties of data which is not part of the interface
 			m_data.CenterPoint = m_canvas.GetCenter();
 		}
-        void OnModuleSelect(object sender, System.EventArgs e) { m_canvas.CommandSelectDrawTool(((ToolStripMenuItem)sender).Text); }
+        void OnModuleSelect(object sender, System.EventArgs e) { m_canvas.CommandSelectDrawTool(((ToolStripItem)sender).Text); }
 		void OnToolSelect(object sender, System.EventArgs e)
 		{
 			string toolid = string.Empty;

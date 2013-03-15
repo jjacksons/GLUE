@@ -21,6 +21,7 @@ namespace Canvas.ModuleItems
         }
         protected Module m_owner;
         protected ConfObject c_owner;
+        protected ConfObject c_clone;
         protected Module m_clone;
         protected UnitPoint m_originalPoint;
         protected UnitPoint m_endPoint;
@@ -186,10 +187,7 @@ namespace Canvas.ModuleItems
             Selected = acopy.Selected;
         }
         public abstract IDrawObject Clone();
-        public GLM toGLM()
-        {
-            return new GLM(this.Id, Properties);
-        }
+        public abstract String toGLM();
         static int ThresholdPixel = 6;
         protected static float ThresholdWidth(ICanvas canvas, float objectwidth)
         {
@@ -433,14 +431,5 @@ namespace Canvas.ModuleItems
         public Property() { }
         public Property(string Name, object Value, String Unit) { name = Name; value = Value; unit = Unit; }
         public Property clone() { return new Property(name, value,unit); }
-    }
-        public class GLM
-    {
-        public String Type { get; set; }
-        public List<Property> Properties { get; set; }
-        public GLM() { Type = ""; Properties = new List<Property>(); }
-        public GLM(String type) { Type = type; Properties = new List<Property>(); }
-        public GLM(string type, List<Property> properties) { Type = type; Properties = properties; }
-        public GLM clone() { return new GLM(Type, Properties); }
     }
 }

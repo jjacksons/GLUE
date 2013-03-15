@@ -98,6 +98,7 @@
     <Compile Include="Model.cs" />
     <Compile Include="ModuleItems\ConfObject.cs" />
     <Compile Include="ModuleItems\Module.cs" />
+    <Compile Include="ModuleItems\Clock.cs" />
     <Compile Include="ModuleItems\powerflow\Meter.cs" />
     <Compile Include="ModuleItems\powerflow\LineConfiguration.cs" />
     <Compile Include="ModuleItems\powerflow\Fuse.cs" />

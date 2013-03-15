@@ -138,11 +138,24 @@ namespace Canvas
 		}
         private void OnGLMImport(object sender, EventArgs e)
         {
-            OpenFileDialog dlg = new OpenFileDialog();
-            dlg.Filter = "Gridlabd GLM files (*.glm)|*.glm";
-            DialogResult results = dlg.ShowDialog(this);
-            if (results != DialogResult.OK) return;
-            string filename = dlg.SafeFileName.Replace(".glm", "");
+            importFile(String.Empty);
+        }
+        private void importFile(String filename)
+        {
+
+            String path = "";
+            bool multifile = false;
+            bool multiimport = false;
+            if (filename.Trim().Length == 0)
+            {
+                OpenFileDialog dlg = new OpenFileDialog();
+                dlg.Filter = "Gridlabd GLM files (*.glm)|*.glm";
+                DialogResult results = dlg.ShowDialog(this);
+                if (results != DialogResult.OK) return;
+                filename = dlg.FileName;
+                path = filename.Remove(filename.IndexOf(dlg.SafeFileName));
+            }
+            
             if (this.m_activeDocument == null) OpenDocument(string.Empty);
             if (this.m_activeDocument.isDirty())
             {
@@ -155,29 +168,46 @@ namespace Canvas
                     OpenDocument(string.Empty);
                 }
             }
+
             int FileLineCount = 0;
             string line;
             List<ModuleItems.Module> objects = new List<ModuleItems.Module>();
             Type typ = null;
             ModuleItems.Module temp = null;
-            System.IO.StreamReader file = new System.IO.StreamReader(dlg.FileName);
+            System.IO.StreamReader file = new System.IO.StreamReader(filename);
+            String prevline = "";
+
             while ((line = file.ReadLine()) != null)
             {
 
                 line = Regex.Replace(line, "\t", "");
-                line = Regex.Replace(line,"//.*","");
+                line = Regex.Replace(line, "//.*", "");
                 FileLineCount++;
                 if (line.Trim() == string.Empty) continue;
+                prevline = line.Trim();
+                if (line.Trim() == "{") line = prevline + " {";
+                if (line.IndexOf("#") >= 0 && ! multifile)
+                {
+                    DialogResult result = MessageBox.Show(this, "This file used external files. Do you want to import?", Program.AppName, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                    multifile = true;
+                    if (result == DialogResult.Cancel) return;
+                    multiimport = result == System.Windows.Forms.DialogResult.Yes;
+                }
+                if (line.IndexOf("#include") >= 0 && multiimport) importFile(path + Regex.Replace(line, ".*\"(.*)\"", "$1"));
+                if (line.IndexOf("{") >= 0)
+                {
+
+                }
                 if (line.IndexOf("object") >= 0)
                 {
                     String type = Regex.Replace(line, ".*object (.*){", "$1").Trim();
-                    
+
                     if (type.IndexOf(":") >= 0) type = Regex.Replace(line, ".*object (.*):.*{", "$1").Trim();
-                    temp = (ModuleItems.Module)m_activeDocument.Model.CreateObject(type, new UnitPoint(),null);
-                    if (type.IndexOf(":") >= 0) temp.Properties.Add(new ModuleItems.Property("name",Regex.Replace(line, ".*object .*:(.*){", "$1").Trim(),""));
+                    temp = (ModuleItems.Module)m_activeDocument.Model.CreateObject(type, new UnitPoint(), null);
+                    if (type.IndexOf(":") >= 0) temp.Properties.Add(new ModuleItems.Property("name", Regex.Replace(line, ".*object .*:(.*){", "$1").Trim(), ""));
                     continue;
                 }
-                if ((line.Trim() == "}" || line.Trim() == "};")&& temp != null)
+                if ((line.Trim() == "}" || line.Trim() == "};") && temp != null)
                 {
                     objects.Add(temp);
                     temp = null;
@@ -188,14 +218,14 @@ namespace Canvas
                 {
                     foreach (ModuleItems.Property p in temp.Properties) if (p.name == Regex.Replace(line, "(.*) .*", "$1").Trim()) p.value = Regex.Replace(line, ".* (.*);", "$1").Trim();
                 }
-                              
+
             }
             m_activeDocument.SetHint("Completed glm file import. Processing...");
             //connect
-            UnitPoint start = new UnitPoint(0,0);
-            UnitPoint end = new UnitPoint(1,0);
-            UnitPoint from = new UnitPoint(1,1);
-            UnitPoint to = new UnitPoint(0,-1);
+            UnitPoint start = new UnitPoint(0, 0);
+            UnitPoint end = new UnitPoint(1, 0);
+            UnitPoint from = new UnitPoint(1, 1);
+            UnitPoint to = new UnitPoint(0, -1);
             foreach (ModuleItems.Module m in objects)
             {
                 if (m.tofrom || m.child)
@@ -220,11 +250,12 @@ namespace Canvas
                 }
                 m.FromPoint = m.StartPoint = start;
                 m.EndPoint = m.ToPoint = end;
-                if(m.tofrom){
+                if (m.tofrom)
+                {
                     m.FromPoint = from;
                     m.ToPoint = to;
                 }
-                if(m.child)m.FromPoint = from;
+                if (m.child) m.FromPoint = from;
                 start.X += 2;
                 end.X += 2;
                 from.X += 2;
@@ -239,8 +270,8 @@ namespace Canvas
                     from.Y += 2;
                 }
 
-    
-                        
+
+
             }
             foreach (ModuleItems.Module m in objects)
             {
@@ -249,12 +280,11 @@ namespace Canvas
                     m.Move(new UnitPoint(m.FromPoint.X - m.from_connections.ToPoint.X, m.FromPoint.Y - m.from_connections.ToPoint.Y));
                     m.to_connections.Move(new UnitPoint(m.to_connections.FromPoint.X - m.ToPoint.X, m.to_connections.FromPoint.Y - m.ToPoint.Y));
                 }
-                if (m.child)m.Move(new UnitPoint(m.FromPoint.X - m.from_connections.ToPoint.X, m.FromPoint.Y - m.from_connections.ToPoint.Y));
+                if (m.child) m.Move(new UnitPoint(m.FromPoint.X - m.from_connections.ToPoint.X, m.FromPoint.Y - m.from_connections.ToPoint.Y));
             }
             foreach (ModuleItems.Module m in objects) m_activeDocument.Model.AddObject(m_activeDocument.Model.ActiveLayer, m);
             file.Close();
         }
-
 		private void OnFileSave(object sender, EventArgs e)
 		{
 			DocumentForm doc = this.ActiveMdiChild as DocumentForm;
@@ -334,21 +364,7 @@ namespace Canvas
 
         }
 
-        private void gLMToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (this.m_activeDocument.isDirty())
-            {
-                string filename = "";
-                DialogResult result = MessageBox.Show(this, "This file is already edited. Do you want to merge?", Program.AppName, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-                if (result == DialogResult.Cancel) return;
-                if (result == DialogResult.No)
-                {
-                    this.m_activeDocument.Save();
-                    this.m_activeDocument.Close();
-                    this.m_activeDocument = new DocumentForm(filename);
-                }
-            }
-        }
+
 
         private void m_windowMenu_Click(object sender, EventArgs e)
         {
@@ -391,7 +407,7 @@ namespace Canvas
                 temp2.Location = DefaultTextbox.Location;
                 temp2.Top += i++ * 26;
                 temp2.Tag = prop.name;
-                this.toolTip1.SetToolTip(temp2, prop.value.ToString());
+                this.toolTip1.SetToolTip(temp2, prop.value.ToString()+ prop.unit);
                 temp2.TextChanged += new System.EventHandler(updateProperty);
                 
 

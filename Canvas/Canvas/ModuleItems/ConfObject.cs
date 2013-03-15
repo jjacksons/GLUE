@@ -50,6 +50,7 @@ namespace Canvas.ModuleItems
             ToPoint
         }
         public static string ObjectType;
+        public abstract String toGLM();
         public virtual void Copy(ConfObject acopy)
         {
             base.Copy(acopy);
@@ -167,7 +168,7 @@ namespace Canvas.ModuleItems
                     }
                     if (snaptype == typeof(IntersectSnapPoint))
                     {
-                        Module otherline = Utils.FindObjectTypeInList(this, otherobjs, typeof(Module)) as Module;
+                        ConfObject otherline = Utils.FindObjectTypeInList(this, otherobjs, typeof(ConfObject)) as ConfObject;
                         if (otherline == null)
                             continue;
                         UnitPoint p = HitUtil.LinesIntersectPoint(m_p1, m_p2, otherline.StartPoint, otherline.EndPoint);
@@ -182,7 +183,7 @@ namespace Canvas.ModuleItems
                 return new MidpointSnapPoint(canvas, this, HitUtil.LineMidpoint(m_p1, m_p2));
             if (usersnaptype == typeof(IntersectSnapPoint))
             {
-                Module otherline = Utils.FindObjectTypeInList(this, otherobjs, typeof(Module)) as Module;
+                ConfObject otherline = Utils.FindObjectTypeInList(this, otherobjs, typeof(ConfObject)) as ConfObject;
                 if (otherline == null)
                     return null;
                 UnitPoint p = HitUtil.LinesIntersectPoint(m_p1, m_p2, otherline.StartPoint, otherline.EndPoint);

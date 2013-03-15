@@ -10,10 +10,10 @@ namespace Canvas.ModuleItems.powerflow
 {
     class NodePointLC : NodePoint
     {
-        public NodePointLC(line_configuration owner, ePoint id)
+        public NodePointLC(ConfObject owner, ePoint id)
         {
             c_owner = owner;
-            m_clone = m_owner.Clone() as Module;
+            c_clone = m_owner.Clone() as ConfObject;
             m_pointId = id;
             m_originalPoint = GetPoint(m_pointId);
         }
@@ -21,21 +21,30 @@ namespace Canvas.ModuleItems.powerflow
     class line_configuration : ConfObject
     {
 
-        public line_configuration() { setupProperties(new List<Property>()); haschild = true; }
-        public line_configuration(line_configuration old) { m_p1 = old.StartPoint; m_p2 = old.EndPoint; m_p3 = old.ToPoint; setupProperties(old.Properties); haschild = true; }
+        public line_configuration() { setupProperties(new List<Property>()); }
+        public line_configuration(line_configuration old) { m_p1 = old.StartPoint; m_p2 = old.EndPoint; m_p3 = old.ToPoint; setupProperties(old.Properties); }
         private void setupProperties(List<Property> prop)
         {
-            Properties = new List<Property>(9);
-            DefaultProperties = new List<Property>(9);
+
+            Properties = new List<Property>();
+            DefaultProperties = new List<Property>(6);
             DefaultProperties.Add(new Property("name", "", ""));
-            DefaultProperties.Add(new Property("phases", "", ""));
-            DefaultProperties.Add(new Property("from", "", ""));
-            DefaultProperties.Add(new Property("to", "", ""));
-            DefaultProperties.Add(new Property("status", "CLOSED", ""));
-            DefaultProperties.Add(new Property("phase_A_state", "CLOSED", ""));
-            DefaultProperties.Add(new Property("phase_B_state", "CLOSED", ""));
-            DefaultProperties.Add(new Property("phase_C_state", "CLOSED", ""));
-            DefaultProperties.Add(new Property("operating_mode", "BANKED", ""));
+            DefaultProperties.Add(new Property("conductor_A", "", ""));
+            DefaultProperties.Add(new Property("conductor_B", "", ""));
+            DefaultProperties.Add(new Property("conductor_C", "", ""));
+            DefaultProperties.Add(new Property("conductor_N", "", ""));
+            DefaultProperties.Add(new Property("spacing", "", ""));
+
+            DefaultProperties.Add(new Property("z11", "", ""));
+            DefaultProperties.Add(new Property("z12", "", ""));
+            DefaultProperties.Add(new Property("z13", "", ""));
+            DefaultProperties.Add(new Property("z21", "", ""));
+            DefaultProperties.Add(new Property("z22", "", ""));
+            DefaultProperties.Add(new Property("z23", "", ""));
+            DefaultProperties.Add(new Property("z31", "", ""));
+            DefaultProperties.Add(new Property("z32", "", ""));
+            DefaultProperties.Add(new Property("z33", "", ""));
+            
             if (Properties.Count == 0) foreach (Property p in DefaultProperties) Properties.Add(p);
         }
         public override void GetObjectData(XmlWriter wr)
@@ -47,15 +56,21 @@ namespace Canvas.ModuleItems.powerflow
 
         public override string GetInfoAsString()
         {
-            return string.Format("Line Configuration@{0},{1} - L={2:f4}<{3:f4}",
-                StartPoint.PosAsString(),
-                EndPoint.PosAsString(),
-                HitUtil.Distance(StartPoint, EndPoint),
-                HitUtil.RadiansToDegrees(HitUtil.LineAngleR(StartPoint, EndPoint, 0)));
+            return string.Format("line_configuration@{0}",
+                StartPoint.PosAsString());
         }
         public override IDrawObject Clone()
         {
             return new line_configuration(this);
+        }
+        public override string toGLM()
+        {
+            String s = "    tobject line_configuration {" + System.Environment.NewLine;
+            foreach (Property p in Properties)
+                foreach (Property q in DefaultProperties)
+                    if (p.name == q.name && p.value != q.value) s = s + "   " + p.name + " " + p.value.ToString() + ";" + System.Environment.NewLine;
+            s = s + "   }" + System.Environment.NewLine;
+            return s;
         }
         public override INodePoint NodePoint(ICanvas canvas, UnitPoint point)
         {
@@ -66,6 +81,7 @@ namespace Canvas.ModuleItems.powerflow
                 return new NodePointLC(this, NodePointLC.ePoint.StartPoint);
             if (HitUtil.CircleHitPoint(m_p3, thWidth, point))
                 return new NodePointLC(this, NodePointLC.ePoint.EndPoint);
+
             return null;
         }
 
@@ -75,19 +91,23 @@ namespace Canvas.ModuleItems.powerflow
         }
         public override void Draw(ICanvas canvas, RectangleF unitrect)
         {
+            Brush B = Brushes.Black;
             Color color = Color;
             Pen pen = canvas.CreatePen(color, Width);
             if (Highlighted || Selected)
             {
                 pen = Canvas.DrawTools.DrawUtils.SelectedPen;
-                if (m_p1.IsEmpty == false) Canvas.DrawTools.DrawUtils.DrawNode(canvas, m_p1);
-                if (m_p2.IsEmpty == false) Canvas.DrawTools.DrawUtils.DrawNode(canvas, m_p2);
-                if (m_p3.IsEmpty == false) Canvas.DrawTools.DrawUtils.DrawNode(canvas, m_p3);
+                B = Brushes.Magenta;
+                //if (m_p1.IsEmpty == false) Canvas.DrawTools.DrawUtils.DrawNode(canvas, m_p1);
             }
-            canvas.DrawLine(canvas, pen, m_p1, m_p2);
-            pen = new Pen(pen.Color, (float)3);
-            canvas.Graphics.DrawRectangle(pen, canvas.ToScreen(new UnitPoint(m_p2.X + 0.2, m_p2.Y + 0.1)).X, canvas.ToScreen(new UnitPoint(m_p2.X + 0.2, m_p2.Y + 0.1)).Y, canvas.ToScreen(new UnitPoint(m_p2.X + 0.8, m_p2.Y - 0.1)).X - canvas.ToScreen(new UnitPoint(m_p2.X + 0.2, m_p2.Y + 0.1)).X, canvas.ToScreen(new UnitPoint(m_p2.X + 0.8, m_p2.Y - 0.1)).Y - canvas.ToScreen(new UnitPoint(m_p2.X + 0.2, m_p2.Y + 0.1)).Y);
+            pen = new Pen(pen.Color, (float)6);
 
+            unitrect.Inflate(3, 3);
+            canvas.DrawArc(canvas, pen, m_p1, (float)0.03, 0, 360);
+            float size = (canvas.ToScreen(new UnitPoint(m_p1.X + 1, m_p1.Y)).X - canvas.ToScreen(m_p1).X)/10;
+            Font m_font = new System.Drawing.Font("Arial Black", size, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+           
+            canvas.Graphics.DrawString("Line Config", m_font, B, canvas.ToScreen(new UnitPoint(m_p1.X - 0.4, m_p1.Y + 0.2)).X, canvas.ToScreen(new UnitPoint(m_p1.X - 0.3, m_p1.Y + 0.2)).Y);
 
         }
     }

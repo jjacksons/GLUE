@@ -68,6 +68,15 @@ namespace Canvas.ModuleItems.powerflow
 
             return null;
         }
+        public override string toGLM()
+        {
+            String s = "    tobject overhead_line {" + System.Environment.NewLine;
+            foreach (Property p in Properties)
+                foreach (Property q in DefaultProperties)
+                    if (p.name == q.name && p.value != q.value) s = s + "   " + p.name + " " + p.value.ToString() + ";" + System.Environment.NewLine;
+            s = s + "   }" + System.Environment.NewLine;
+            return s;
+        }
         
         public override string Id
         {

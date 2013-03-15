@@ -370,7 +370,13 @@ namespace Canvas
             {
                 List<ModuleItems.Property> t = new List<ModuleItems.Property>();
                 List<ModuleItems.Property> u = new List<ModuleItems.Property>();
-                if (obj.GetType().ToString().IndexOf("Module") > 0 )
+                if (obj.GetType().ToString().IndexOf("configuration") >= 0 || obj.GetType().ToString().IndexOf("conductor") >= 0)
+                {
+                    ModuleItems.ConfObject temp = obj as ModuleItems.ConfObject;
+                    t = temp.Properties;
+                    u = temp.DefaultProperties;
+                }
+                else if (obj.GetType().ToString().IndexOf("Module") > 0 )
                 {
                     ModuleItems.Module temp = obj as ModuleItems.Module;
                     t = temp.Properties;
@@ -378,6 +384,7 @@ namespace Canvas
                 }
                 MainWin temps = (MainWin)this.Parent.Parent.Parent;
                 temps.updateProperties(t,u);
+                
             }
             
 
