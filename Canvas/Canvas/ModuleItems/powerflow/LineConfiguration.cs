@@ -45,7 +45,7 @@ namespace Canvas.ModuleItems.powerflow
             DefaultProperties.Add(new Property("z32", "", ""));
             DefaultProperties.Add(new Property("z33", "", ""));
             
-            if (Properties.Count == 0) foreach (Property p in DefaultProperties) Properties.Add(p);
+            if (Properties.Count == 0) foreach (Property p in DefaultProperties) Properties.Add(p.clone());
         }
         public override void GetObjectData(XmlWriter wr)
         {
@@ -68,7 +68,7 @@ namespace Canvas.ModuleItems.powerflow
             String s = "    tobject line_configuration {" + System.Environment.NewLine;
             foreach (Property p in Properties)
                 foreach (Property q in DefaultProperties)
-                    if (p.name == q.name && p.value != q.value) s = s + "   " + p.name + " " + p.value.ToString() + ";" + System.Environment.NewLine;
+                    if (p.name == q.name && p.value.ToString() != q.value.ToString()) s = s + "   " + p.name + " " + p.value.ToString() + ";" + System.Environment.NewLine;
             s = s + "   }" + System.Environment.NewLine;
             return s;
         }

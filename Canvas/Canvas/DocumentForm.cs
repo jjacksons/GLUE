@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace Canvas
 {
@@ -55,6 +56,7 @@ namespace Canvas
 
 			m_canvas.KeyDown += new KeyEventHandler(OnCanvasKeyDown);
 			SetupMenuItems();
+            SetupGLMItems();
 			SetupDrawTools();
 			SetupLayerToolstrip();
 			SetupEditTools();
@@ -64,6 +66,7 @@ namespace Canvas
 			MenuStrip menuitem = new MenuStrip();
 			menuitem.Items.Add(m_menuItems.GetMenuStrip("edit"));
 			menuitem.Items.Add(m_menuItems.GetMenuStrip("draw"));
+            menuitem.Items.Add(m_menuItems.GetMenuStrip("GLM"));
 			menuitem.Visible = false;
 			Controls.Add(menuitem);
 			this.MainMenuStrip = menuitem;
@@ -73,7 +76,34 @@ namespace Canvas
 			base.OnLoad(e);
 			m_canvas.SetCenter(m_data.CenterPoint);
 		}
-       
+        void SetupGLMItems()
+        {
+            MenuItem mmitem = m_menuItems.GetItem("Export GLM");
+            mmitem.Text = "Export GLM";
+            mmitem.ToolTipText = "Export GLM";
+            mmitem.Click += new EventHandler(OnGLMExport);
+            
+
+            mmitem = m_menuItems.GetItem("Import GLM");
+            mmitem.Text = "Import GLM";
+            mmitem.ToolTipText = "Import GLM";
+            mmitem.Click += new EventHandler(OnGLMImport);
+
+            mmitem = m_menuItems.GetItem("Run Simulation");
+            mmitem.Text = "Run Simulation";
+            mmitem.ToolTipText = "Run Simulation (F5)";
+            mmitem.Click += new EventHandler(OnToolSelect);
+            mmitem.SingleKey = Keys.F5;
+            mmitem.Tag = "Run Simulation";
+
+            ToolStripMenuItem menu = m_menuItems.GetMenuStrip("GLM");
+            menu.MergeAction = System.Windows.Forms.MergeAction.Insert;
+            menu.MergeIndex = 1;
+            menu.Text = "&GLM";
+            menu.DropDownItems.Add(m_menuItems.GetItem("Import GLM").CreateMenuItem());
+            menu.DropDownItems.Add(m_menuItems.GetItem("Export GLM").CreateMenuItem());
+            menu.DropDownItems.Add(m_menuItems.GetItem("Run Simulation").CreateMenuItem());
+        }
 		void SetupMenuItems()
 		{
 			MenuItem mmitem = m_menuItems.GetItem("Undo");
@@ -481,6 +511,193 @@ namespace Canvas
 				}
 			}
 		}
+        private void OnGLMExport(object sender, EventArgs e)
+        {
+
+            UpdateData();
+            SaveFileDialog dlg = new SaveFileDialog();
+            dlg.Filter = "GLM File (*.glm)|*.glm";
+            dlg.OverwritePrompt = true;
+            if (m_filename.Length > 0)
+                dlg.FileName = m_filename;
+            if (dlg.ShowDialog(this) == DialogResult.OK)
+            {
+                export(dlg.FileName);
+                m_filename = dlg.FileName;
+            }
+
+
+        }
+        private void export(String filename)
+        {
+
+            if (!isDirty()) return;
+            String export = "";
+            foreach (object o in m_canvas.Model.ActiveLayer.Objects)
+            {
+                if (o.GetType().ToString().IndexOf("configuration") >= 0 || o.GetType().ToString().IndexOf("conductor") >= 0)
+                {
+                    ModuleItems.ConfObject temp = o as ModuleItems.ConfObject;
+                    export = export + temp.toGLM();
+                }
+                else if (o.GetType().ToString().IndexOf("Module") > 0)
+                {
+                    ModuleItems.Module temp = o as ModuleItems.Module;
+                    export = export + temp.toGLM();
+                }
+            }
+            System.IO.StreamWriter file = new System.IO.StreamWriter(filename);
+            file.WriteLine(export);
+            file.Close();
+        }
+        private void OnGLMImport(object sender, EventArgs e)
+        {
+            importFile(String.Empty);
+        }
+        private void importFile(String filename)
+        {
+
+            String path = "";
+            bool multifile = false;
+            bool multiimport = false;
+            if (filename.Trim().Length == 0)
+            {
+                OpenFileDialog dlg = new OpenFileDialog();
+                dlg.Filter = "Gridlabd GLM files (*.glm)|*.glm";
+                DialogResult results = dlg.ShowDialog(this);
+                if (results != DialogResult.OK) return;
+                filename = dlg.FileName;
+                path = filename.Remove(filename.IndexOf(dlg.SafeFileName));
+            }
+
+           
+            if (this.isDirty())
+            {
+                DialogResult result = MessageBox.Show(this, "This file is already edited. Do you want to merge?", Program.AppName, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                if (result == DialogResult.Cancel) return;
+                if (result == DialogResult.No)
+                {
+                    this.Save();
+                    this.Close();
+                }
+            }
+
+            int FileLineCount = 0;
+            string line;
+            List<ModuleItems.Module> objects = new List<ModuleItems.Module>();
+            Type typ = null;
+            ModuleItems.Module temp = null;
+            System.IO.StreamReader file = new System.IO.StreamReader(filename);
+            String prevline = "";
+
+            while ((line = file.ReadLine()) != null)
+            {
+
+                line = Regex.Replace(line, "\t", "");
+                line = Regex.Replace(line, "//.*", "");
+                FileLineCount++;
+                if (line.Trim() == string.Empty) continue;
+                prevline = line.Trim();
+                if (line.Trim() == "{") line = prevline + " {";
+                if (line.IndexOf("#") >= 0 && !multifile)
+                {
+                    DialogResult result = MessageBox.Show(this, "This file used external files. Do you want to import?", Program.AppName, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                    multifile = true;
+                    if (result == DialogResult.Cancel) return;
+                    multiimport = result == System.Windows.Forms.DialogResult.Yes;
+                }
+                if (line.IndexOf("#include") >= 0 && multiimport) importFile(path + Regex.Replace(line, ".*\"(.*)\"", "$1"));
+                if (line.IndexOf("{") >= 0)
+                {
+
+                }
+                if (line.IndexOf("object") >= 0)
+                {
+                    String type = Regex.Replace(line, ".*object (.*){", "$1").Trim();
+
+                    if (type.IndexOf(":") >= 0) type = Regex.Replace(line, ".*object (.*):.*{", "$1").Trim();
+                    temp = (ModuleItems.Module)Model.CreateObject(type, new UnitPoint(), null);
+                    if (type.IndexOf(":") >= 0) temp.Properties.Add(new ModuleItems.Property("name", Regex.Replace(line, ".*object .*:(.*){", "$1").Trim(), ""));
+                    continue;
+                }
+                if ((line.Trim() == "}" || line.Trim() == "};") && temp != null)
+                {
+                    objects.Add(temp);
+                    temp = null;
+                    typ = null;
+                    continue;
+                }
+                if (temp != null)
+                {
+                    foreach (ModuleItems.Property p in temp.Properties) if (p.name == Regex.Replace(line, "(.*) .*", "$1").Trim()) p.value = Regex.Replace(line, ".* (.*);", "$1").Trim();
+                }
+
+            }
+            SetHint("Completed glm file import. Processing...");
+            //connect
+            UnitPoint start = new UnitPoint(0, 0);
+            UnitPoint end = new UnitPoint(1, 0);
+            UnitPoint from = new UnitPoint(1, 1);
+            UnitPoint to = new UnitPoint(0, -1);
+            foreach (ModuleItems.Module m in objects)
+            {
+                if (m.tofrom || m.child)
+                {
+                    m.to_connections = new ModuleItems.powerflow.node();
+                    m.from_connections = new ModuleItems.powerflow.node();
+                    foreach (ModuleItems.Property p in m.Properties)
+                    {
+                        if (p.name == "to")
+                            foreach (ModuleItems.Module n in objects)
+                                foreach (ModuleItems.Property q in m.Properties)
+                                    if (q.name == "name" && q.value == p.value) m.to_connections = n;
+                        if (p.name == "from")
+                            foreach (ModuleItems.Module n in objects)
+                                foreach (ModuleItems.Property q in m.Properties)
+                                    if (q.name == "name" && q.value == p.value) m.from_connections = n;
+                        if (p.name == "parent")
+                            foreach (ModuleItems.Module n in objects)
+                                foreach (ModuleItems.Property q in m.Properties)
+                                    if (q.name == "name" && q.value == p.value) m.from_connections = n;
+                    }
+                }
+                m.FromPoint = m.StartPoint = start;
+                m.EndPoint = m.ToPoint = end;
+                if (m.tofrom)
+                {
+                    m.FromPoint = from;
+                    m.ToPoint = to;
+                }
+                if (m.child) m.FromPoint = from;
+                start.X += 2;
+                end.X += 2;
+                from.X += 2;
+                to.X += 2;
+                if (start.X > 20)
+                {
+                    start.X = to.X = 0;
+                    from.X = end.X = 1;
+                    start.Y += 2;
+                    end.Y += 2;
+                    to.Y += 2;
+                    from.Y += 2;
+                }
+
+
+
+            }
+            foreach (ModuleItems.Module m in objects)
+            {
+                if (m.tofrom)
+                {
+                    m.Move(new UnitPoint(m.FromPoint.X - m.from_connections.ToPoint.X, m.FromPoint.Y - m.from_connections.ToPoint.Y));
+                    m.to_connections.Move(new UnitPoint(m.to_connections.FromPoint.X - m.ToPoint.X, m.to_connections.FromPoint.Y - m.ToPoint.Y));
+                }
+                if (m.child) m.Move(new UnitPoint(m.FromPoint.X - m.from_connections.ToPoint.X, m.FromPoint.Y - m.from_connections.ToPoint.Y));
+            }
+            foreach (ModuleItems.Module m in objects) Model.AddObject(Model.ActiveLayer, m);
+            file.Close();
+        }
 		void OnLayerSelect(object sender, System.EventArgs e)
 		{
 			CommonTools.NameObject<DrawingLayer> obj = null;

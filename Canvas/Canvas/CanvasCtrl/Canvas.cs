@@ -452,7 +452,7 @@ namespace Canvas
 		{
 			m_mousedownPoint = new PointF(e.X, e.Y); // used when panning
 			m_dragOffset = new PointF(0,0);
-
+            if (e.Button == System.Windows.Forms.MouseButtons.Right) CommandEscape();
 			UnitPoint mousepoint = ToUnit(m_mousedownPoint);
 			if (m_snappoint != null)
 				mousepoint = m_snappoint.SnapPoint;
@@ -478,7 +478,7 @@ namespace Canvas
 					return;
 				}
                 DoInvalidate(true);
-                //UpdateCursor();
+                UpdateCursor();
 				m_selection = new SelectionRectangle(m_mousedownPoint);
 			}
 			if (m_commandType == eCommandType.move)
@@ -785,7 +785,20 @@ namespace Canvas
 
         public void updateActiveProperty(ModuleItems.Property tobeupdated,CanvasCtrl c)
         {
-            foreach (ModuleItems.Module j in m_model.SelectedObjects) foreach (ModuleItems.Property p in j.Properties) if (p.name == tobeupdated.name) p.value = tobeupdated.value;
+            foreach (object j in m_model.SelectedObjects)
+            {
+                if (j.GetType().ToString().IndexOf("configuration") >= 0 || j.GetType().ToString().IndexOf("conductor") >= 0)
+                {
+                    ModuleItems.ConfObject temp = j as ModuleItems.ConfObject;
+                    foreach (ModuleItems.Property p in temp.Properties) if (p.name == tobeupdated.name) p.value = tobeupdated.value;
+                }
+                else if (j.GetType().ToString().IndexOf("Module") > 0)
+                {
+                    ModuleItems.Module temp = j as ModuleItems.Module;
+                    foreach (ModuleItems.Property p in temp.Properties) if (p.name == tobeupdated.name) p.value = tobeupdated.value;
+                }
+                
+            }
             DoInvalidate(true);
             
         }

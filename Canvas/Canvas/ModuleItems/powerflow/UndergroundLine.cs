@@ -34,7 +34,7 @@ namespace Canvas.ModuleItems.powerflow
             DefaultProperties.Add(new Property("to", "", ""));
             DefaultProperties.Add(new Property("length", "0", " ft"));
             DefaultProperties.Add(new Property("configuration", "",""));
-            if (Properties.Count ==0) foreach (Property p in DefaultProperties) Properties.Add(p);
+            if (Properties.Count ==0) foreach (Property p in DefaultProperties) Properties.Add(p.clone());
         }
         public override void GetObjectData(XmlWriter wr)
         {
@@ -58,10 +58,10 @@ namespace Canvas.ModuleItems.powerflow
 
         public override string toGLM()
         {
-            String s = "    tobject underground_line {" + System.Environment.NewLine;
+            String s = "    object underground_line {" + System.Environment.NewLine;
             foreach (Property p in Properties)
                 foreach (Property q in DefaultProperties)
-                    if (p.name == q.name && p.value != q.value) s = s + "   " + p.name + " " + p.value.ToString() + ";" + System.Environment.NewLine;
+                    if (p.name == q.name && p.value.ToString() != q.value.ToString()) s = s + "   " + p.name + " " + p.value.ToString() + ";" + System.Environment.NewLine;
             s = s + "   }" + System.Environment.NewLine;
             return s;
         }

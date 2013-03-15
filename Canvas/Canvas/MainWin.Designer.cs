@@ -38,11 +38,6 @@ namespace Canvas
             this.RightToolStripPanel = new System.Windows.Forms.ToolStripPanel();
             this.LeftToolStripPanel = new System.Windows.Forms.ToolStripPanel();
             this.m_mainMenu = new System.Windows.Forms.MenuStrip();
-            this.importToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.gLMToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.sINCALToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.lIDToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.gISToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.m_windowMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.propertiesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -95,7 +90,6 @@ namespace Canvas
             // m_mainMenu
             // 
             this.m_mainMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.importToolStripMenuItem,
             this.optionsToolStripMenuItem,
             this.m_windowMenu,
             this.m_helpMenu});
@@ -105,42 +99,6 @@ namespace Canvas
             this.m_mainMenu.Size = new System.Drawing.Size(803, 24);
             this.m_mainMenu.TabIndex = 0;
             this.m_mainMenu.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.m_mainMenu_ItemClicked);
-            // 
-            // importToolStripMenuItem
-            // 
-            this.importToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.gLMToolStripMenuItem,
-            this.sINCALToolStripMenuItem,
-            this.lIDToolStripMenuItem,
-            this.gISToolStripMenuItem});
-            this.importToolStripMenuItem.Name = "importToolStripMenuItem";
-            this.importToolStripMenuItem.Size = new System.Drawing.Size(55, 20);
-            this.importToolStripMenuItem.Text = "Import";
-            // 
-            // gLMToolStripMenuItem
-            // 
-            this.gLMToolStripMenuItem.Name = "gLMToolStripMenuItem";
-            this.gLMToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
-            this.gLMToolStripMenuItem.Text = "GLM";
-            this.gLMToolStripMenuItem.Click += new System.EventHandler(this.OnGLMImport);
-            // 
-            // sINCALToolStripMenuItem
-            // 
-            this.sINCALToolStripMenuItem.Name = "sINCALToolStripMenuItem";
-            this.sINCALToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
-            this.sINCALToolStripMenuItem.Text = "SINCAL";
-            // 
-            // lIDToolStripMenuItem
-            // 
-            this.lIDToolStripMenuItem.Name = "lIDToolStripMenuItem";
-            this.lIDToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
-            this.lIDToolStripMenuItem.Text = "LID";
-            // 
-            // gISToolStripMenuItem
-            // 
-            this.gISToolStripMenuItem.Name = "gISToolStripMenuItem";
-            this.gISToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
-            this.gISToolStripMenuItem.Text = "GIS";
             // 
             // optionsToolStripMenuItem
             // 
@@ -281,12 +239,7 @@ namespace Canvas
 		private System.Windows.Forms.ToolStripMenuItem m_aboutMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem1;
-		private System.Windows.Forms.ToolStripMenuItem layersToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem importToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem gLMToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem sINCALToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem lIDToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem gISToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem layersToolStripMenuItem;
         private ToolStripPanel BottomToolStripPanel;
         private ToolStripPanel TopToolStripPanel;
         private ToolStripPanel RightToolStripPanel;
