@@ -799,6 +799,23 @@ namespace Canvas
 			}
 			// update selected nodes
 			m_canvas.Model.MoveNodes(mouseunitpoint, m_nodes);
+            foreach (INodePoint i in m_nodes) {
+                if (i is ModuleItems.NodePoint)
+                {
+                    ModuleItems.NodePoint temp = i as ModuleItems.NodePoint;
+                    if(temp.getID() == ModuleItems.NodePoint.ePoint.FromPoint){
+                        if (m_canvas.DataModel.GetHitObjects(m_canvas, mouseunitpoint).Count == 0) foreach (ModuleItems.Property p in temp.getOwner().Properties) if (p.name == "from") p.value = String.Empty;
+                        foreach (IDrawObject j in m_canvas.DataModel.GetHitObjects(m_canvas, mouseunitpoint)) if (j.GetType().ToString().IndexOf("Module") >= 0 && j != temp.getOwner()) temp.getOwner().from_connections = (ModuleItems.Module)j;
+                        if (temp.getOwner().from_connections != null) foreach (ModuleItems.Property p in temp.getOwner().Properties) if (p.name == "from") foreach (ModuleItems.Property q in temp.getOwner().from_connections.Properties) if (q.name == "name") p.value = q.value;
+                    }
+                    if (temp.getID() == ModuleItems.NodePoint.ePoint.ToPoint)
+                    {
+                        if (m_canvas.DataModel.GetHitObjects(m_canvas, mouseunitpoint).Count == 0) foreach (ModuleItems.Property p in temp.getOwner().Properties) if (p.name == "to") p.value = String.Empty;
+                        foreach (IDrawObject j in m_canvas.DataModel.GetHitObjects(m_canvas, mouseunitpoint)) if (j.GetType().ToString().IndexOf("Module") >= 0 && j != temp.getOwner()) temp.getOwner().to_connections = (ModuleItems.Module)j;
+                        if (temp.getOwner().to_connections != null) foreach (ModuleItems.Property p in temp.getOwner().Properties) if (p.name == "to") foreach (ModuleItems.Property q in temp.getOwner().to_connections.Properties) if (q.name == "name") p.value = q.value;
+                    }
+                }
+            }
 			m_nodes.Clear();
 			handled = true;
 			m_canvas.CanvasCtrl.DoInvalidate(true);

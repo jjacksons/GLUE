@@ -23,12 +23,12 @@ namespace Canvas
 			return null;
 		}
 
-		Dictionary<string, IDrawObject> m_drawObjectTypes = new Dictionary<string, IDrawObject>(); 
-		DrawTools.DrawObjectBase CreateObject(string objecttype)
+		static Dictionary<string, IDrawObject> m_drawObjectTypes = new Dictionary<string, IDrawObject>();
+        public static IDrawObject CreateObject(string objecttype)
 		{
 			if (m_drawObjectTypes.ContainsKey(objecttype))
 			{
-				return m_drawObjectTypes[objecttype].Clone() as DrawTools.DrawObjectBase;
+				return m_drawObjectTypes[objecttype].Clone();
 			}
 			return null;
 		}
@@ -130,6 +130,8 @@ namespace Canvas
 					}
 					if (childnode.Name == "property")
 						XmlUtil.ParseProperty(childnode, this);
+                    if (childnode.Name == "properties")
+                        XmlUtil.ParseProperty(childnode, this);
 				}
 				return true;
 			}
@@ -201,7 +203,7 @@ namespace Canvas
 			DrawingLayer layer = ActiveLayer as DrawingLayer;
 			if (layer.Enabled == false)
 				return null;
-			DrawTools.DrawObjectBase newobj = CreateObject(type);
+            DrawTools.DrawObjectBase newobj = CreateObject(type) as DrawTools.DrawObjectBase;
 			if (newobj != null)
 			{
 				newobj.Layer = layer;
@@ -272,6 +274,7 @@ namespace Canvas
 			foreach (INodePoint node in nodes)
 			{
 				node.SetPosition(position);
+                
 				node.Finish();
 			}
 		}
@@ -280,6 +283,7 @@ namespace Canvas
 			List<IDrawObject> selected = new List<IDrawObject>();
 			foreach (ICanvasLayer layer in m_layers)
 			{
+                
 				if (layer.Visible == false)
 					continue;
 				foreach (IDrawObject drawobject in layer.Objects)

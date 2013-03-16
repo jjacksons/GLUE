@@ -154,11 +154,11 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Resources\CursorCollection.cs" />
+    <Compile Include="Utils\CursorCollection.cs" />
     <Compile Include="Resources\Images.cs" />
-    <Compile Include="Resources\KeyMapping.cs" />
-    <Compile Include="Resources\ProcessEventArgs.cs" />
-    <Compile Include="Resources\ProcessInterface.cs" />
+    <Compile Include="Utils\KeyMapping.cs" />
+    <Compile Include="Utils\ProcessEventArgs.cs" />
+    <Compile Include="Utils\ProcessInterface.cs" />
     <Compile Include="Utils\GDIWrapper.cs" />
     <Compile Include="Utils\MenuItemCollection.cs" />
     <Compile Include="Utils\SerializeUtil.cs" />

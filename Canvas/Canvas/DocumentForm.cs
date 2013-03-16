@@ -296,8 +296,6 @@ namespace Canvas
             
             item.DropDownItems.Add("Node", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow),new EventHandler(OnModuleSelect));
             m_data.AddDrawTool("Node", new ModuleItems.powerflow.node());
-            item.DropDownItems.Add("Link", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
-            item.DropDownItems.Add("Line", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
             item.DropDownItems.Add("line_configuration", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow),new EventHandler(OnModuleSelect));
             m_data.AddDrawTool("line_configuration", new ModuleItems.powerflow.line_configuration());
             item.DropDownItems.Add("Line spacing", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));

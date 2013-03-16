@@ -190,7 +190,7 @@ namespace Canvas
 				{
 					foreach (XmlElement itemnode in node.ChildNodes)
 					{
-						object item = DataModel.NewDrawObject(itemnode.Name);
+						object item = DataModel.CreateObject(itemnode.Name);
 						if (item == null)
 							continue;
 						if (item != null)

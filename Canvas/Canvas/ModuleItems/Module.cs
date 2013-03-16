@@ -99,6 +99,8 @@ namespace Canvas.ModuleItems
                 return GetPoint(ePoint.EndPoint);
             return GetPoint(ePoint.StartPoint);
         }
+        public Module getOwner() { return m_owner; }
+        public ePoint getID(){return m_pointId;}
         protected void SetPoint(ePoint pointid, UnitPoint point, Module mod)
         {
             if (pointid == ePoint.FromPoint)
@@ -123,22 +125,48 @@ namespace Canvas.ModuleItems
                 if (mod.horizontal) point.X -= 1;
                 else point.Y -= 1;
                 SetPoint(ePoint.StartPoint, point, mod);
+                
             }
         }
     }
     abstract class Module : Canvas.DrawTools.DrawObjectBase, IDrawObject, ISerialize
     {
+        
         protected UnitPoint m_p1, m_p2, m_p3, m_p4;
+        
         protected ePoint currentPoint = ePoint.FromPoint;
+        [XmlSerializable]
         public bool horizontal = true;
+        [XmlSerializable]
         public bool tofrom = false;
+        [XmlSerializable]
         public bool child = false;
+        [XmlSerializable]
         public bool conf = false;
+        [XmlSerializable]
         public ConfObject conf_object { get; set; }
-        public Module to_connections { get; set; }
+        [XmlSerializable]
+        public Module to_connections
+        {
+            get;
+            set;
+        }
+        [XmlSerializable]
         public Module from_connections { get; set; }
-        public List<Property> Properties = new List<Property>();
-        public List<Property> DefaultProperties = new List<Property>();
+        [XmlSerializable]
+        protected List<Property> properties = new List<Property>();
+        [XmlSerializable]
+        public List<Property> Properties
+        {
+            get { return properties; }
+            set { properties = value; }
+        }
+        protected List<Property> defaultProperties = new List<Property>();
+        public List<Property> DefaultProperties
+        {
+            get { return defaultProperties; }
+            set { defaultProperties = value; }
+        }
         [XmlSerializable]
         public UnitPoint FromPoint
         {
@@ -163,6 +191,7 @@ namespace Canvas.ModuleItems
             get { return m_p4; }
             set { m_p4 = value; }
         }
+        [XmlSerializable]
         public String getUnit(String name)
         {
             foreach (Property p in DefaultProperties)
@@ -171,6 +200,7 @@ namespace Canvas.ModuleItems
             }
             return String.Empty;
         }
+        [XmlSerializable]
         public enum ePoint {
             FromPoint,
             StartPoint,
@@ -234,7 +264,6 @@ namespace Canvas.ModuleItems
             return rect.Contains(boundingrect);
         }
         public abstract void Draw(ICanvas canvas, RectangleF unitrect);
-
         public virtual void OnMouseMove(ICanvas canvas, UnitPoint point)
         {
             if (Control.ModifierKeys == Keys.Control && currentPoint == ePoint.FromPoint)point = HitUtil.OrthoPointD(m_p1, point, 45);
@@ -256,6 +285,8 @@ namespace Canvas.ModuleItems
             {
                 m_p1 = point;
                 currentPoint = ePoint.StartPoint;
+                foreach (IDrawObject i in canvas.DataModel.GetHitObjects(canvas, point)) if (i.GetType().ToString().IndexOf("Module") >= 0 && i != this) from_connections = (ModuleItems.Module)i;
+                if (from_connections != null) foreach (Property p in properties) if (p.name == "from") foreach (Property q in from_connections.properties) if (q.name == "name") p.value = q.value;
                 return eDrawObjectMouseDown.Continue;
             }
             if (currentPoint == ePoint.StartPoint)
@@ -315,6 +346,8 @@ namespace Canvas.ModuleItems
             if (Control.ModifierKeys == Keys.Control)
                 point = HitUtil.OrthoPointD(m_p1, point, 45);
             m_p4 = point;
+            foreach (IDrawObject i in canvas.DataModel.GetHitObjects(canvas, point)) if (i.GetType().ToString().IndexOf("Module") >= 0 && i != this) to_connections = (ModuleItems.Module)i;
+            if (to_connections != null) foreach (Property p in properties) if (p.name == "to") foreach (Property q in to_connections.properties) if (q.name == "name") p.value = q.value;
             return eDrawObjectMouseDown.Done;
         }
         public void OnMouseUp(ICanvas canvas, UnitPoint point, ISnapPoint snappoint)
@@ -353,10 +386,14 @@ namespace Canvas.ModuleItems
                             return new VertextSnapPoint(canvas, this, m_p1);
                         if (HitUtil.CircleHitPoint(m_p2, thWidth, point))
                             return new VertextSnapPoint(canvas, this, m_p2);
+                        if (HitUtil.CircleHitPoint(m_p3, thWidth, point))
+                            return new VertextSnapPoint(canvas, this, m_p1);
+                        if (HitUtil.CircleHitPoint(m_p4, thWidth, point))
+                            return new VertextSnapPoint(canvas, this, m_p2);
                     }
                     if (snaptype == typeof(MidpointSnapPoint))
                     {
-                        UnitPoint p = MidPoint(canvas, m_p1, m_p2, point);
+                        UnitPoint p = MidPoint(canvas, m_p2, m_p3, point);
                         if (p != UnitPoint.Empty)
                             return new MidpointSnapPoint(canvas, this, p);
                     }

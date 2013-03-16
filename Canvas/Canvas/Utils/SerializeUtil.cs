@@ -27,9 +27,18 @@ namespace Canvas
 				svalue = XmlConvert.ToString(Math.Round((float)value, 8));
 			if (svalue.Length == 0 && value.GetType() == typeof(double))
 				svalue = XmlConvert.ToString(Math.Round((double)value, 8));
-			if (svalue.Length == 0)
+            if (svalue.Length == 0 && value.GetType() == typeof(List<ModuleItems.Property>)){
+                List<ModuleItems.Property> temp = (List<ModuleItems.Property>)value;
+                foreach(ModuleItems.Property p in temp){
+                    wr.WriteStartElement("properties");
+			        wr.WriteAttributeString("name", p.name);
+			        wr.WriteAttributeString("value", p.value.ToString());
+			        wr.WriteEndElement();
+                }
+                return;
+            }
+            if (svalue.Length == 0)
 				svalue = value.ToString();
-			
 			wr.WriteStartElement("property");
 			wr.WriteAttributeString("name", name);
 			wr.WriteAttributeString("value", svalue);
@@ -37,24 +46,41 @@ namespace Canvas
 		}
 		public static void ParseProperty(XmlElement node, object dataobject)
 		{
-			if (node.Name != "property")
-				return;
+            if (node.Name == "property")
+            {
 
-			string fieldname = node.GetAttribute("name");
-			string svalue = node.GetAttribute("value");
-			if (fieldname.Length == 0 || svalue.Length == 0)
-				return;
 
-			PropertyInfo info = CommonTools.PropertyUtil.GetProperty(dataobject, fieldname);
-			if (info == null || info.CanWrite == false)
-				return;
-			try
-			{
-				object value = PropertyUtil.ChangeType(svalue, info.PropertyType);
-				if (value != null)
-					info.SetValue(dataobject, value, null);
-			}
-			catch {};
+                string fieldname = node.GetAttribute("name");
+                string svalue = node.GetAttribute("value");
+                if (fieldname.Length == 0 || svalue.Length == 0)
+                    return;
+
+                PropertyInfo info = CommonTools.PropertyUtil.GetProperty(dataobject, fieldname);
+                if (info == null || info.CanWrite == false)
+                    return;
+                try
+                {
+                    object value = PropertyUtil.ChangeType(svalue, info.PropertyType);
+                    if (value != null)
+                        info.SetValue(dataobject, value, null);
+                }
+                catch { };
+            }
+            if (node.Name == "properties")
+            {
+                try
+                {
+                    ModuleItems.Module temp = (ModuleItems.Module)dataobject;
+                    foreach (ModuleItems.Property p in temp.Properties) if (p.name == node.GetAttribute("name")) p.value = node.GetAttribute("value"); 
+                }
+                catch { };
+                try
+                {
+                    ModuleItems.ConfObject temp = (ModuleItems.ConfObject)dataobject;
+                    foreach (ModuleItems.Property p in temp.Properties) if (p.name == node.GetAttribute("name")) p.value = node.GetAttribute("value");
+                }
+                catch { };
+            }
 		}
 		public static void ParseProperties(XmlElement itemnode, object dataobject)
 		{
@@ -68,7 +94,7 @@ namespace Canvas
 				XmlSerializable attr = (XmlSerializable)Attribute.GetCustomAttribute(propertyInfo, typeof(XmlSerializable));
 				if (attr != null)
 				{
-					string name	= propertyInfo.Name;
+					string name	= propertyInfo.Name; 
 					object value = propertyInfo.GetValue(dataobject, null);
 					if (value != null)
 						AddProperty(name, value, wr);
