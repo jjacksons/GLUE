@@ -41,6 +41,7 @@ namespace Canvas
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.m_windowMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.propertiesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.consoleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.m_helpMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.m_aboutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -51,8 +52,13 @@ namespace Canvas
             this.PropertiesTitle = new System.Windows.Forms.Label();
             this.DefaultLabel = new System.Windows.Forms.Label();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.ConsolePanel = new System.Windows.Forms.Panel();
+            this.ConsoleText = new System.Windows.Forms.RichTextBox();
+            this.button1 = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
             this.m_mainMenu.SuspendLayout();
             this.PropertiesPanel.SuspendLayout();
+            this.ConsolePanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // BottomToolStripPanel
@@ -108,7 +114,8 @@ namespace Canvas
             // m_windowMenu
             // 
             this.m_windowMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.propertiesToolStripMenuItem});
+            this.propertiesToolStripMenuItem,
+            this.consoleToolStripMenuItem});
             this.m_windowMenu.Name = "m_windowMenu";
             this.m_windowMenu.Size = new System.Drawing.Size(63, 20);
             this.m_windowMenu.Text = "&Window";
@@ -121,6 +128,13 @@ namespace Canvas
             this.propertiesToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.propertiesToolStripMenuItem.Text = "Properties";
             this.propertiesToolStripMenuItem.Click += new System.EventHandler(this.propertiesToolStripMenuItem_Click);
+            // 
+            // consoleToolStripMenuItem
+            // 
+            this.consoleToolStripMenuItem.Name = "consoleToolStripMenuItem";
+            this.consoleToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+            this.consoleToolStripMenuItem.Text = "Console";
+            this.consoleToolStripMenuItem.Click += new System.EventHandler(this.consoleToolStripMenuItem_Click);
             // 
             // m_helpMenu
             // 
@@ -209,11 +223,62 @@ namespace Canvas
             this.toolTip1.SetToolTip(this.DefaultLabel, "hi");
             this.DefaultLabel.Visible = false;
             // 
+            // ConsolePanel
+            // 
+            this.ConsolePanel.Controls.Add(this.button1);
+            this.ConsolePanel.Controls.Add(this.ConsoleText);
+            this.ConsolePanel.Controls.Add(this.label1);
+            this.ConsolePanel.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.ConsolePanel.Location = new System.Drawing.Point(0, 379);
+            this.ConsolePanel.Name = "ConsolePanel";
+            this.ConsolePanel.Size = new System.Drawing.Size(603, 130);
+            this.ConsolePanel.TabIndex = 0;
+            this.ConsolePanel.Visible = false;
+            // 
+            // ConsoleText
+            // 
+            this.ConsoleText.BackColor = System.Drawing.SystemColors.InfoText;
+            this.ConsoleText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ConsoleText.ForeColor = System.Drawing.SystemColors.Info;
+            this.ConsoleText.Location = new System.Drawing.Point(0, 22);
+            this.ConsoleText.Name = "ConsoleText";
+            this.ConsoleText.ReadOnly = true;
+            this.ConsoleText.Size = new System.Drawing.Size(603, 108);
+            this.ConsoleText.TabIndex = 2;
+            this.ConsoleText.Text = "";
+            this.ConsoleText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ConsoleText_KeyDown);
+            // 
+            // button1
+            // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button1.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button1.Location = new System.Drawing.Point(580, 0);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(23, 22);
+            this.button1.TabIndex = 0;
+            this.button1.Text = "X";
+            this.button1.UseVisualStyleBackColor = false;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // label1
+            // 
+            this.label1.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.label1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.label1.Font = new System.Drawing.Font("Rockwell", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(0, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(603, 22);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "Console";
+            // 
             // MainWin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(803, 509);
+            this.Controls.Add(this.ConsolePanel);
             this.Controls.Add(this.PropertiesPanel);
             this.Controls.Add(this.m_mainMenu);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -226,6 +291,7 @@ namespace Canvas
             this.m_mainMenu.PerformLayout();
             this.PropertiesPanel.ResumeLayout(false);
             this.PropertiesPanel.PerformLayout();
+            this.ConsolePanel.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -251,6 +317,11 @@ namespace Canvas
         private Label PropertiesTitle;
         private ToolStripMenuItem propertiesToolStripMenuItem;
         private ToolTip toolTip1;
+        private Panel ConsolePanel;
+        private Button button1;
+        private Label label1;
+        private ToolStripMenuItem consoleToolStripMenuItem;
+        private RichTextBox ConsoleText;
 	}
 
 }

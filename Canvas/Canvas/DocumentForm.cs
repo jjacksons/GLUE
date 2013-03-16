@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Diagnostics;
 
 namespace Canvas
 {
@@ -92,7 +93,7 @@ namespace Canvas
             mmitem = m_menuItems.GetItem("Run Simulation");
             mmitem.Text = "Run Simulation";
             mmitem.ToolTipText = "Run Simulation (F5)";
-            mmitem.Click += new EventHandler(OnToolSelect);
+            mmitem.Click += new EventHandler(runSimulation);
             mmitem.SingleKey = Keys.F5;
             mmitem.Tag = "Run Simulation";
 
@@ -453,6 +454,15 @@ namespace Canvas
 			m_data.CenterPoint = m_canvas.GetCenter();
 		}
         void OnModuleSelect(object sender, System.EventArgs e) { m_canvas.CommandSelectDrawTool(((ToolStripItem)sender).Text); }
+        void runSimulation(object sender, System.EventArgs e) { runglm(); }
+        StreamWriter inputWriter = null;
+        public void runglm()
+        {
+                MainWin temps = (MainWin)this.Parent.Parent;
+                temps.StartProcess("cmd.exe", "");
+                
+        }
+
 		void OnToolSelect(object sender, System.EventArgs e)
 		{
 			string toolid = string.Empty;
