@@ -32,11 +32,11 @@ namespace Canvas.ModuleItems.powerflow
             DefaultProperties.Add(new Property("phases", "", ""));
             DefaultProperties.Add(new Property("from", "", ""));
             DefaultProperties.Add(new Property("to", "", ""));
-            DefaultProperties.Add(new Property("status", "CLOSED", ""));
-            DefaultProperties.Add(new Property("phase_A_state", "CLOSED", ""));
-            DefaultProperties.Add(new Property("phase_B_state", "CLOSED", ""));
-            DefaultProperties.Add(new Property("phase_C_state", "CLOSED", ""));
-            DefaultProperties.Add(new Property("operating_mode", "BANKED", ""));
+            DefaultProperties.Add(new Property("status", "", ""));
+            DefaultProperties.Add(new Property("phase_A_state", "", ""));
+            DefaultProperties.Add(new Property("phase_B_state", "", ""));
+            DefaultProperties.Add(new Property("phase_C_state", "", ""));
+            DefaultProperties.Add(new Property("operating_mode", "", ""));
             if (Properties.Count == 0) foreach (Property p in DefaultProperties) Properties.Add(p.clone());
         }
         public override void GetObjectData(XmlWriter wr)
@@ -105,7 +105,7 @@ namespace Canvas.ModuleItems.powerflow
                 if (m_p4.IsEmpty == false) Canvas.DrawTools.DrawUtils.DrawNode(canvas, m_p4);
             }
             canvas.DrawLine(canvas, pen, m_p1, m_p2);
-            if (this.currentPoint != ePoint.FromPoint) canvas.DrawLine(canvas, pen, m_p3, m_p4);
+            if (m_p4 != m_p3) canvas.DrawLine(canvas, pen, m_p3, m_p4);
             pen = new Pen(pen.Color, (float)3);
             if (horizontal)
             {

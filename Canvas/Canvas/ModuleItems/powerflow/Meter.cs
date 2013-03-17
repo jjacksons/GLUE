@@ -31,39 +31,25 @@ namespace Canvas.ModuleItems.powerflow
             DefaultProperties.Add(new Property("name", "", ""));
             DefaultProperties.Add(new Property("phases", "", ""));
             DefaultProperties.Add(new Property("nominal_voltage", "", " V"));
-            DefaultProperties.Add(new Property("measured_real_energy", "", " WH"));
-            DefaultProperties.Add(new Property("measured_reactive_energy", "", " VAH"));
-            DefaultProperties.Add(new Property("measured_power", "", " VA"));
             DefaultProperties.Add(new Property("bustype", "", ""));
             DefaultProperties.Add(new Property("maximum_voltage_error", "", " Volts"));
             DefaultProperties.Add(new Property("busflags", "", ""));
-            DefaultProperties.Add(new Property("measured_power_A", "", " VA"));
-            DefaultProperties.Add(new Property("measured_power_B", "", " VA"));
-            DefaultProperties.Add(new Property("measured_power_C", "", " VA"));
-            DefaultProperties.Add(new Property("measured_demand", "", " W"));
-            DefaultProperties.Add(new Property("measured_real_power", "", " W"));
-            DefaultProperties.Add(new Property("measured_reactive_power", "", " W"));
-            DefaultProperties.Add(new Property("measured_voltage_A", "", " V"));
-            DefaultProperties.Add(new Property("measured_voltage_B", "", " V"));
-            DefaultProperties.Add(new Property("measured_voltage_C", "", " V"));
-            DefaultProperties.Add(new Property("measured_current_A", "", " A"));
-            DefaultProperties.Add(new Property("measured_current_B", "", " A"));
-            DefaultProperties.Add(new Property("measured_current_C", "", " A"));
+            DefaultProperties.Add(new Property("voltage_A", "", " VA"));
+            DefaultProperties.Add(new Property("voltage_B", "", " VA"));
+            DefaultProperties.Add(new Property("voltage_C", "", " VA"));
             DefaultProperties.Add(new Property("bill_day", "", ""));
             DefaultProperties.Add(new Property("price", "", " $/kwh"));
             DefaultProperties.Add(new Property("monthly_fee", "", " $"));
-            DefaultProperties.Add(new Property("monthly_bill", "", " $"));
-            DefaultProperties.Add(new Property("previous_monthly_bill", "", " $"));
             DefaultProperties.Add(new Property("monthly_energy", "", " kwh"));
             DefaultProperties.Add(new Property("previous_monthly_energy", "", " kwh"));
             DefaultProperties.Add(new Property("bill_mode", "", ""));
-            DefaultProperties.Add(new Property("power_market", "", " Seconds"));
-            DefaultProperties.Add(new Property("first_tier_price", "", " Seconds"));
-            DefaultProperties.Add(new Property("second_tier_price", "", " Seconds"));
-            DefaultProperties.Add(new Property("third_tier_price", "", " Seconds"));
-            DefaultProperties.Add(new Property("first_tier_energy", "", " Seconds"));
-            DefaultProperties.Add(new Property("second_tier_energy", "", " Seconds"));
-            DefaultProperties.Add(new Property("third_tier_energy", "", " Seconds"));
+            DefaultProperties.Add(new Property("power_market", "", " "));
+            DefaultProperties.Add(new Property("first_tier_price", "", " $"));
+            DefaultProperties.Add(new Property("second_tier_price", "", " $"));
+            DefaultProperties.Add(new Property("third_tier_price", "", " $"));
+            DefaultProperties.Add(new Property("first_tier_energy", "", " kwh"));
+            DefaultProperties.Add(new Property("second_tier_energy", "", " kwh"));
+            DefaultProperties.Add(new Property("third_tier_energy", "", " kwh"));
 
 
 
@@ -97,18 +83,22 @@ namespace Canvas.ModuleItems.powerflow
         public override INodePoint NodePoint(ICanvas canvas, UnitPoint point)
         {
             float thWidth = ThresholdWidth(canvas, Width);
-            if (HitUtil.CircleHitPoint(m_p1, thWidth, point))
+            if (HitUtil.CircleHitPoint(m_p1, thWidth+(float)0.3, point))
                 return new NodePointMeter(this, NodePointMeter.ePoint.FromPoint);
-            if (HitUtil.CircleHitPoint(m_p2, thWidth, point))
+            if (HitUtil.CircleHitPoint(m_p2, thWidth + (float)0.3, point))
                 return new NodePointMeter(this, NodePointMeter.ePoint.StartPoint);
-            if (HitUtil.CircleHitPoint(m_p3, thWidth, point))
+            if (HitUtil.CircleHitPoint(m_p3, thWidth + (float)0.3, point))
                 return new NodePointMeter(this, NodePointMeter.ePoint.EndPoint);
-            if (HitUtil.CircleHitPoint(m_p4, thWidth, point))
+            if (HitUtil.CircleHitPoint(m_p4, thWidth + (float)0.3, point))
                 return new NodePointMeter(this, NodePointMeter.ePoint.ToPoint);
 
             return null;
         }
-
+        public override bool PointInObject(ICanvas canvas, UnitPoint point)
+        {
+            float thWidth = ThresholdWidth(canvas, Width)+(float)0.3;
+            return HitUtil.IsPointInLine(m_p1, m_p2, point, thWidth) || HitUtil.IsPointInLine(m_p2, m_p3, point, thWidth) || HitUtil.IsPointInLine(m_p3, m_p4, point, thWidth);
+        }
         public override string Id
         {
             get { return "meter"; }

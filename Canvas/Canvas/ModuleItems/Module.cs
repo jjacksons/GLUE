@@ -251,7 +251,7 @@ namespace Canvas.ModuleItems
                 return mid;
             return UnitPoint.Empty;
         }
-        public bool PointInObject(ICanvas canvas, UnitPoint point)
+        public virtual bool  PointInObject(ICanvas canvas, UnitPoint point)
         {
             float thWidth = ThresholdWidth(canvas, Width);
             return HitUtil.IsPointInLine(m_p1, m_p2, point, thWidth) || HitUtil.IsPointInLine(m_p2, m_p3, point, thWidth) || HitUtil.IsPointInLine(m_p3, m_p4, point, thWidth);

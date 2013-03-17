@@ -117,6 +117,8 @@ namespace Canvas
 		{
 			foreach (MenuItem item in m_items.Values)
 				item.Enabled = false;
+            foreach (ToolStripItem strip in m_stripsItem.Values)
+                strip.Enabled = false;
 		}
 		public ToolStripPanel GetStripPanel(DockStyle dockedLocation)
 		{

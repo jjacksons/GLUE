@@ -75,7 +75,7 @@ namespace Canvas
 		protected override void OnLoad(EventArgs e)
 		{
 			base.OnLoad(e);
-			//m_canvas.SetCenter(m_data.CenterPoint);
+			m_canvas.SetCenter(m_data.CenterPoint);
 		}
         void SetupGLMItems()
         {
@@ -99,7 +99,7 @@ namespace Canvas
 
             ToolStripMenuItem menu = m_menuItems.GetMenuStrip("GLM");
             menu.MergeAction = System.Windows.Forms.MergeAction.Insert;
-            menu.MergeIndex = 1;
+            menu.MergeIndex = 3;
             menu.Text = "&GLM";
             menu.DropDownItems.Add(m_menuItems.GetItem("Import GLM").CreateMenuItem());
             menu.DropDownItems.Add(m_menuItems.GetItem("Export GLM").CreateMenuItem());
@@ -291,9 +291,7 @@ namespace Canvas
             ToolStripMenuItem item = m_menuItems.GetMenuStrip("powerflow");
             item.ToolTipText = "Powerflow Module";
             item.Image = ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow);
-            item.Tag = "powerflow";
-            m_data.AddEditTool(item.Tag.ToString(), new EditTools.LinesMeetEditTool(this));
-            
+
             item.DropDownItems.Add("Node", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow),new EventHandler(OnModuleSelect));
             m_data.AddDrawTool("Node", new ModuleItems.powerflow.node());
             item.DropDownItems.Add("line_configuration", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow),new EventHandler(OnModuleSelect));
@@ -320,7 +318,7 @@ namespace Canvas
             item.DropDownItems.Add("Capacitor", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
             item.DropDownItems.Add("fuse", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow), new EventHandler(OnModuleSelect));
             m_data.AddDrawTool("fuse", new ModuleItems.powerflow.fuse());
-            item.DropDownItems.Add("Switch", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow), new EventHandler(OnModuleSelect));
+            item.DropDownItems.Add("switch", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow), new EventHandler(OnModuleSelect));
             m_data.AddDrawTool("switch", new ModuleItems.powerflow.Switch());
             item.DropDownItems.Add("Recloser", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
             item.DropDownItems.Add("Relay", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
@@ -356,7 +354,6 @@ namespace Canvas
 
             ToolStrip strip = m_menuItems.GetStrip("modules");
             strip.Items.Add(m_menuItems.GetItem("clock").CreateButton());
-            strip.Items.Add(m_menuItems.GetMenuStrip("powerflow"));
             strip.Items.Add(m_menuItems.GetMenuStrip("powerflow"));
             strip.Items.Add(m_menuItems.GetMenuStrip("generator"));
             m_toolHint = string.Empty;
@@ -553,6 +550,7 @@ namespace Canvas
                     ModuleItems.Module temp = o as ModuleItems.Module;
                     export = export + temp.toGLM();
                 }
+                export = export + System.Environment.NewLine;
             }
             System.IO.StreamWriter file = new System.IO.StreamWriter(filename);
             file.WriteLine(export);
@@ -615,10 +613,6 @@ namespace Canvas
                     multiimport = result == System.Windows.Forms.DialogResult.Yes;
                 }
                 if (line.IndexOf("#include") >= 0 && multiimport) importFile(path + Regex.Replace(line, ".*\"(.*)\"", "$1"));
-                if (line.IndexOf("{") >= 0)
-                {
-
-                }
                 if (line.IndexOf("object") >= 0)
                 {
                     String type = Regex.Replace(line, ".*object (.*){", "$1").Trim();
@@ -637,75 +631,84 @@ namespace Canvas
                 }
                 if (temp != null)
                 {
+                    line = Regex.Replace(line, "(.*) (.*) .*;", "$1 $2;").Trim();
                     foreach (ModuleItems.Property p in temp.Properties) if (p.name == Regex.Replace(line, "(.*) .*", "$1").Trim()) p.value = Regex.Replace(line, ".* (.*);", "$1").Trim();
                 }
 
             }
-            SetHint("Completed glm file import. Processing...");
-            //connect
-            UnitPoint start = new UnitPoint(0, 0);
-            UnitPoint end = new UnitPoint(1, 0);
-            UnitPoint from = new UnitPoint(1, 1);
-            UnitPoint to = new UnitPoint(0, -1);
-            foreach (ModuleItems.Module m in objects)
-            {
-                if (m.tofrom || m.child)
-                {
-                    m.to_connections = new ModuleItems.powerflow.node();
-                    m.from_connections = new ModuleItems.powerflow.node();
-                    foreach (ModuleItems.Property p in m.Properties)
-                    {
-                        if (p.name == "to")
-                            foreach (ModuleItems.Module n in objects)
-                                foreach (ModuleItems.Property q in m.Properties)
-                                    if (q.name == "name" && q.value == p.value) m.to_connections = n;
-                        if (p.name == "from")
-                            foreach (ModuleItems.Module n in objects)
-                                foreach (ModuleItems.Property q in m.Properties)
-                                    if (q.name == "name" && q.value == p.value) m.from_connections = n;
-                        if (p.name == "parent")
-                            foreach (ModuleItems.Module n in objects)
-                                foreach (ModuleItems.Property q in m.Properties)
-                                    if (q.name == "name" && q.value == p.value) m.from_connections = n;
-                    }
-                }
-                m.FromPoint = m.StartPoint = start;
-                m.EndPoint = m.ToPoint = end;
-                if (m.tofrom)
-                {
-                    m.FromPoint = from;
-                    m.ToPoint = to;
-                }
-                if (m.child) m.FromPoint = from;
-                start.X += 2;
-                end.X += 2;
-                from.X += 2;
-                to.X += 2;
-                if (start.X > 20)
-                {
-                    start.X = to.X = 0;
-                    from.X = end.X = 1;
-                    start.Y += 2;
-                    end.Y += 2;
-                    to.Y += 2;
-                    from.Y += 2;
-                }
-
-
-
-            }
-            foreach (ModuleItems.Module m in objects)
-            {
-                if (m.tofrom)
-                {
-                    m.Move(new UnitPoint(m.FromPoint.X - m.from_connections.ToPoint.X, m.FromPoint.Y - m.from_connections.ToPoint.Y));
-                    m.to_connections.Move(new UnitPoint(m.to_connections.FromPoint.X - m.ToPoint.X, m.to_connections.FromPoint.Y - m.ToPoint.Y));
-                }
-                if (m.child) m.Move(new UnitPoint(m.FromPoint.X - m.from_connections.ToPoint.X, m.FromPoint.Y - m.from_connections.ToPoint.Y));
-            }
-            foreach (ModuleItems.Module m in objects) Model.AddObject(Model.ActiveLayer, m);
             file.Close();
+            SetHint("Completed glm file import. Processing...");
+            UnitPoint start = new UnitPoint(0, 0);
+            while (objects.Count > 0)
+            {
+
+                ModuleItems.Module m = objects[0];
+                objects.Remove(m);
+                m.FromPoint = m.StartPoint = m.ToPoint = m.EndPoint = start;
+                if (m.tofrom)
+                {
+                    m.FromPoint = new UnitPoint(start.X + 1,start.Y + 1);
+                    m.EndPoint = new UnitPoint(start.X + 1, start.Y);
+                    m.ToPoint = new UnitPoint(start.X , start.Y - 1);
+                }
+                if (m.child)
+                {
+                    m.FromPoint = new UnitPoint(start.X + 1, start.Y + 1);
+                    m.EndPoint = new UnitPoint(start.X + 1, start.Y);
+                }
+                Model.AddObject(Model.ActiveLayer, m);
+
+                Trace(m,objects);
+                start.X++;
+                start.X++;
+                start.X++;
+            }
+
+
+            Invalidate();
+            SetHint("");
         }
+        private void Trace(ModuleItems.Module m, List<ModuleItems.Module> l)
+        {
+            CanvasWrapper c = new CanvasWrapper(m_canvas);
+            List<ModuleItems.Module> toremove = new List<ModuleItems.Module>();
+            foreach (ModuleItems.Property p in m.Properties)
+                if (p.name == "name")
+                    foreach (ModuleItems.Module n in l)
+                        foreach (ModuleItems.Property q in n.Properties)
+                            if ((q.name == "from" && q.value.ToString() == p.value.ToString()) || (q.name == "parent" && q.value.ToString() == p.value.ToString())) toremove.Add(n);
+            foreach (ModuleItems.Property p in m.Properties)
+                if (p.name == "to")
+                    foreach (ModuleItems.Module n in l)
+                        foreach (ModuleItems.Property q in n.Properties)
+                            if ((q.name == "name" && q.value.ToString() == p.value.ToString())) toremove.Add(n);
+            
+            while (toremove.Count > 0)
+            {
+                int spacer = toremove.Count - 1;
+                while(m_canvas.Model.GetHitObjects(c, new UnitPoint(m.ToPoint.X + spacer * 2, m.ToPoint.Y - 1)).Count > 0) spacer++;
+                toremove[0].FromPoint = toremove[0].StartPoint = toremove[0].ToPoint = toremove[0].EndPoint = m.ToPoint;
+                if (toremove[0].tofrom)
+                {
+                    toremove[0].StartPoint = new UnitPoint(m.ToPoint.X + spacer*2, m.ToPoint.Y-1);
+                    toremove[0].EndPoint = new UnitPoint(m.ToPoint.X + 1 + spacer * 2, m.ToPoint.Y - 1);
+                    toremove[0].ToPoint = new UnitPoint(m.ToPoint.X + spacer * 2, m.ToPoint.Y - 2);
+                }
+                if (toremove[0].child)
+                {
+                    toremove[0].StartPoint = new UnitPoint(m.ToPoint.X + spacer * 2, m.ToPoint.Y - 1);
+                    toremove[0].EndPoint = new UnitPoint(m.ToPoint.X + 1 + spacer * 2, m.ToPoint.Y - 1);
+                }
+                Model.AddObject(Model.ActiveLayer, toremove[0]);
+                l.Remove(toremove[0]);
+                Trace(toremove[0],l);
+                toremove.Remove(toremove[0]);
+            }
+
+        }
+
+
+
 		void OnLayerSelect(object sender, System.EventArgs e)
 		{
 			CommonTools.NameObject<DrawingLayer> obj = null;
