@@ -87,8 +87,6 @@ namespace Canvas
 
             panel = m_menuItems.GetStripPanel(DockStyle.Left);
             panel.Join(m_menuItems.GetStrip("modify"));
-
-            panel = m_menuItems.GetStripPanel(DockStyle.Left);
             panel.Join(m_menuItems.GetStrip("modules"));
 
             panel = m_menuItems.GetStripPanel(DockStyle.Bottom);
@@ -119,6 +117,7 @@ namespace Canvas
                 ToolStripManager.RevertMerge(m_menuItems.GetStrip("layer"));
                 ToolStripManager.RevertMerge(m_menuItems.GetStrip("status"));
                 ToolStripManager.RevertMerge(m_menuItems.GetStrip("modify"));
+                ToolStripManager.RevertMerge(m_menuItems.GetStrip("modules"));
                 ToolStripManager.Merge(m_activeDocument.GetToolStrip("draw"), m_menuItems.GetStrip("draw"));
                 ToolStripManager.Merge(m_activeDocument.GetToolStrip("edit"), m_menuItems.GetStrip("edit"));
                 ToolStripManager.Merge(m_activeDocument.GetToolStrip("layer"), m_menuItems.GetStrip("layer"));

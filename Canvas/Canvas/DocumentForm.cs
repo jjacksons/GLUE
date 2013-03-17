@@ -75,7 +75,7 @@ namespace Canvas
 		protected override void OnLoad(EventArgs e)
 		{
 			base.OnLoad(e);
-			m_canvas.SetCenter(m_data.CenterPoint);
+			//m_canvas.SetCenter(m_data.CenterPoint);
 		}
         void SetupGLMItems()
         {
@@ -341,7 +341,6 @@ namespace Canvas
             item.ToolTipText = "Generators Module";
             item.Image = ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.generators);
             item.Tag = "generator";
-            m_data.AddEditTool(item.Tag.ToString(), new EditTools.LineShrinkExtendEditTool(this));
 
             MenuItem mmitem = m_menuItems.GetItem("clock");
             mmitem.Text = "clock";
@@ -349,7 +348,6 @@ namespace Canvas
             mmitem.Image = ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.clock);
             mmitem.Click += new EventHandler(OnModuleSelect);
             m_data.AddDrawTool("clock", new ModuleItems.clock());
-
 
 
             ToolStrip strip = m_menuItems.GetStrip("modules");
