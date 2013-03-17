@@ -7,7 +7,7 @@ namespace Canvas
 	static class Program
 	{
 		public static int TracePaint = 1;
-		public static string AppName = "OpenS-CAD";
+		public static string AppName = "GLUE";
 		/// <summary>
 		/// The main entry point for the application.
 		/// </summary>

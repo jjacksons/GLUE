@@ -77,11 +77,11 @@ namespace Canvas.ModuleItems.powerflow
         }
         public override string toGLM()
         {
-            String s = "    object node {" + System.Environment.NewLine;
+            String s = "object node {" + System.Environment.NewLine;
             foreach (Property p in Properties)
                 foreach (Property q in DefaultProperties)
-                    if (p.name == q.name && p.value.ToString() != q.value.ToString()) s = s + "   " + p.name + " " + p.value.ToString() + ";" + System.Environment.NewLine;
-            s = s + "   }" + System.Environment.NewLine;
+                    if (p.name == q.name && p.value.ToString() != q.value.ToString()) s = s + "    " + p.name + " " + p.value.ToString() + ";" + System.Environment.NewLine;
+            s = s + "}" + System.Environment.NewLine;
             return s;
         }
         public override void Draw(ICanvas canvas, RectangleF unitrect)

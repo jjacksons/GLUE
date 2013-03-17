@@ -135,7 +135,7 @@ namespace Canvas
         private void OnFileOpen(object sender, EventArgs e)
         {
             OpenFileDialog dlg = new OpenFileDialog();
-            dlg.Filter = "Cad XML files (*.cadxml)|*.cadxml";
+            dlg.Filter = "GLUE XML files (*.gxml)|*.gxml";
             if (dlg.ShowDialog(this) == DialogResult.OK)
                 OpenDocument(dlg.FileName);
         }

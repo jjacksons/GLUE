@@ -165,6 +165,7 @@ namespace ProcessInterface
             errorReader = TextReader.Synchronized(process.StandardError);
 
             //  Run the workers that read output and error.
+            if (outputWorker.IsBusy) return;
             outputWorker.RunWorkerAsync();
             errorWorker.RunWorkerAsync();
         }

@@ -199,10 +199,11 @@ namespace Canvas
 			
 			float centerY = ClientRectangle.Height / 2;
 			m_panOffset.Y += centerY - screenPoint.Y;
-
+            m_dragOffset = new PointF(0,0);
 			if (setCursor)
 				Cursor.Position = this.PointToScreen(new Point((int)centerX, (int)centerY));
 			DoInvalidate(true);
+            UpdateCursor();
 		}
 		protected override void OnPaint(PaintEventArgs e)
 		{
@@ -669,6 +670,7 @@ namespace Canvas
 			else
 				m_model.Zoom = m_model.Zoom * zoomdelta;
 			SetCenterScreen(ToScreen(p), true);
+            m_lastCenterPoint = p;
 			DoInvalidate(true);
 			base.OnMouseWheel(e);
 		}

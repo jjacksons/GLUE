@@ -75,7 +75,7 @@ namespace Canvas
 		protected override void OnLoad(EventArgs e)
 		{
 			base.OnLoad(e);
-			m_canvas.SetCenter(m_data.CenterPoint);
+			//m_canvas.SetCenter(m_data.CenterPoint);
 		}
         void SetupGLMItems()
         {
@@ -427,7 +427,7 @@ namespace Canvas
 		{
 			UpdateData();
 			SaveFileDialog dlg = new SaveFileDialog();
-			dlg.Filter = "Cad XML files (*.cadxml)|*.cadxml";
+			dlg.Filter = "GLUE XML files (*.gxml)|*.gxml";
 			dlg.OverwritePrompt = true;
 			if (m_filename.Length > 0)
 				dlg.FileName = m_filename;
@@ -453,11 +453,11 @@ namespace Canvas
 		}
         void OnModuleSelect(object sender, System.EventArgs e) { m_canvas.CommandSelectDrawTool(((ToolStripItem)sender).Text); }
         void runSimulation(object sender, System.EventArgs e) { runglm(); }
-        StreamWriter inputWriter = null;
         public void runglm()
         {
                 MainWin temps = (MainWin)this.Parent.Parent;
-                temps.StartProcess("cmd.exe", "");
+                export("temp.glm");
+                temps.StartProcess("cmd.exe", "gridlabd -v temp.glm");
                 
         }
 

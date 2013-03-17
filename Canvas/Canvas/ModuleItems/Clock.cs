@@ -52,11 +52,11 @@ namespace Canvas.ModuleItems
         }
         public override string toGLM()
         {
-            String s = "    clock {"+System.Environment.NewLine;
+            String s = "clock {"+System.Environment.NewLine;
             foreach (Property p in Properties)
                 foreach (Property q in DefaultProperties)
-                    if (p.name == q.name && p.value.ToString() != q.value.ToString()) s = s + "   " + p.name + " " + p.value.ToString() + ";"+System.Environment.NewLine;
-            s = s + "   }"+ System.Environment.NewLine;
+                    if (p.name == q.name && p.value.ToString() != q.value.ToString()) s = s + "    " + p.name + " " + p.value.ToString() + ";"+System.Environment.NewLine;
+            s = s + "}"+ System.Environment.NewLine;
             return s;
         }
         public override INodePoint NodePoint(ICanvas canvas, UnitPoint point)

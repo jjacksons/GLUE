@@ -387,9 +387,9 @@ namespace Canvas.ModuleItems
                         if (HitUtil.CircleHitPoint(m_p2, thWidth, point))
                             return new VertextSnapPoint(canvas, this, m_p2);
                         if (HitUtil.CircleHitPoint(m_p3, thWidth, point))
-                            return new VertextSnapPoint(canvas, this, m_p1);
+                            return new VertextSnapPoint(canvas, this, m_p3);
                         if (HitUtil.CircleHitPoint(m_p4, thWidth, point))
-                            return new VertextSnapPoint(canvas, this, m_p2);
+                            return new VertextSnapPoint(canvas, this, m_p4);
                     }
                     if (snaptype == typeof(MidpointSnapPoint))
                     {
@@ -425,9 +425,12 @@ namespace Canvas.ModuleItems
             {
                 double d1 = HitUtil.Distance(point, m_p1);
                 double d2 = HitUtil.Distance(point, m_p2);
-                if (d1 <= d2)
-                    return new VertextSnapPoint(canvas, this, m_p1);
-                return new VertextSnapPoint(canvas, this, m_p2);
+                double d3 = HitUtil.Distance(point, m_p3);
+                double d4 = HitUtil.Distance(point, m_p4);
+                if (d1 <= d2 && d1 <= d3 && d1 <= d4) return new VertextSnapPoint(canvas, this, m_p1);
+                if (d2 <= d1 && d2 <= d3 && d2 <= d4) return new VertextSnapPoint(canvas, this, m_p1);
+                if (d3 <= d2 && d3 <= d1 && d3 <= d4) return new VertextSnapPoint(canvas, this, m_p1);
+                return new VertextSnapPoint(canvas, this, m_p4);
             }
             if (usersnaptype == typeof(NearestSnapPoint))
             {

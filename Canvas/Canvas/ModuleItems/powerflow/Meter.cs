@@ -87,11 +87,11 @@ namespace Canvas.ModuleItems.powerflow
         }
         public override string toGLM()
         {
-            String s = "    object meter {" + System.Environment.NewLine;
+            String s = "object meter {" + System.Environment.NewLine;
             foreach (Property p in Properties)
                 foreach (Property q in DefaultProperties)
-                    if (p.name == q.name && p.value.ToString() != q.value.ToString()) s = s + "   " + p.name + " " + p.value.ToString() + ";" + System.Environment.NewLine;
-            s = s + "   }" + System.Environment.NewLine;
+                    if (p.name == q.name && p.value.ToString() != q.value.ToString()) s = s + "    " + p.name + " " + p.value.ToString() + ";" + System.Environment.NewLine;
+            s = s + "}" + System.Environment.NewLine;
             return s;
         }
         public override INodePoint NodePoint(ICanvas canvas, UnitPoint point)
@@ -124,7 +124,6 @@ namespace Canvas.ModuleItems.powerflow
             }
             pen = new Pen(pen.Color, (float)6);
             
-            unitrect.Inflate(3, 3);
             canvas.DrawArc(canvas,pen,m_p1,(float)0.05,0,360);
             pen = new Pen(pen.Color, (float)3);
             canvas.Graphics.DrawRectangle(pen, canvas.ToScreen(new UnitPoint(m_p1.X - 0.2, m_p1.Y - 0.2)).X, canvas.ToScreen(new UnitPoint(m_p1.X + 0.2, m_p1.Y + 0.2)).Y, canvas.ToScreen(new UnitPoint(m_p1.X + 0.2, m_p1.Y +0.2)).X - canvas.ToScreen(new UnitPoint(m_p1.X - 0.2, m_p1.Y - 0.2)).X, canvas.ToScreen(new UnitPoint(m_p1.X - 0.2, m_p1.Y - 0.2)).Y - canvas.ToScreen(new UnitPoint(m_p1.X + 0.2, m_p1.Y + 0.2)).Y);

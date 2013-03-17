@@ -1,0 +1,35 @@
+    object node {
+   name source;
+   phases abcn;
+   voltage_A 415;
+   voltage_B 415;
+   voltage_C 415;
+   bustype SWING;
+   }
+    object node {
+   name B;
+   phases ABCN;
+   }
+    object meter {
+   name C;
+   phases ABCN;
+   }
+object overhead_line {
+     name Line1;
+     phases ABCN;
+     from source;
+     to B;
+     length 123;
+     configuration lc1;
+}
+object overhead_line {
+     name Line2;
+     phases ABCN;
+     from B;
+     to C;
+     configuration LC1;
+}
+    tobject line_configuration {
+   name LC1;
+   }
+

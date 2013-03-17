@@ -38,7 +38,7 @@ namespace Canvas.Options
 			this.label1.Size = new System.Drawing.Size(336, 148);
 			this.label1.TabIndex = 0;
 			this.label1.Text = "I am still working on this.For now adding and removing layers must be done manual" +
-				"ly by modifying the cadxml (xml) file directly.";
+				"ly by modifying the GLUE (xml) file directly.";
 			this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// LayersPage

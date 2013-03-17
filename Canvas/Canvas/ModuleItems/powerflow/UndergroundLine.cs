@@ -58,11 +58,11 @@ namespace Canvas.ModuleItems.powerflow
 
         public override string toGLM()
         {
-            String s = "    object underground_line {" + System.Environment.NewLine;
+            String s = "object underground_line {" + System.Environment.NewLine;
             foreach (Property p in Properties)
                 foreach (Property q in DefaultProperties)
-                    if (p.name == q.name && p.value.ToString() != q.value.ToString()) s = s + "   " + p.name + " " + p.value.ToString() + ";" + System.Environment.NewLine;
-            s = s + "   }" + System.Environment.NewLine;
+                    if (p.name == q.name && p.value.ToString() != q.value.ToString()) s = s + "    " + p.name + " " + p.value.ToString() + ";" + System.Environment.NewLine;
+            s = s + "}" + System.Environment.NewLine;
             return s;
         }
         public override INodePoint NodePoint(ICanvas canvas, UnitPoint point)
@@ -98,7 +98,7 @@ namespace Canvas.ModuleItems.powerflow
                 if (m_p4.IsEmpty == false) Canvas.DrawTools.DrawUtils.DrawNode(canvas, m_p4);
             }
             canvas.DrawLine(canvas, pen, m_p1, m_p2);
-            if(this.currentPoint != ePoint.FromPoint)canvas.DrawLine(canvas, pen, m_p3, m_p4);
+            if(m_p4 != m_p3)canvas.DrawLine(canvas, pen, m_p3, m_p4);
             pen = new Pen(pen.Color, (float)4);
             pen.DashStyle = DashStyle.Dash;
             canvas.DrawLine(canvas,pen,m_p2,m_p3);
