@@ -8,15 +8,6 @@ using System.Xml;
 
 namespace Canvas.ModuleItems.powerflow
 {
-    class NodePointOverheadLine : NodePoint
-        {
-        public NodePointOverheadLine(Module owner, ePoint id) {
-            m_owner = owner;
-            m_clone = m_owner.Clone() as Module;
-            m_pointId = id;
-            m_originalPoint = GetPoint(m_pointId);
-        }
-        }
     class overhead_line : Module
     {
 
@@ -53,20 +44,6 @@ namespace Canvas.ModuleItems.powerflow
         public override IDrawObject Clone()
         {
             return new overhead_line(this);
-        }
-        public override INodePoint NodePoint(ICanvas canvas, UnitPoint point)
-        {
-            float thWidth = ThresholdWidth(canvas, Width);
-            if (HitUtil.CircleHitPoint(m_p1, thWidth, point))
-                return new NodePointOverheadLine(this, NodePointOverheadLine.ePoint.FromPoint);
-            if (HitUtil.CircleHitPoint(m_p2, thWidth, point))
-                return new NodePointOverheadLine(this, NodePointOverheadLine.ePoint.StartPoint);
-            if (HitUtil.CircleHitPoint(m_p3, thWidth, point))
-                return new NodePointOverheadLine(this, NodePointOverheadLine.ePoint.EndPoint);
-            if (HitUtil.CircleHitPoint(m_p4, thWidth, point))
-                return new NodePointOverheadLine(this, NodePointOverheadLine.ePoint.ToPoint);
-
-            return null;
         }
         public override string toGLM()
         {

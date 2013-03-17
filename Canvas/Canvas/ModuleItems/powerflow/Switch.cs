@@ -8,16 +8,6 @@ using System.Xml;
 
 namespace Canvas.ModuleItems.powerflow
 {
-    class NodePointSwitch : NodePoint
-    {
-        public NodePointSwitch(Module owner, ePoint id)
-        {
-            m_owner = owner;
-            m_clone = m_owner.Clone() as Module;
-            m_pointId = id;
-            m_originalPoint = GetPoint(m_pointId);
-        }
-    }
     class Switch : Module
     {
 
@@ -67,20 +57,6 @@ namespace Canvas.ModuleItems.powerflow
             s = s + "}" + System.Environment.NewLine;
             return s;
         }
-        public override INodePoint NodePoint(ICanvas canvas, UnitPoint point)
-        {
-            float thWidth = ThresholdWidth(canvas, Width);
-            if (HitUtil.CircleHitPoint(m_p1, thWidth, point))
-                return new NodePointSwitch(this, NodePointSwitch.ePoint.FromPoint);
-            if (HitUtil.CircleHitPoint(m_p2, thWidth, point))
-                return new NodePointSwitch(this, NodePointSwitch.ePoint.StartPoint);
-            if (HitUtil.CircleHitPoint(m_p3, thWidth, point))
-                return new NodePointSwitch(this, NodePointSwitch.ePoint.EndPoint);
-            if (HitUtil.CircleHitPoint(m_p4, thWidth, point))
-                return new NodePointSwitch(this, NodePointSwitch.ePoint.ToPoint);
-            return null;
-        }
-
         public override string Id
         {
             get { return "Switch"; }

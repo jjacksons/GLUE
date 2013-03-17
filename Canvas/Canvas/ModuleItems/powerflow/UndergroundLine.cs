@@ -8,16 +8,6 @@ using System.Xml;
 
 namespace Canvas.ModuleItems.powerflow
 {
-    class NodePointUndergroundLine : NodePoint
-        {
-        public NodePointUndergroundLine(Module owner, ePoint id)
-        {
-            m_owner = owner;
-            m_clone = m_owner.Clone() as Module;
-            m_pointId = id;
-            m_originalPoint = GetPoint(m_pointId);
-        }
-        }
     class underground_line : Module
     {
 
@@ -64,19 +54,6 @@ namespace Canvas.ModuleItems.powerflow
                     if (p.name == q.name && p.value.ToString() != q.value.ToString()) s = s + "    " + p.name + " " + p.value.ToString() + ";" + System.Environment.NewLine;
             s = s + "}" + System.Environment.NewLine;
             return s;
-        }
-        public override INodePoint NodePoint(ICanvas canvas, UnitPoint point)
-        {
-            float thWidth = ThresholdWidth(canvas, Width);
-            if (HitUtil.CircleHitPoint(m_p1, thWidth, point))
-                return new NodePointUndergroundLine(this, NodePointUndergroundLine.ePoint.FromPoint);
-            if (HitUtil.CircleHitPoint(m_p2, thWidth, point))
-                return new NodePointUndergroundLine(this, NodePointUndergroundLine.ePoint.StartPoint);
-            if (HitUtil.CircleHitPoint(m_p3, thWidth, point))
-                return new NodePointUndergroundLine(this, NodePointUndergroundLine.ePoint.EndPoint);
-            if (HitUtil.CircleHitPoint(m_p4, thWidth, point))
-                return new NodePointUndergroundLine(this, NodePointUndergroundLine.ePoint.ToPoint);
-            return null;
         }
         
         public override string Id

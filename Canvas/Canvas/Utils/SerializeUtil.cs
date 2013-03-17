@@ -74,12 +74,6 @@ namespace Canvas
                     foreach (ModuleItems.Property p in temp.Properties) if (p.name == node.GetAttribute("name")) p.value = node.GetAttribute("value"); 
                 }
                 catch { };
-                try
-                {
-                    ModuleItems.ConfObject temp = (ModuleItems.ConfObject)dataobject;
-                    foreach (ModuleItems.Property p in temp.Properties) if (p.name == node.GetAttribute("name")) p.value = node.GetAttribute("value");
-                }
-                catch { };
             }
 		}
 		public static void ParseProperties(XmlElement itemnode, object dataobject)

@@ -96,7 +96,7 @@
       <DependentUpon>MainWin.cs</DependentUpon>
     </Compile>
     <Compile Include="Model.cs" />
-    <Compile Include="ModuleItems\ConfObject.cs" />
+    <Compile Include="ModuleItems\generators\SolarPanel.cs" />
     <Compile Include="ModuleItems\Module.cs" />
     <Compile Include="ModuleItems\Clock.cs" />
     <Compile Include="ModuleItems\powerflow\Meter.cs" />
@@ -215,9 +215,7 @@
     <Content Include="get_glue_icon.ico" />
     <EmbeddedResource Include="Resources\moduleimages.bmp" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ModuleItems\generators\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

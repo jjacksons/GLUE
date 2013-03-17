@@ -538,12 +538,7 @@ namespace Canvas
             String export = "";
             foreach (object o in m_canvas.Model.ActiveLayer.Objects)
             {
-                if (o.GetType().ToString().IndexOf("configuration") >= 0 || o.GetType().ToString().IndexOf("conductor") >= 0)
-                {
-                    ModuleItems.ConfObject temp = o as ModuleItems.ConfObject;
-                    export = export + temp.toGLM();
-                }
-                else if (o.GetType().ToString().IndexOf("Module") > 0)
+                if (o.GetType().ToString().IndexOf("Module") > 0)
                 {
                     ModuleItems.Module temp = o as ModuleItems.Module;
                     export = export + temp.toGLM();
@@ -589,7 +584,6 @@ namespace Canvas
             int FileLineCount = 0;
             string line;
             List<ModuleItems.Module> objects = new List<ModuleItems.Module>();
-            Type typ = null;
             ModuleItems.Module temp = null;
             System.IO.StreamReader file = new System.IO.StreamReader(filename);
             String prevline = "";
@@ -624,7 +618,6 @@ namespace Canvas
                 {
                     objects.Add(temp);
                     temp = null;
-                    typ = null;
                     continue;
                 }
                 if (temp != null)

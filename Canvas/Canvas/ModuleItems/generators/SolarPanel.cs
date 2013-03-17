@@ -6,13 +6,14 @@ using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using System.Xml;
 
-namespace Canvas.ModuleItems.powerflow
+namespace Canvas.ModuleItems.generators
 {
-    class fuse : Module
+
+    class Solar : Module
     {
 
-        public fuse() { setupProperties(new List<Property>()); tofrom = true; }
-        public fuse(fuse old) { m_p1 = old.FromPoint; m_p2 = old.StartPoint; m_p3 = old.EndPoint; m_p4 = old.ToPoint; setupProperties(old.Properties); tofrom = true; }
+        public Solar() { setupProperties(new List<Property>()); tofrom = true; }
+        public Solar(Solar old) { m_p1 = old.FromPoint; m_p2 = old.StartPoint; m_p3 = old.EndPoint; m_p4 = old.ToPoint; setupProperties(old.Properties); tofrom = true; }
         private void setupProperties(List<Property> prop)
         {
 
@@ -47,9 +48,10 @@ namespace Canvas.ModuleItems.powerflow
         }
         public override IDrawObject Clone()
         {
-            return new fuse(this);
+            return new Solar(this);
         }
-        
+
+
         public override string Id
         {
             get { return "fuse"; }

@@ -8,17 +8,7 @@ using System.Xml;
 
 namespace Canvas.ModuleItems.powerflow
 {
-    class NodePointLC : NodePoint
-    {
-        public NodePointLC(ConfObject owner, ePoint id)
-        {
-            c_owner = owner;
-            c_clone = m_owner.Clone() as ConfObject;
-            m_pointId = id;
-            m_originalPoint = GetPoint(m_pointId);
-        }
-    }
-    class line_configuration : ConfObject
+    class line_configuration : ModuleItems.Module
     {
 
         public line_configuration() { setupProperties(new List<Property>()); }
@@ -71,18 +61,6 @@ namespace Canvas.ModuleItems.powerflow
                     if (p.name == q.name && p.value.ToString() != q.value.ToString()) s = s + "    " + p.name + " " + p.value.ToString() + ";" + System.Environment.NewLine;
             s = s + "}" + System.Environment.NewLine;
             return s;
-        }
-        public override INodePoint NodePoint(ICanvas canvas, UnitPoint point)
-        {
-            float thWidth = ThresholdWidth(canvas, Width);
-            if (HitUtil.CircleHitPoint(m_p1, thWidth, point))
-                return new NodePointLC(this, NodePointLC.ePoint.FromPoint);
-            if (HitUtil.CircleHitPoint(m_p2, thWidth, point))
-                return new NodePointLC(this, NodePointLC.ePoint.StartPoint);
-            if (HitUtil.CircleHitPoint(m_p3, thWidth, point))
-                return new NodePointLC(this, NodePointLC.ePoint.EndPoint);
-
-            return null;
         }
 
         public override string Id

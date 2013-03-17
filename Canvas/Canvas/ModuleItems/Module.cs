@@ -8,7 +8,7 @@ using System.Xml;
 
 namespace Canvas.ModuleItems
 {
-    abstract class NodePoint : INodePoint {
+    class NP : INodePoint {
         public enum ePoint {
             FromPoint,
             StartPoint,
@@ -20,15 +20,13 @@ namespace Canvas.ModuleItems
             Horizontal,
         }
         protected Module m_owner;
-        protected ConfObject c_owner;
-        protected ConfObject c_clone;
         protected Module m_clone;
         protected UnitPoint m_originalPoint;
         protected UnitPoint m_endPoint;
         protected ePoint m_pointId;
         static bool m_angleLocked = false;
-        public NodePoint() { }
-        public NodePoint(Module owner, ePoint id)
+        public NP() { }
+        public NP(Module owner, ePoint id)
         {
             m_owner = owner;
             m_clone = m_owner.Clone() as Module;
@@ -143,8 +141,6 @@ namespace Canvas.ModuleItems
         public bool child = false;
         [XmlSerializable]
         public bool conf = false;
-        [XmlSerializable]
-        public ConfObject conf_object { get; set; }
         [XmlSerializable]
         public Module to_connections
         {
@@ -446,7 +442,19 @@ namespace Canvas.ModuleItems
             }
             return null;
         }
-        public abstract INodePoint NodePoint(ICanvas canvas, UnitPoint point);
+        public INodePoint NodePoint(ICanvas canvas, UnitPoint point)
+        {
+            float thWidth = ThresholdWidth(canvas, Width);
+            if (HitUtil.CircleHitPoint(m_p1, thWidth, point))
+                return new NP(this, NP.ePoint.FromPoint);
+            if (HitUtil.CircleHitPoint(m_p2, thWidth, point))
+                return new NP(this, NP.ePoint.StartPoint);
+            if (HitUtil.CircleHitPoint(m_p3, thWidth, point))
+                return new NP(this, NP.ePoint.EndPoint);
+            if (HitUtil.CircleHitPoint(m_p4, thWidth, point))
+                return new NP(this, NP.ePoint.ToPoint);
+            return null;
+        }
         public override void InitializeFromModel(UnitPoint point, DrawingLayer layer, ISnapPoint snap)
         {
             FromPoint  = StartPoint = EndPoint = ToPoint = point;

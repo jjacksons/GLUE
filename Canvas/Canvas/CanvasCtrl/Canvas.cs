@@ -371,13 +371,7 @@ namespace Canvas
             {
                 List<ModuleItems.Property> t = new List<ModuleItems.Property>();
                 List<ModuleItems.Property> u = new List<ModuleItems.Property>();
-                if (obj.GetType().ToString().IndexOf("configuration") >= 0 || obj.GetType().ToString().IndexOf("conductor") >= 0)
-                {
-                    ModuleItems.ConfObject temp = obj as ModuleItems.ConfObject;
-                    t = temp.Properties;
-                    u = temp.DefaultProperties;
-                }
-                else if (obj.GetType().ToString().IndexOf("Module") > 0 )
+                if (obj.GetType().ToString().IndexOf("Module") > 0 )
                 {
                     ModuleItems.Module temp = obj as ModuleItems.Module;
                     t = temp.Properties;
@@ -789,12 +783,7 @@ namespace Canvas
         {
             foreach (object j in m_model.SelectedObjects)
             {
-                if (j.GetType().ToString().IndexOf("configuration") >= 0 || j.GetType().ToString().IndexOf("conductor") >= 0)
-                {
-                    ModuleItems.ConfObject temp = j as ModuleItems.ConfObject;
-                    foreach (ModuleItems.Property p in temp.Properties) if (p.name == tobeupdated.name) p.value = tobeupdated.value;
-                }
-                else if (j.GetType().ToString().IndexOf("Module") > 0)
+                if (j.GetType().ToString().IndexOf("Module") > 0)
                 {
                     ModuleItems.Module temp = j as ModuleItems.Module;
                     foreach (ModuleItems.Property p in temp.Properties) if (p.name == tobeupdated.name) p.value = tobeupdated.value;
