@@ -19,6 +19,7 @@ namespace Canvas.ModuleItems.powerflow
             Properties = new List<Property>();
             DefaultProperties = new List<Property>(6);
             DefaultProperties.Add(new Property("name", "", ""));
+            DefaultProperties.Add(new Property("parent", "", ""));
             DefaultProperties.Add(new Property("phases", "", ""));
             DefaultProperties.Add(new Property("nominal_voltage", "", " V"));
             DefaultProperties.Add(new Property("load_class", "", ""));

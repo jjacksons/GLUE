@@ -615,7 +615,7 @@ namespace Canvas
             {
 
                 line = Regex.Replace(line, "\t", "");
-                line = Regex.Replace(line, "//.*", "");
+                line = Regex.Replace(line, "//.*", "").Trim();
                 FileLineCount++;
                 if (line.Trim() == string.Empty) continue;
                 prevline = line.Trim();
@@ -721,7 +721,7 @@ namespace Canvas
                 if (toremove[0].child)
                 {
                     toremove[0].StartPoint = new UnitPoint(m.ToPoint.X + spacer * 2, m.ToPoint.Y - 1);
-                    toremove[0].EndPoint = new UnitPoint(m.ToPoint.X + 1 + spacer * 2, m.ToPoint.Y - 1);
+                    toremove[0].EndPoint = toremove[0].ToPoint = new UnitPoint(m.ToPoint.X + 1 + spacer * 2, m.ToPoint.Y - 1);
                 }
                 Model.AddObject(Model.ActiveLayer, toremove[0]);
                 l.Remove(toremove[0]);

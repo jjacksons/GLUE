@@ -19,6 +19,7 @@ namespace Canvas.ModuleItems.generator
             Properties = new List<Property>();
             DefaultProperties = new List<Property>(6);
             DefaultProperties.Add(new Property("name", "", ""));
+            DefaultProperties.Add(new Property("parent", "", ""));
             DefaultProperties.Add(new Property("generator_mode", "SUPPLY_DRIVEN", ""));
             DefaultProperties.Add(new Property("generator_status", "ONLINE", " "));
             DefaultProperties.Add(new Property("panel_type", "SINGLE_CRYSTAL_SILICON", ""));
@@ -108,7 +109,7 @@ namespace Canvas.ModuleItems.generator
             pen = new Pen(pen.Color, (float)3);
             if (horizontal)
             {
-                canvas.DrawLine(canvas, pen, m_p2, m_p3);
+                canvas.DrawLine(canvas, pen, m_p2, new UnitPoint(m_p2.X+0.8,m_p2.Y));
                 canvas.Graphics.DrawRectangle(pen, canvas.ToScreen(new UnitPoint(m_p2.X + 0.2, 1)).X, canvas.ToScreen(new UnitPoint(1, m_p2.Y + 0.4)).Y, canvas.ToScreen(new UnitPoint(m_p2.X + 0.8, 1)).X - canvas.ToScreen(new UnitPoint(m_p2.X + 0.2, m_p2.Y + 0.2)).X, canvas.ToScreen(new UnitPoint(1, m_p2.Y - 0.4)).Y - canvas.ToScreen(new UnitPoint(1, m_p2.Y +0.4)).Y);
                 canvas.DrawLine(canvas, pen, new UnitPoint(m_p2.X + 0.2, m_p2.Y + 0.3), new UnitPoint(m_p2.X + 0.8, m_p2.Y + 0.3));
                 canvas.DrawLine(canvas, pen, new UnitPoint(m_p2.X + 0.2, m_p2.Y + 0.2), new UnitPoint(m_p2.X + 0.8, m_p2.Y + 0.2));
@@ -125,7 +126,7 @@ namespace Canvas.ModuleItems.generator
             }
             else
             {
-                canvas.DrawLine(canvas, pen, m_p2, m_p3);
+                canvas.DrawLine(canvas, pen, m_p2, new UnitPoint(m_p2.X, m_p2.Y-0.8));
                 canvas.Graphics.DrawRectangle(pen, canvas.ToScreen(new UnitPoint(m_p2.X - 0.4, 1)).X, canvas.ToScreen(new UnitPoint(1, m_p2.Y - 0.2)).Y, canvas.ToScreen(new UnitPoint(m_p2.X + 0.4, 1)).X - canvas.ToScreen(new UnitPoint(m_p2.X - 0.4, 1)).X, canvas.ToScreen(new UnitPoint(1, m_p2.Y - 0.8)).Y - canvas.ToScreen(new UnitPoint(1, m_p2.Y - 0.2)).Y);
                 canvas.DrawLine(canvas, pen, new UnitPoint(m_p2.X + 0.3, m_p2.Y - 0.2), new UnitPoint(m_p2.X + 0.3, m_p2.Y - 0.8));
                 canvas.DrawLine(canvas, pen, new UnitPoint(m_p2.X + 0.2, m_p2.Y - 0.2), new UnitPoint(m_p2.X + 0.2, m_p2.Y - 0.8));
