@@ -24,6 +24,26 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>2.0</OldToolsVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ProductName>GLUE</ProductName>
+    <PublisherName>GLUE Productions</PublisherName>
+    <SuiteName>GLUE</SuiteName>
+    <ApplicationRevision>2</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <CreateDesktopShortcut>true</CreateDesktopShortcut>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -44,6 +64,24 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>get_glue_icon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>B25FD909DBCCA9E5F9D770087A6039AAC8327543</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>GLUE_1_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetZone>LocalIntranet</TargetZone>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />
@@ -96,9 +134,17 @@
       <DependentUpon>MainWin.cs</DependentUpon>
     </Compile>
     <Compile Include="Model.cs" />
+    <Compile Include="ModuleItems\generators\Inverter.cs" />
     <Compile Include="ModuleItems\generators\SolarPanel.cs" />
     <Compile Include="ModuleItems\Module.cs" />
     <Compile Include="ModuleItems\Clock.cs" />
+    <Compile Include="ModuleItems\powerflow\Load.cs" />
+    <Compile Include="ModuleItems\powerflow\TransformerConfiguration.cs" />
+    <Compile Include="ModuleItems\powerflow\UndergroundLineConductor.cs" />
+    <Compile Include="ModuleItems\powerflow\OverheadLineConductor.cs" />
+    <Compile Include="ModuleItems\powerflow\LineSpacing.cs" />
+    <Compile Include="ModuleItems\powerflow\regulator.cs" />
+    <Compile Include="ModuleItems\powerflow\Transformer.cs" />
     <Compile Include="ModuleItems\powerflow\Meter.cs" />
     <Compile Include="ModuleItems\powerflow\LineConfiguration.cs" />
     <Compile Include="ModuleItems\powerflow\Fuse.cs" />
@@ -106,6 +152,8 @@
     <Compile Include="ModuleItems\powerflow\Switch.cs" />
     <Compile Include="ModuleItems\powerflow\OverheadLine.cs" />
     <Compile Include="ModuleItems\powerflow\Node.cs" />
+    <Compile Include="ModuleItems\Tape\Recorder.cs" />
+    <Compile Include="ModuleItems\Tape\Player.cs" />
     <Compile Include="Options\GridPage.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -137,6 +185,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="GLUE_1_TemporaryKey.pfx" />
+    <None Include="GLUE_TemporaryKey.pfx" />
+    <None Include="Properties\app.manifest" />
     <None Include="Properties\DataSources\Canvas.EditTools.LinePoints.datasource" />
     <None Include="Properties\DataSources\Canvas.Options.OptionsBackground.datasource" />
     <None Include="Properties\DataSources\Canvas.Options.OptionsBackground1.datasource" />
@@ -215,7 +266,36 @@
     <Content Include="get_glue_icon.ico" />
     <EmbeddedResource Include="Resources\moduleimages.bmp" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.4.5">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 4.5</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <FileAssociation Include=".gxml">
+      <Visible>False</Visible>
+      <Description>Glue save file</Description>
+      <Progid>3778</Progid>
+      <DefaultIcon>get_glue_icon.ico</DefaultIcon>
+    </FileAssociation>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

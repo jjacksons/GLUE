@@ -30,3 +30,8 @@ C:\Users\Ash\Desktop\GLUE\Canvas\Canvas\obj\Debug\Canvas.Options.GridPage.resour
 C:\Users\Ash\Desktop\GLUE\Canvas\Canvas\obj\Debug\Canvas.Options.LayersPage.resources
 C:\Users\Ash\Desktop\GLUE\Canvas\Canvas\obj\Debug\Canvas.Options.OptionsDlg.resources
 C:\Users\Ash\Desktop\GLUE\Canvas\Canvas\obj\Debug\GLUE.csproj.GenerateResource.Cache
+C:\Users\Ash\Desktop\GLUE\Canvas\Canvas\bin\Debug\GLUE.exe.manifest
+C:\Users\Ash\Desktop\GLUE\Canvas\Canvas\bin\Debug\GLUE.application
+C:\Users\Ash\Desktop\GLUE\Canvas\Canvas\obj\Debug\GLUE.exe.manifest
+C:\Users\Ash\Desktop\GLUE\Canvas\Canvas\obj\Debug\GLUE.application
+C:\Users\Ash\Desktop\GLUE\Canvas\Canvas\obj\Debug\GLUE.TrustInfo.xml

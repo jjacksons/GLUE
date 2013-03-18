@@ -236,7 +236,7 @@ namespace Canvas.ModuleItems
             double w = Math.Abs(x2-x);
             double h = Math.Abs(y2-y);
             RectangleF rect = ScreenUtils.GetRect(x, y, w, h);
-            rect.Inflate((float)Width, (float)Width);
+            rect.Inflate((float)Width+(float)0.5, (float)Width+(float)0.5);
             return rect;
         }
         UnitPoint MidPoint(ICanvas canvas, UnitPoint p1, UnitPoint p2, UnitPoint hitpoint)
@@ -268,7 +268,7 @@ namespace Canvas.ModuleItems
             {
                 m_p2 = point;
                 if (this.horizontal) m_p3 = new UnitPoint(point.X + 1, point.Y);
-                else m_p3 = new UnitPoint(point.X, point.Y + 1);
+                else m_p3 = new UnitPoint(point.X, point.Y - 1);
                 m_p4 = m_p3;
             }
             if (currentPoint == ePoint.EndPoint) m_p4 = point;
@@ -276,7 +276,7 @@ namespace Canvas.ModuleItems
         }
         public virtual eDrawObjectMouseDown OnMouseDown(ICanvas canvas, UnitPoint point, ISnapPoint snappoint)
         {
-            if (!tofrom) return eDrawObjectMouseDown.Done;
+            if (!tofrom && !child) return eDrawObjectMouseDown.Done;
             if (currentPoint == ePoint.FromPoint)
             {
                 m_p1 = point;
@@ -293,7 +293,8 @@ namespace Canvas.ModuleItems
                     Module src = snappoint.Owner as Module;
                     m_p2 = HitUtil.NearestPointOnLine(src.FromPoint, src.EndPoint, m_p1, true);
                     if (horizontal) m_p3 = new UnitPoint(m_p2.X + 1, m_p2.Y);
-                    else m_p3 = new UnitPoint(m_p2.X, m_p2.Y + 1);
+                    else m_p3 = new UnitPoint(m_p2.X, m_p2.Y - 1);
+                    if (child) return eDrawObjectMouseDown.Done;
                     return eDrawObjectMouseDown.Continue;
                 }
                 if (snappoint is PerpendicularSnapPoint && snappoint.Owner is Canvas.DrawTools.Line)
@@ -301,7 +302,8 @@ namespace Canvas.ModuleItems
                     Canvas.DrawTools.Line src = snappoint.Owner as Canvas.DrawTools.Line;
                     m_p2 = HitUtil.NearestPointOnLine(src.P1, src.P2, m_p1, true);
                     if (horizontal) m_p3 = new UnitPoint(m_p2.X + 1, m_p2.Y);
-                    else m_p3 = new UnitPoint(m_p2.X, m_p2.Y + 1);
+                    else m_p3 = new UnitPoint(m_p2.X, m_p2.Y - 1);
+                    if (child) return eDrawObjectMouseDown.Done;
                     return eDrawObjectMouseDown.Continue;
                 }
                 if (snappoint is PerpendicularSnapPoint && snappoint.Owner is Canvas.DrawTools.Arc)
@@ -309,14 +311,16 @@ namespace Canvas.ModuleItems
                     Canvas.DrawTools.Arc src = snappoint.Owner as Canvas.DrawTools.Arc;
                     m_p2 = HitUtil.NearestPointOnCircle(src.Center, src.Radius, m_p1, 0);
                     if (horizontal) m_p3 = new UnitPoint(m_p2.X + 1, m_p2.Y);
-                    else m_p3 = new UnitPoint(m_p2.X, m_p2.Y + 1);
+                    else m_p3 = new UnitPoint(m_p2.X, m_p2.Y - 1);
+                    if (child) return eDrawObjectMouseDown.Done;
                     return eDrawObjectMouseDown.Continue;
                 }
                 if (Control.ModifierKeys == Keys.Control)
                     point = HitUtil.OrthoPointD(m_p1, point, 45);
                 m_p2 = point;
                 if (horizontal) m_p3 = new UnitPoint(m_p2.X + 1, m_p2.Y);
-                else m_p3 = new UnitPoint(m_p2.X, m_p2.Y + 1);
+                else m_p3 = new UnitPoint(m_p2.X, m_p2.Y - 1);
+                if (child) return eDrawObjectMouseDown.Done;
                 return eDrawObjectMouseDown.Continue;
             }
             Selected = false;

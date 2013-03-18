@@ -470,6 +470,7 @@ namespace Canvas
 					m_commandType = eCommandType.editNode;
 					m_snappoint = null;
 					base.OnMouseDown(e);
+
 					return;
 				}
                 DoInvalidate(true);
@@ -482,6 +483,11 @@ namespace Canvas
 			}
 			if (m_commandType == eCommandType.draw)
 			{
+                if (e.Button == System.Windows.Forms.MouseButtons.Middle && m_newObject != null)
+                {
+                    if (m_newObject is ModuleItems.Module) (m_newObject as ModuleItems.Module).horizontal = !(m_newObject as ModuleItems.Module).horizontal;
+                    return;
+                }
 				HandleMouseDownWhenDrawing(mousepoint, null);
 				DoInvalidate(true);
 			}

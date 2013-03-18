@@ -94,12 +94,12 @@ namespace Canvas.ModuleItems.powerflow
             }
             else
             {
-                canvas.DrawLine(canvas, pen, m_p2, new UnitPoint(m_p2.X, m_p2.Y + 0.2));
-                canvas.DrawArc(canvas, pen, new UnitPoint(m_p2.X, m_p2.Y + 0.2), (float)0.03, 0, 360);
-                if (isclosed()) canvas.DrawLine(canvas, pen, new UnitPoint(m_p2.X, m_p2.Y + 0.2), new UnitPoint(m_p2.X , m_p2.Y+ 0.8));
-                else canvas.DrawLine(canvas, pen, new UnitPoint(m_p2.X, m_p2.Y + 0.2), new UnitPoint(m_p2.X + 0.4, m_p2.Y + 0.8));
-                canvas.DrawArc(canvas, pen, new UnitPoint(m_p2.X , m_p2.Y+ 0.8), (float)0.03, 0, 360);
-                canvas.DrawLine(canvas, pen, new UnitPoint(m_p2.X, m_p2.Y + 0.8), m_p3);
+                canvas.DrawLine(canvas, pen, m_p2, new UnitPoint(m_p2.X, m_p2.Y - 0.2));
+                canvas.DrawArc(canvas, pen, new UnitPoint(m_p2.X, m_p2.Y - 0.2), (float)0.03, 0, 360);
+                if (isclosed()) canvas.DrawLine(canvas, pen, new UnitPoint(m_p2.X, m_p2.Y + 0.2), new UnitPoint(m_p2.X , m_p2.Y- 0.8));
+                else canvas.DrawLine(canvas, pen, new UnitPoint(m_p2.X, m_p2.Y - 0.2), new UnitPoint(m_p2.X + 0.4, m_p2.Y - 0.8));
+                canvas.DrawArc(canvas, pen, new UnitPoint(m_p2.X , m_p2.Y- 0.8), (float)0.03, 0, 360);
+                canvas.DrawLine(canvas, pen, new UnitPoint(m_p2.X, m_p2.Y -0.8), m_p3);
             }
         }
     }

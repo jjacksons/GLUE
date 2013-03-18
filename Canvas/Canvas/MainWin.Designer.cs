@@ -155,8 +155,8 @@ namespace Canvas
             // 
             this.optionsToolStripMenuItem1.Name = "optionsToolStripMenuItem1";
             this.optionsToolStripMenuItem1.Size = new System.Drawing.Size(127, 22);
-            this.optionsToolStripMenuItem1.Tag = "Grid";
-            this.optionsToolStripMenuItem1.Text = "&Grid";
+            this.optionsToolStripMenuItem1.Tag = "Gridzzz";
+            this.optionsToolStripMenuItem1.Text = "&Gridzzz";
             this.optionsToolStripMenuItem1.Click += new System.EventHandler(this.OnOptions);
             // 
             // layersToolStripMenuItem

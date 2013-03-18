@@ -103,6 +103,7 @@ namespace Canvas
             powerflow,
             generators,
             clock,
+            tape,
         }
         static public ImageList ImageList()
         {

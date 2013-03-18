@@ -77,6 +77,7 @@ namespace Canvas
 			base.OnLoad(e);
 			//m_canvas.SetCenter(m_data.CenterPoint);
 		}
+        static bool shownames = false;
         void SetupGLMItems()
         {
             MenuItem mmitem = m_menuItems.GetItem("Export GLM");
@@ -292,28 +293,34 @@ namespace Canvas
             item.ToolTipText = "Powerflow Module";
             item.Image = ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow);
 
-            item.DropDownItems.Add("Node", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow),new EventHandler(OnModuleSelect));
-            m_data.AddDrawTool("Node", new ModuleItems.powerflow.node());
+            item.DropDownItems.Add("node", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow),new EventHandler(OnModuleSelect));
+            m_data.AddDrawTool("node", new ModuleItems.powerflow.node());
             item.DropDownItems.Add("line_configuration", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow),new EventHandler(OnModuleSelect));
             m_data.AddDrawTool("line_configuration", new ModuleItems.powerflow.line_configuration());
-            item.DropDownItems.Add("Line spacing", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("line_spacing", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow), new EventHandler(OnModuleSelect));
+            m_data.AddDrawTool("line_spacing", new ModuleItems.powerflow.line_spacing());
             item.DropDownItems.Add("overhead_line", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow), new EventHandler(OnModuleSelect));
             m_data.AddDrawTool("overhead_line", new ModuleItems.powerflow.overhead_line());
-            item.DropDownItems.Add("Overhead Line Conductor", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("overhead_line_conductor", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow), new EventHandler(OnModuleSelect));
+            m_data.AddDrawTool("overhead_line_conductor", new ModuleItems.powerflow.overhead_line_conductor());
             item.DropDownItems.Add("underground_line", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow), new EventHandler(OnModuleSelect));
             m_data.AddDrawTool("underground_line", new ModuleItems.powerflow.underground_line());
-            item.DropDownItems.Add("Underground Line Conductor", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("underground_line_conductor", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow), new EventHandler(OnModuleSelect));
+            m_data.AddDrawTool("underground_line_conductor", new ModuleItems.powerflow.underground_line_conductor());
             item.DropDownItems.Add("Triplex line", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
             item.DropDownItems.Add("Triplex Line Configuration", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
             item.DropDownItems.Add("Triplex Conductor", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
-            item.DropDownItems.Add("Transformer", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("transformer", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow), new EventHandler(OnModuleSelect));
+            m_data.AddDrawTool("transformer", new ModuleItems.powerflow.transformer());
             item.DropDownItems.Add("Transformer Configuration", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
-            item.DropDownItems.Add("Load", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("load", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow), new EventHandler(OnModuleSelect));
+            m_data.AddDrawTool("load", new ModuleItems.powerflow.load());
             item.DropDownItems.Add("meter", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow), new EventHandler(OnModuleSelect));
             m_data.AddDrawTool("meter", new ModuleItems.powerflow.meter());
             item.DropDownItems.Add("Triplex Node", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
             item.DropDownItems.Add("Triplex Meter", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
-            item.DropDownItems.Add("Regulator", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("regulator", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow), new EventHandler(OnModuleSelect));
+            m_data.AddDrawTool("regulator", new ModuleItems.powerflow.regulator());
             item.DropDownItems.Add("Regulator Configuration", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
             item.DropDownItems.Add("Capacitor", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
             item.DropDownItems.Add("fuse", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow), new EventHandler(OnModuleSelect));
@@ -342,6 +349,21 @@ namespace Canvas
             item.Image = ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.generators);
             item.Tag = "generator";
 
+            item.DropDownItems.Add("solar", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.generators), new EventHandler(OnModuleSelect));
+            m_data.AddDrawTool("solar", new ModuleItems.generator.solar());
+            item.DropDownItems.Add("inverter", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.generators), new EventHandler(OnModuleSelect));
+            m_data.AddDrawTool("inverter", new ModuleItems.generator.inverter());
+
+            item = m_menuItems.GetMenuStrip("tape");
+            item.ToolTipText = "Tape Module";
+            item.Image = ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.tape);
+            item.Tag = "Tape";
+
+            item.DropDownItems.Add("player", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.tape), new EventHandler(OnModuleSelect));
+            m_data.AddDrawTool("player", new ModuleItems.tape.player());
+            item.DropDownItems.Add("recorder", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.tape), new EventHandler(OnModuleSelect));
+            m_data.AddDrawTool("recorder", new ModuleItems.tape.recorder());
+
             MenuItem mmitem = m_menuItems.GetItem("clock");
             mmitem.Text = "clock";
             mmitem.ToolTipText = "Gridlab Simulation Clock";
@@ -354,6 +376,7 @@ namespace Canvas
             strip.Items.Add(m_menuItems.GetItem("clock").CreateButton());
             strip.Items.Add(m_menuItems.GetMenuStrip("powerflow"));
             strip.Items.Add(m_menuItems.GetMenuStrip("generator"));
+            strip.Items.Add(m_menuItems.GetMenuStrip("tape"));
             m_toolHint = string.Empty;
         }
 
@@ -624,6 +647,11 @@ namespace Canvas
                 {
                     line = Regex.Replace(line, "(.*) (.*) .*;", "$1 $2;").Trim();
                     foreach (ModuleItems.Property p in temp.Properties) if (p.name == Regex.Replace(line, "(.*) .*", "$1").Trim()) p.value = Regex.Replace(line, ".* (.*);", "$1").Trim();
+                    continue;
+                }
+                if (line.IndexOf("module") >= 0)
+                {
+                    //todo adda a module object
                 }
 
             }
@@ -653,6 +681,11 @@ namespace Canvas
                 start.X++;
                 start.X++;
                 start.X++;
+                if (start.X > 50)
+                {
+                    start.X = 0;
+                    start.Y += 3;
+                }
             }
 
 
