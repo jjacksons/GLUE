@@ -139,6 +139,13 @@
     <Compile Include="ModuleItems\generators\SolarPanel.cs" />
     <Compile Include="ModuleItems\Module.cs" />
     <Compile Include="ModuleItems\Clock.cs" />
+    <Compile Include="ModuleItems\powerflow\Capacitor.cs" />
+    <Compile Include="ModuleItems\powerflow\TriplexMeter.cs" />
+    <Compile Include="ModuleItems\powerflow\TriplexNode.cs" />
+    <Compile Include="ModuleItems\powerflow\TriplexLineConductor.cs" />
+    <Compile Include="ModuleItems\powerflow\TriplexLineConfiguration.cs" />
+    <Compile Include="ModuleItems\powerflow\TriplexLine.cs" />
+    <Compile Include="ModuleItems\powerflow\RegulatorConfiguration.cs" />
     <Compile Include="ModuleItems\powerflow\Load.cs" />
     <Compile Include="ModuleItems\powerflow\TransformerConfiguration.cs" />
     <Compile Include="ModuleItems\powerflow\UndergroundLineConductor.cs" />

@@ -444,5 +444,68 @@ namespace Canvas
             ConsolePanel.Visible = false;
             StopProcess();
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            FindPanel.Visible = false;
+        }
+        public void showFind()
+        {
+            FindPanel.Visible = true;
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked)
+            {
+                foreach (IDrawObject o in m_activeDocument.Model.ActiveLayer.Objects)
+                {
+                    if (o is ModuleItems.Module)
+                    {
+                        ModuleItems.Module temp = o as ModuleItems.Module;
+                        foreach (ModuleItems.Property p in temp.Properties) if (Regex.IsMatch(p.name, textBox3.Text) && Regex.IsMatch(p.value.ToString(), ".*" + textBox1.Text + ".*")) { m_activeDocument.Model.AddSelectedObject(o); }
+                    }
+                }
+            }
+            else
+            {
+                List<ModuleItems.Module> found = new List<ModuleItems.Module>();
+                foreach (IDrawObject o in m_activeDocument.Model.ActiveLayer.Objects)
+                {
+                    if (o is ModuleItems.Module)
+                    {
+                        ModuleItems.Module temp = o as ModuleItems.Module;
+                        foreach (ModuleItems.Property p in temp.Properties) if (Regex.IsMatch(p.name, textBox3.Text) && Regex.IsMatch(p.value.ToString(), ".*" + textBox1.Text + ".*"))found.Add(temp);
+                    }
+                    
+
+                }
+                if (found.Count == 0)
+                {
+                    m_activeDocument.SetHint("Nothing found");
+                    return;
+                }
+                if (m_activeDocument.Model.SelectedCount == 0)
+                {
+                    m_activeDocument.Model.ClearSelectedObjects();
+                    m_activeDocument.Model.AddSelectedObject(found[0]);
+                    this.Invalidate(true);
+                    return;
+                }
+                for (int i = 0; i < found.Count; i++)
+                {
+                    foreach (IDrawObject d in m_activeDocument.Model.SelectedObjects) if (d == found[i])
+                        {
+                            if (i == found.Count - 1) i = -1;
+                            m_activeDocument.Model.ClearSelectedObjects();
+                            m_activeDocument.Model.AddSelectedObject(found[i + 1]);
+                            this.Invalidate(true);
+                            return;
+                        }
+                }
+                
+            }
+            this.Invalidate(true);
+        }
     }
 }

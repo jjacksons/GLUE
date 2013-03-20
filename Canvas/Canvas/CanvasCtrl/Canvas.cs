@@ -944,6 +944,15 @@ namespace Canvas
 						m_snappoint = null;
 					DoInvalidate(false);
 				}
+                if (e.KeyCode == Keys.F)
+                {
+                    if (this.Parent.Parent.Parent is Canvas.MainWin)
+                    {
+                        Canvas.MainWin temp = this.Parent.Parent.Parent as Canvas.MainWin;
+                        temp.showFind();
+                    }
+                    DoInvalidate(false);
+                }
 				return;
 			}
 

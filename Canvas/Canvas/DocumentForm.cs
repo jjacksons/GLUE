@@ -307,9 +307,12 @@ namespace Canvas
             m_data.AddDrawTool("underground_line", new ModuleItems.powerflow.underground_line());
             item.DropDownItems.Add("underground_line_conductor", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow), new EventHandler(OnModuleSelect));
             m_data.AddDrawTool("underground_line_conductor", new ModuleItems.powerflow.underground_line_conductor());
-            item.DropDownItems.Add("Triplex line", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
-            item.DropDownItems.Add("Triplex Line Configuration", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
-            item.DropDownItems.Add("Triplex Conductor", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("triplex_line", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow), new EventHandler(OnModuleSelect));
+            m_data.AddDrawTool("triplex_line", new ModuleItems.powerflow.underground_line_conductor());
+            item.DropDownItems.Add("triplex_line_configuration", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow), new EventHandler(OnModuleSelect));
+            m_data.AddDrawTool("triplex_line_configuration", new ModuleItems.powerflow.triplex_line_configuration());
+            item.DropDownItems.Add("triplex_line_conductor", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow), new EventHandler(OnModuleSelect));
+            m_data.AddDrawTool("triplex_line_conductor", new ModuleItems.powerflow.triplex_line_conductor());
             item.DropDownItems.Add("transformer", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow), new EventHandler(OnModuleSelect));
             m_data.AddDrawTool("transformer", new ModuleItems.powerflow.transformer());
             item.DropDownItems.Add("Transformer Configuration", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
@@ -317,12 +320,16 @@ namespace Canvas
             m_data.AddDrawTool("load", new ModuleItems.powerflow.load());
             item.DropDownItems.Add("meter", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow), new EventHandler(OnModuleSelect));
             m_data.AddDrawTool("meter", new ModuleItems.powerflow.meter());
-            item.DropDownItems.Add("Triplex Node", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
-            item.DropDownItems.Add("Triplex Meter", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("triplex_node", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow), new EventHandler(OnModuleSelect));
+            m_data.AddDrawTool("triplex_node", new ModuleItems.powerflow.triplex_node());
+            item.DropDownItems.Add("triplex_meter", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow), new EventHandler(OnModuleSelect));
+            m_data.AddDrawTool("triplex_meter", new ModuleItems.powerflow.triplex_meter());
             item.DropDownItems.Add("regulator", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow), new EventHandler(OnModuleSelect));
             m_data.AddDrawTool("regulator", new ModuleItems.powerflow.regulator());
-            item.DropDownItems.Add("Regulator Configuration", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
-            item.DropDownItems.Add("Capacitor", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("regulator_configuration", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow), new EventHandler(OnModuleSelect));
+            m_data.AddDrawTool("regulator_configuration", new ModuleItems.powerflow.regulator_configuration());
+            item.DropDownItems.Add("capacitor", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow), new EventHandler(OnModuleSelect));
+            m_data.AddDrawTool("capacitor", new ModuleItems.powerflow.capacitor());
             item.DropDownItems.Add("fuse", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow), new EventHandler(OnModuleSelect));
             m_data.AddDrawTool("fuse", new ModuleItems.powerflow.fuse());
             item.DropDownItems.Add("switch", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow), new EventHandler(OnModuleSelect));
@@ -706,10 +713,6 @@ namespace Canvas
                     foreach (ModuleItems.Module n in l)
                         foreach (ModuleItems.Property q in n.Properties)
                             if ((q.name == "name" && q.value.ToString() == p.value.ToString())) toremove.Add(n);
-            foreach (ModuleItems.Property p in m.Properties) if (p.name == "name" && p.value.ToString() == "FDR_EGERSZEGI_AVE_UG_LV_SP_123938820")
-                {
-                int i = 2;
-    }
             for(int i  = 0;i <toremove.Count;i++)
             {
                 int spacerX = 0;
