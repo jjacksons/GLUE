@@ -72,8 +72,8 @@ namespace Canvas.ModuleItems.powerflow
         }
         public override bool PointInObject(ICanvas canvas, UnitPoint point)
         {
-            float thWidth = ThresholdWidth(canvas, Width)+(float)0.3;
-            return HitUtil.IsPointInLine(m_p1, m_p2, point, thWidth) || HitUtil.IsPointInLine(m_p2, m_p3, point, thWidth) || HitUtil.IsPointInLine(m_p3, m_p4, point, thWidth);
+            float thWidth = ThresholdWidth(canvas, Width)+(float)0.1;
+            return HitUtil.IsPointInCircle(m_p1, thWidth, point, thWidth);
         }
         public override string Id
         {

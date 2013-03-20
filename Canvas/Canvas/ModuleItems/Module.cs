@@ -250,7 +250,8 @@ namespace Canvas.ModuleItems
         public virtual bool  PointInObject(ICanvas canvas, UnitPoint point)
         {
             float thWidth = ThresholdWidth(canvas, Width);
-            return HitUtil.IsPointInLine(m_p1, m_p2, point, thWidth) || HitUtil.IsPointInLine(m_p2, m_p3, point, thWidth) || HitUtil.IsPointInLine(m_p3, m_p4, point, thWidth);
+            if (point == m_p1 || point == m_p2 || point == m_p3 || point == m_p4) return true;
+            return HitUtil.IsPointInLine(m_p1, m_p2, point, thWidth) || HitUtil.IsPointInLine(m_p2, m_p3, point, thWidth + (float)0.1) || HitUtil.IsPointInLine(m_p3, m_p4, point, thWidth);
         }
         public bool ObjectInRectangle(ICanvas canvas, RectangleF rect, bool anyPoint)
         {

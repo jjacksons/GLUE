@@ -706,27 +706,41 @@ namespace Canvas
                     foreach (ModuleItems.Module n in l)
                         foreach (ModuleItems.Property q in n.Properties)
                             if ((q.name == "name" && q.value.ToString() == p.value.ToString())) toremove.Add(n);
-            
+            foreach (ModuleItems.Property p in m.Properties) if (p.name == "name" && p.value.ToString() == "FDR_EGERSZEGI_AVE_UG_LV_SP_123938820")
+                {
+                int i = 2;
+    }
+            for(int i  = 0;i <toremove.Count;i++)
+            {
+                int spacerX = 0;
+                int spacerY = 0;
+                while (m_canvas.Model.GetHitObjects(c, new UnitPoint(m.ToPoint.X + spacerX * 2, m.ToPoint.Y - 1 - spacerY*2)).Count > 0) if (spacerX++ >  5) { 
+                    spacerY++; spacerX = 0; 
+                }
+                toremove[i].FromPoint = toremove[i].StartPoint = toremove[i].ToPoint = toremove[i].EndPoint = m.ToPoint;
+                if (toremove[i].tofrom)
+                {
+                    toremove[i].StartPoint = new UnitPoint(m.ToPoint.X + spacerX * 2, m.ToPoint.Y - 1 - spacerY * 2);
+                    toremove[i].EndPoint = new UnitPoint(m.ToPoint.X + 1 + spacerX * 2, m.ToPoint.Y - 1 - spacerY * 2);
+                    toremove[i].ToPoint = new UnitPoint(m.ToPoint.X + spacerX * 2, m.ToPoint.Y - 2 - spacerY * 2);
+                }
+                if (toremove[i].child)
+                {
+                    toremove[i].StartPoint = new UnitPoint(m.StartPoint.X + spacerX * 2, m.StartPoint.Y - 1 - spacerY * 2);
+                    toremove[i].EndPoint = toremove[i].ToPoint = new UnitPoint(m.StartPoint.X + 1 + spacerX * 2, m.StartPoint.Y - 1 - spacerY * 2);
+                }
+
+                Model.AddObject(Model.ActiveLayer, toremove[i]);
+                
+                l.Remove(toremove[i]);
+                
+                
+            }
             while (toremove.Count > 0)
             {
-                int spacer = toremove.Count - 1;
-                while(m_canvas.Model.GetHitObjects(c, new UnitPoint(m.ToPoint.X + spacer * 2, m.ToPoint.Y - 1)).Count > 0) spacer++;
-                toremove[0].FromPoint = toremove[0].StartPoint = toremove[0].ToPoint = toremove[0].EndPoint = m.ToPoint;
-                if (toremove[0].tofrom)
-                {
-                    toremove[0].StartPoint = new UnitPoint(m.ToPoint.X + spacer*2, m.ToPoint.Y-1);
-                    toremove[0].EndPoint = new UnitPoint(m.ToPoint.X + 1 + spacer * 2, m.ToPoint.Y - 1);
-                    toremove[0].ToPoint = new UnitPoint(m.ToPoint.X + spacer * 2, m.ToPoint.Y - 2);
-                }
-                if (toremove[0].child)
-                {
-                    toremove[0].StartPoint = new UnitPoint(m.ToPoint.X + spacer * 2, m.ToPoint.Y - 1);
-                    toremove[0].EndPoint = toremove[0].ToPoint = new UnitPoint(m.ToPoint.X + 1 + spacer * 2, m.ToPoint.Y - 1);
-                }
-                Model.AddObject(Model.ActiveLayer, toremove[0]);
-                l.Remove(toremove[0]);
-                Trace(toremove[0],l);
+                Trace(toremove[0], l);
                 toremove.Remove(toremove[0]);
+                
             }
 
         }

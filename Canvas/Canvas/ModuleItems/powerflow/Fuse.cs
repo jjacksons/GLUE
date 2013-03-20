@@ -79,7 +79,7 @@ namespace Canvas.ModuleItems.powerflow
                 if (m_p4.IsEmpty == false) Canvas.DrawTools.DrawUtils.DrawNode(canvas, m_p4);
             }
             canvas.DrawLine(canvas, pen, m_p1, m_p2);
-            if (this.currentPoint != ePoint.FromPoint) canvas.DrawLine(canvas, pen, m_p3, m_p4);
+            if (m_p3!=m_p4) canvas.DrawLine(canvas, pen, m_p3, m_p4);
             pen = new Pen(pen.Color, (float)3);
             if (horizontal)
             {
