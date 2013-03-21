@@ -510,6 +510,8 @@ namespace Canvas
                 {
                     m_activeDocument.Model.ClearSelectedObjects();
                     m_activeDocument.Model.AddSelectedObject(found[0]);
+                    
+                    m_activeDocument.Canvas.HandleSelection(new List<IDrawObject>{ m_activeDocument.Model.GetFirstSelected()});
                     this.Invalidate(true);
                     return;
                 }
@@ -520,6 +522,7 @@ namespace Canvas
                             if (i == found.Count - 1) i = -1;
                             m_activeDocument.Model.ClearSelectedObjects();
                             m_activeDocument.Model.AddSelectedObject(found[i + 1]);
+                            m_activeDocument.Canvas.HandleSelection(new List<IDrawObject> { m_activeDocument.Model.GetFirstSelected() });
                             this.Invalidate(true);
                             return;
                         }
@@ -538,16 +541,89 @@ namespace Canvas
             int count = 0;
             if (checkBox1.Checked)
             {
+                m_activeDocument.Model.ClearSelectedObjects();
                 foreach (IDrawObject o in m_activeDocument.Model.ActiveLayer.Objects)
                 {
                     if (o is ModuleItems.Module)
                     {
                         ModuleItems.Module temp = o as ModuleItems.Module;
-                        foreach (ModuleItems.Property p in temp.Properties) if (Regex.IsMatch(p.name, textBox3.Text) && Regex.IsMatch(p.value.ToString(), ".*" + textBox1.Text + ".*")) { p.value = Regex.Replace(p.value.ToString(), textBox1.Text, textBox2.Text); count++; }
+                        foreach (ModuleItems.Property p in temp.Properties) if (Regex.IsMatch(p.name, textBox3.Text) && Regex.IsMatch(p.value.ToString(), ".*" + textBox1.Text + ".*")) {
+                            p.value = Regex.Replace(p.value.ToString(), textBox1.Text, textBox2.Text); 
+                            count++;
+                            m_activeDocument.Model.AddSelectedObject(o);
+                            
+                        }
                     }
                 }
                 if (count > 0) m_activeDocument.SetHint(count+" Replacements Made"); else m_activeDocument.SetHint("Nothing found");
             }
+            else
+            {
+                List<ModuleItems.Module> found = new List<ModuleItems.Module>();
+                foreach (IDrawObject o in m_activeDocument.Model.ActiveLayer.Objects)
+                {
+                    if (o is ModuleItems.Module)
+                    {
+                        ModuleItems.Module temp = o as ModuleItems.Module;
+                        foreach (ModuleItems.Property p in temp.Properties)
+                        {
+                            if (checkBox2.Checked)
+                            {
+                                try
+                                {
+                                    if (Regex.IsMatch(p.name, textBox3.Text) && Regex.IsMatch(p.value.ToString(), ".*" + textBox1.Text + ".*")) found.Add(temp);
+                                }
+                                catch
+                                {
+                                    m_activeDocument.SetHint("Invalid Search Syntax");
+                                    this.Invalidate(true);
+                                    return;
+                                }
+                            }
+                            else
+                            {
+                                if (p.name == textBox3.Text && p.value.ToString() == textBox1.Text) found.Add(temp);
+                            }
+                        }
+                    }
+
+
+                }
+                if (found.Count == 0)
+                {
+                    m_activeDocument.Model.ClearSelectedObjects();
+                    m_activeDocument.SetHint("Nothing found");
+                    return;
+                }
+                if (m_activeDocument.Model.SelectedCount == 0)
+                {
+                    
+                    m_activeDocument.Model.ClearSelectedObjects();
+                    foreach(ModuleItems.Property p in found[0].Properties)if(Regex.IsMatch(p.name, textBox3.Text) && Regex.IsMatch(p.value.ToString(), ".*" + textBox1.Text + ".*"))p.value = Regex.Replace(p.value.ToString(), textBox1.Text, textBox2.Text);
+                    m_activeDocument.Model.AddSelectedObject(found[0]);
+                    m_activeDocument.Canvas.HandleSelection(new List<IDrawObject> { m_activeDocument.Model.GetFirstSelected() });
+                    this.Invalidate(true);
+                    return;
+                }
+                for (int i = 0; i < found.Count; i++)
+                {
+                    foreach (IDrawObject d in m_activeDocument.Model.SelectedObjects) if (d == found[i])
+                        {
+                            if (i == found.Count - 1) i = -1;
+                            m_activeDocument.Model.ClearSelectedObjects();
+                            foreach (ModuleItems.Property p in found[0].Properties) if (Regex.IsMatch(p.name, textBox3.Text) && Regex.IsMatch(p.value.ToString(), ".*" + textBox1.Text + ".*")) p.value = Regex.Replace(p.value.ToString(), textBox1.Text, textBox2.Text);
+                    
+                            m_activeDocument.Model.AddSelectedObject(found[i + 1]);
+                            m_activeDocument.Canvas.HandleSelection(new List<IDrawObject> { m_activeDocument.Model.GetFirstSelected() });
+                            this.Invalidate(true);
+                            return;
+                        }
+                }
+                m_activeDocument.Model.ClearSelectedObjects();
+                m_activeDocument.Model.AddSelectedObject(found[0]);
+
+            }
+            this.Invalidate(true);
         }
     }
 }

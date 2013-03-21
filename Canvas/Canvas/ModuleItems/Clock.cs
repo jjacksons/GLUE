@@ -19,6 +19,7 @@ namespace Canvas.ModuleItems
             Properties = new List<Property>();
             DefaultProperties = new List<Property>(6);
             DefaultProperties.Add(new Property("timezone", "", ""));
+            DefaultProperties.Add(new Property("timestamp", "", ""));
             DefaultProperties.Add(new Property("starttime", "", ""));
             DefaultProperties.Add(new Property("stoptime", "", ""));
 

@@ -336,21 +336,21 @@ namespace Canvas
             item.DropDownItems.Add("switch", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow), new EventHandler(OnModuleSelect));
             m_data.AddDrawTool("switch", new ModuleItems.powerflow.Switch());
             item.DropDownItems.Add("Recloser", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
-            item.DropDownItems.Add("Relay", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
-            item.DropDownItems.Add("Substation", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
-            item.DropDownItems.Add("Parametric Load", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
-            item.DropDownItems.Add("Volt-VAr Control", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
-            item.DropDownItems.Add("Volt Dump", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
-            item.DropDownItems.Add("Current Dump", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
-            item.DropDownItems.Add("Bill Dump", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
-            item.DropDownItems.Add("Fault Check", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
-            item.DropDownItems.Add("Frequency Generator", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
-            item.DropDownItems.Add("Motor", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
-            item.DropDownItems.Add("Restoration", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
-            item.DropDownItems.Add("Series Reactor", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
-            item.DropDownItems.Add("Sectionalizer", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
-            item.DropDownItems.Add("Power Metrics", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
-            item.DropDownItems.Add("Emissions", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Relay*", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Substation*", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Parametric Load*", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Volt-VAr Control*", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Volt Dump*", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Current Dump*", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Bill Dump*", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Fault Check*", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Frequency Generator*", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Motor*", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Restoration*", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Series Reactor*", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Sectionalizer*", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Power Metrics*", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("Emissions*", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
             
             item = m_menuItems.GetMenuStrip("generator");
             item.ToolTipText = "Generators Module";
@@ -378,9 +378,7 @@ namespace Canvas
             item.Tag = "residential";
 
             item.DropDownItems.Add("house", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.residential), new EventHandler(OnModuleSelect));
-            m_data.AddDrawTool("solar", new ModuleItems.generator.solar());
-            item.DropDownItems.Add("office", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.residential), new EventHandler(OnModuleSelect));
-            m_data.AddDrawTool("inverter", new ModuleItems.generator.inverter());
+            m_data.AddDrawTool("house", new ModuleItems.residential.house());
 
             item = m_menuItems.GetMenuStrip("unknown");
             item.ToolTipText = "Unknown Modules";
@@ -587,8 +585,16 @@ namespace Canvas
 
             if (!isDirty()) return;
             String export = "";
+            bool pf = false;
+            bool gen = false;
+            bool h = false;
+            bool t = false;
             foreach (object o in m_canvas.Model.ActiveLayer.Objects)
             {
+                if (o.GetType().ToString().IndexOf("powerflow") > 0) pf = true;
+                if (o.GetType().ToString().IndexOf("generator") > 0) gen = true;
+                if (o.GetType().ToString().IndexOf("residential") > 0) h = true;
+                if (o.GetType().ToString().IndexOf("tape") > 0) t = true;
                 if (o.GetType().ToString().IndexOf("Module") > 0)
                 {
                     ModuleItems.Module temp = o as ModuleItems.Module;
@@ -596,6 +602,10 @@ namespace Canvas
                 }
                 export = export + System.Environment.NewLine;
             }
+            if (pf) export = "module powerflow;"+System.Environment.NewLine + export;
+            if (gen) export = "module generator;" + System.Environment.NewLine + export;
+            if (t) export = "module tape;" + System.Environment.NewLine + export;
+            if (h) export = "module residential;" + System.Environment.NewLine + export;
             System.IO.StreamWriter file = new System.IO.StreamWriter(filename);
             file.WriteLine(export);
             file.Close();
@@ -671,6 +681,12 @@ namespace Canvas
                     if (type.IndexOf(":") >= 0) foreach (ModuleItems.Property p in temp.Properties) if (p.name == "name") p.value = Regex.Replace(line, ".*object .*:(.*){", "$1").Trim();
                     continue;
                 }
+                if (line.IndexOf("{") >= 0 && line.IndexOf("clock") >= 0)
+                {
+                    //only clocks so far
+                    temp = new ModuleItems.clock();
+                    continue;
+                }
                 if ((line.Trim() == "}" || line.Trim() == "};") && temp != null)
                 {
                     objects.Add(temp);
@@ -679,17 +695,13 @@ namespace Canvas
                 }
                 if (temp != null)
                 {
+                    line = Regex.Replace(line, "'(.*) (.*)'", "'$1@@@@$2'").Trim();
                     line = Regex.Replace(line, "(.*) (.*) .*;", "$1 $2;").Trim();
                     bool solved = false;
-                    foreach (ModuleItems.Property p in temp.Properties) if (p.name == Regex.Replace(line, "(.*) .*", "$1").Trim()) { p.value = Regex.Replace(line, ".* (.*);", "$1").Trim(); solved = true; }
-                    if (!solved)temp.Properties.Add(new ModuleItems.Property(Regex.Replace(line, "(.*) .*", "$1").Trim(),Regex.Replace(line, ".* (.*);", "$1").Trim(),""));
+                    foreach (ModuleItems.Property p in temp.Properties) if (p.name == Regex.Replace(line, "(.*) .*", "$1").Trim()) { p.value = Regex.Replace(Regex.Replace(line, ".* (.*);", "$1").Trim(), "@@@@", " "); solved = true; }
+                    if (!solved) temp.Properties.Add(new ModuleItems.Property(Regex.Replace(line, "(.*) .*", "$1").Trim(), Regex.Replace(Regex.Replace(line, ".* (.*);", "$1").Trim(), "@@@@", " "), ""));
                     continue;
                 }
-                if (line.IndexOf("module") >= 0)
-                {
-                    //todo adda a module object
-                }
-
             }
             file.Close();
             SetHint("Completed glm file import. Processing...");
@@ -725,7 +737,7 @@ namespace Canvas
             }
 
 
-            Invalidate();
+            Invalidate(true);
             SetHint("");
         }
         private void Trace(ModuleItems.Module m, List<ModuleItems.Module> l)

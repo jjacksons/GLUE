@@ -324,7 +324,7 @@ namespace Canvas
 		{
 			get { return m_newObject; }
 		}
-		protected void HandleSelection(List<IDrawObject> selected)
+		public void HandleSelection(List<IDrawObject> selected)
 		{
 			bool add = Control.ModifierKeys == Keys.Shift;
 			bool toggle = Control.ModifierKeys == Keys.Control;

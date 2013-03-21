@@ -55,14 +55,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="GLUE.exe" size="536064">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="GLUE.exe" size="548864">
       <assemblyIdentity name="GLUE" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>6h4l45MEveFS+nJnWtAJDYep79M=</dsig:DigestValue>
+        <dsig:DigestValue>Grz5ynBokU5BQUYHTLBfFTwRtvY=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

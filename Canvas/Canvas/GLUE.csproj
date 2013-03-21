@@ -160,6 +160,7 @@
     <Compile Include="ModuleItems\powerflow\Switch.cs" />
     <Compile Include="ModuleItems\powerflow\OverheadLine.cs" />
     <Compile Include="ModuleItems\powerflow\Node.cs" />
+    <Compile Include="ModuleItems\residential\house.cs" />
     <Compile Include="ModuleItems\Tape\Recorder.cs" />
     <Compile Include="ModuleItems\Tape\Player.cs" />
     <Compile Include="ModuleItems\Unknowns\unknown.cs" />
@@ -305,6 +306,7 @@
       <DefaultIcon>get_glue_icon.ico</DefaultIcon>
     </FileAssociation>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

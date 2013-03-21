@@ -228,7 +228,9 @@ namespace Canvas.ModuleItems
         public RectangleF GetBoundingRect(ICanvas canvas)
         {
             float thWidth = ThresholdWidth(canvas, Width);
-            if (currentPoint == ePoint.FromPoint) return ScreenUtils.GetRect(m_p1, m_p3, thWidth);
+            RectangleF temp = ScreenUtils.GetRect(m_p1, m_p3, thWidth);
+            temp.Inflate((float)Width + (float)0.5, (float)Width + (float)0.5);
+            if (currentPoint == ePoint.FromPoint) return temp;
             double x = Math.Min(m_p1.X, Math.Min(m_p2.X, Math.Min(m_p3.X, m_p4.X)));
             double y = Math.Min(m_p1.Y, Math.Min(m_p2.Y, Math.Min(m_p3.Y, m_p4.Y)));
             double x2 = Math.Max(m_p1.X, Math.Max(m_p2.X, Math.Max(m_p3.X, m_p4.X)));
