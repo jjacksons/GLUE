@@ -825,6 +825,10 @@ namespace Canvas
 			m_commandType = eCommandType.select;
 			m_moveHelper.HandleCancelMove();
 			m_nodeMoveHelper.HandleCancelMove();
+            if (this.Parent is DocumentForm){
+                DocumentForm temp = this.Parent as DocumentForm;
+                temp.SetHint("");
+            }
 			DoInvalidate(dirty);
 			UpdateCursor();
 		}

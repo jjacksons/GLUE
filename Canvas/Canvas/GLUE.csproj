@@ -162,6 +162,7 @@
     <Compile Include="ModuleItems\powerflow\Node.cs" />
     <Compile Include="ModuleItems\Tape\Recorder.cs" />
     <Compile Include="ModuleItems\Tape\Player.cs" />
+    <Compile Include="ModuleItems\Unknowns\unknown.cs" />
     <Compile Include="Options\GridPage.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -104,6 +104,8 @@ namespace Canvas
             generators,
             clock,
             tape,
+            residential,
+            unknown
         }
         static public ImageList ImageList()
         {

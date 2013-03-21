@@ -315,7 +315,8 @@ namespace Canvas
             m_data.AddDrawTool("triplex_line_conductor", new ModuleItems.powerflow.triplex_line_conductor());
             item.DropDownItems.Add("transformer", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow), new EventHandler(OnModuleSelect));
             m_data.AddDrawTool("transformer", new ModuleItems.powerflow.transformer());
-            item.DropDownItems.Add("Transformer Configuration", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("transformer_configuration", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            m_data.AddDrawTool("transformer_configuration", new ModuleItems.powerflow.transformer_configuration());
             item.DropDownItems.Add("load", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow), new EventHandler(OnModuleSelect));
             m_data.AddDrawTool("load", new ModuleItems.powerflow.load());
             item.DropDownItems.Add("meter", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow), new EventHandler(OnModuleSelect));
@@ -365,11 +366,29 @@ namespace Canvas
             item.ToolTipText = "Tape Module";
             item.Image = ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.tape);
             item.Tag = "Tape";
-
+            
             item.DropDownItems.Add("player", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.tape), new EventHandler(OnModuleSelect));
             m_data.AddDrawTool("player", new ModuleItems.tape.player());
             item.DropDownItems.Add("recorder", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.tape), new EventHandler(OnModuleSelect));
             m_data.AddDrawTool("recorder", new ModuleItems.tape.recorder());
+
+            item = m_menuItems.GetMenuStrip("residential");
+            item.ToolTipText = "Residential Module";
+            item.Image = ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.residential);
+            item.Tag = "residential";
+
+            item.DropDownItems.Add("house", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.residential), new EventHandler(OnModuleSelect));
+            m_data.AddDrawTool("solar", new ModuleItems.generator.solar());
+            item.DropDownItems.Add("office", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.residential), new EventHandler(OnModuleSelect));
+            m_data.AddDrawTool("inverter", new ModuleItems.generator.inverter());
+
+            item = m_menuItems.GetMenuStrip("unknown");
+            item.ToolTipText = "Unknown Modules";
+            item.Image = ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.unknown);
+            item.Tag = "unknown";
+
+            item.DropDownItems.Add("unknown", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.unknown), new EventHandler(OnModuleSelect));
+            m_data.AddDrawTool("unknown", new ModuleItems.unknown.unknown());
 
             MenuItem mmitem = m_menuItems.GetItem("clock");
             mmitem.Text = "clock";
@@ -384,6 +403,8 @@ namespace Canvas
             strip.Items.Add(m_menuItems.GetMenuStrip("powerflow"));
             strip.Items.Add(m_menuItems.GetMenuStrip("generator"));
             strip.Items.Add(m_menuItems.GetMenuStrip("tape"));
+            strip.Items.Add(m_menuItems.GetMenuStrip("residential"));
+            strip.Items.Add(m_menuItems.GetMenuStrip("unknown"));
             m_toolHint = string.Empty;
         }
 
@@ -641,7 +662,13 @@ namespace Canvas
 
                     if (type.IndexOf(":") >= 0) type = Regex.Replace(line, ".*object (.*):.*{", "$1").Trim();
                     temp = (ModuleItems.Module)Model.CreateObject(type, new UnitPoint(), null);
-                    if (type.IndexOf(":") >= 0) temp.Properties.Add(new ModuleItems.Property("name", Regex.Replace(line, ".*object .*:(.*){", "$1").Trim(), ""));
+                    if (temp == null)
+                    {
+                        ModuleItems.unknown.unknown temp2 = Model.CreateObject("unknown", new UnitPoint(), null) as ModuleItems.unknown.unknown;
+                        temp2.Type = type;
+                        temp = temp2;
+                    }
+                    if (type.IndexOf(":") >= 0) foreach (ModuleItems.Property p in temp.Properties) if (p.name == "name") p.value = Regex.Replace(line, ".*object .*:(.*){", "$1").Trim();
                     continue;
                 }
                 if ((line.Trim() == "}" || line.Trim() == "};") && temp != null)
@@ -653,7 +680,9 @@ namespace Canvas
                 if (temp != null)
                 {
                     line = Regex.Replace(line, "(.*) (.*) .*;", "$1 $2;").Trim();
-                    foreach (ModuleItems.Property p in temp.Properties) if (p.name == Regex.Replace(line, "(.*) .*", "$1").Trim()) p.value = Regex.Replace(line, ".* (.*);", "$1").Trim();
+                    bool solved = false;
+                    foreach (ModuleItems.Property p in temp.Properties) if (p.name == Regex.Replace(line, "(.*) .*", "$1").Trim()) { p.value = Regex.Replace(line, ".* (.*);", "$1").Trim(); solved = true; }
+                    if (!solved)temp.Properties.Add(new ModuleItems.Property(Regex.Replace(line, "(.*) .*", "$1").Trim(),Regex.Replace(line, ".* (.*);", "$1").Trim(),""));
                     continue;
                 }
                 if (line.IndexOf("module") >= 0)

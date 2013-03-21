@@ -456,6 +456,8 @@ namespace Canvas
 
         private void button3_Click(object sender, EventArgs e)
         {
+            if (textBox3.Text.Trim() == String.Empty) return;
+            if (textBox3.Text.Trim() == "*" ||textBox3.Text.Trim() == "?") textBox3.Text = ".";
             if (checkBox1.Checked)
             {
                 foreach (IDrawObject o in m_activeDocument.Model.ActiveLayer.Objects)
@@ -475,13 +477,32 @@ namespace Canvas
                     if (o is ModuleItems.Module)
                     {
                         ModuleItems.Module temp = o as ModuleItems.Module;
-                        foreach (ModuleItems.Property p in temp.Properties) if (Regex.IsMatch(p.name, textBox3.Text) && Regex.IsMatch(p.value.ToString(), ".*" + textBox1.Text + ".*"))found.Add(temp);
+                        foreach (ModuleItems.Property p in temp.Properties)
+                        {
+                            if (checkBox2.Checked)
+                            {
+                                try
+                                {
+                                    if (Regex.IsMatch(p.name, textBox3.Text) && Regex.IsMatch(p.value.ToString(), ".*" + textBox1.Text + ".*")) found.Add(temp);
+                                }
+                                catch { 
+                                    m_activeDocument.SetHint("Invalid Search Syntax");
+                                    this.Invalidate(true);
+                                    return;
+                                }
+                            }
+                            else
+                            {
+                                if (p.name == textBox3.Text && p.value.ToString() == textBox1.Text) found.Add(temp);
+                            }
+                        }
                     }
                     
 
                 }
                 if (found.Count == 0)
                 {
+                    m_activeDocument.Model.ClearSelectedObjects();
                     m_activeDocument.SetHint("Nothing found");
                     return;
                 }
@@ -503,9 +524,30 @@ namespace Canvas
                             return;
                         }
                 }
+                m_activeDocument.Model.ClearSelectedObjects();
+                m_activeDocument.Model.AddSelectedObject(found[0]);
                 
             }
             this.Invalidate(true);
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            if (textBox3.Text.Trim() == String.Empty) return;
+            if (textBox3.Text.Trim() == "*" || textBox3.Text.Trim() == "?") textBox3.Text = ".";
+            int count = 0;
+            if (checkBox1.Checked)
+            {
+                foreach (IDrawObject o in m_activeDocument.Model.ActiveLayer.Objects)
+                {
+                    if (o is ModuleItems.Module)
+                    {
+                        ModuleItems.Module temp = o as ModuleItems.Module;
+                        foreach (ModuleItems.Property p in temp.Properties) if (Regex.IsMatch(p.name, textBox3.Text) && Regex.IsMatch(p.value.ToString(), ".*" + textBox1.Text + ".*")) { p.value = Regex.Replace(p.value.ToString(), textBox1.Text, textBox2.Text); count++; }
+                    }
+                }
+                if (count > 0) m_activeDocument.SetHint(count+" Replacements Made"); else m_activeDocument.SetHint("Nothing found");
+            }
         }
     }
 }
