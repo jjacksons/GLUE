@@ -16,3 +16,4 @@ C:\Users\Ash\Desktop\GLUE\CommonTools\obj\Debug\CommonTools.PropertyDialog.resou
 C:\Users\Ash\Desktop\GLUE\CommonTools\obj\Debug\CommonTools.csproj.GenerateResource.Cache
 C:\Users\Ash\Desktop\GLUE\CommonTools\obj\Debug\CommonTools.dll
 C:\Users\Ash\Desktop\GLUE\CommonTools\obj\Debug\CommonTools.pdb
+C:\Users\Ash\Desktop\GLUE\CommonTools\obj\Debug\CommonTools.csprojResolveAssemblyReference.cache

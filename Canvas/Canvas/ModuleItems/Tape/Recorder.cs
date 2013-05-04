@@ -65,6 +65,17 @@ namespace Canvas.ModuleItems.tape
             s = s + "}" + System.Environment.NewLine;
             return s;
         }
+        public override void InitializeFromModel(UnitPoint point, DrawingLayer layer, ISnapPoint snap)
+        {
+            FromPoint = StartPoint = EndPoint = ToPoint = point;
+            int count = 1;
+            foreach (IDrawObject i in layer.Objects) if (i.GetType() == this.GetType()) count++;
+            foreach (Property p in properties) if (p.name == "name" && p.value == "") p.value = this.Id + count;
+            foreach (Property p in properties) if (p.name == "file" && p.value == "") p.value = this.Id + count + ".csv";
+            Width = layer.Width;
+            Color = layer.Color;
+            Selected = true;
+        }
         public override void Draw(ICanvas canvas, RectangleF unitrect)
         {
             Color color = Color;

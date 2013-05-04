@@ -315,7 +315,7 @@ namespace Canvas
             m_data.AddDrawTool("triplex_line_conductor", new ModuleItems.powerflow.triplex_line_conductor());
             item.DropDownItems.Add("transformer", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow), new EventHandler(OnModuleSelect));
             m_data.AddDrawTool("transformer", new ModuleItems.powerflow.transformer());
-            item.DropDownItems.Add("transformer_configuration", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow));
+            item.DropDownItems.Add("transformer_configuration", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow), new EventHandler(OnModuleSelect));
             m_data.AddDrawTool("transformer_configuration", new ModuleItems.powerflow.transformer_configuration());
             item.DropDownItems.Add("load", ModuleItemsImages16x16.Image(ModuleItemsImages16x16.eIndexes.powerflow), new EventHandler(OnModuleSelect));
             m_data.AddDrawTool("load", new ModuleItems.powerflow.load());
@@ -705,6 +705,7 @@ namespace Canvas
             }
             file.Close();
             SetHint("Completed glm file import. Processing...");
+            this.Invalidate(true);
             UnitPoint start = new UnitPoint(0, 0);
             while (objects.Count > 0)
             {

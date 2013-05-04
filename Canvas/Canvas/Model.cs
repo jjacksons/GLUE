@@ -203,6 +203,7 @@ namespace Canvas
 			DrawingLayer layer = ActiveLayer as DrawingLayer;
 			if (layer.Enabled == false)
 				return null;
+            
             DrawTools.DrawObjectBase newobj = CreateObject(type) as DrawTools.DrawObjectBase;
 			if (newobj != null)
 			{

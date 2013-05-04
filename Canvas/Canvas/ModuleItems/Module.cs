@@ -279,13 +279,24 @@ namespace Canvas.ModuleItems
         }
         public virtual eDrawObjectMouseDown OnMouseDown(ICanvas canvas, UnitPoint point, ISnapPoint snappoint)
         {
-            if (!tofrom && !child) return eDrawObjectMouseDown.Done;
+            if (!tofrom && !child)
+            {
+                foreach (IDrawObject i in canvas.DataModel.GetHitObjects(canvas, point)) if (i.GetType().ToString().IndexOf("Module") >= 0 && i != this)
+                    {
+                        from_connections = (ModuleItems.Module)i;
+                        if (from_connections.ToPoint == point) foreach (Property p in from_connections.properties) if (p.name == "to") foreach (Property q in properties) if (q.name == "name") p.value = q.value;
+                        if (from_connections.FromPoint == point) foreach (Property p in from_connections.properties) if (p.name == "from") foreach (Property q in properties) if (q.name == "name") p.value = q.value;
+                    }
+                
+                return eDrawObjectMouseDown.Done;
+            } 
             if (currentPoint == ePoint.FromPoint)
             {
                 m_p1 = point;
                 currentPoint = ePoint.StartPoint;
                 foreach (IDrawObject i in canvas.DataModel.GetHitObjects(canvas, point)) if (i.GetType().ToString().IndexOf("Module") >= 0 && i != this) from_connections = (ModuleItems.Module)i;
                 if (from_connections != null) foreach (Property p in properties) if (p.name == "from") foreach (Property q in from_connections.properties) if (q.name == "name") p.value = q.value;
+                if (from_connections != null && child) foreach (Property p in properties) if (p.name == "parent") foreach (Property q in from_connections.properties) if (q.name == "name") p.value = q.value;
                 return eDrawObjectMouseDown.Continue;
             }
             if (currentPoint == ePoint.StartPoint)
@@ -465,6 +476,9 @@ namespace Canvas.ModuleItems
         public override void InitializeFromModel(UnitPoint point, DrawingLayer layer, ISnapPoint snap)
         {
             FromPoint  = StartPoint = EndPoint = ToPoint = point;
+            int count = 1;
+            foreach (IDrawObject i in layer.Objects) if (i.GetType() == this.GetType()) count++;
+            foreach (Property p in properties) if (p.name == "name" && p.value == "") p.value = this.Id + count;
             Width = layer.Width;
             Color = layer.Color;
             Selected = true;
